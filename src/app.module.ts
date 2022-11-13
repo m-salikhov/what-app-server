@@ -20,7 +20,7 @@ import { AuthModule } from './modules/auth/auth.module';
       autoLoadEntities: true,
       type: 'mysql',
       host: 'localhost',
-      // port: 3306,
+      port: 3306,
       username: 'andvarif_what_db',
       password: '!Db105_Ra88',
       database: 'andvarif_what_db',

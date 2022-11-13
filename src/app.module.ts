@@ -20,7 +20,7 @@ import { AuthModule } from './modules/auth/auth.module';
       autoLoadEntities: true,
       type: 'mysql',
       host: 'localhost',
-      port: 3306,
+      // port: 3306,
       username: '***REMOVED***',
       password: '***REMOVED***',
       database: '***REMOVED***',

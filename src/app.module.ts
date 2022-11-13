@@ -19,7 +19,7 @@ import { AuthModule } from './modules/auth/auth.module';
     TypeOrmModule.forRoot({
       autoLoadEntities: true,
       type: 'mysql',
-      host: '127.0.0.1',
+      host: '***REMOVED***',
       port: 3306,
       username: '***REMOVED***',
       password: '***REMOVED***',

@@ -15,10 +15,10 @@ const app_service_1 = require("./app.service");
 const user_entity_1 = require("./modules/users/entity/user.entity");
 const users_module_1 = require("./modules/users/users.module");
 const tournaments_module_1 = require("./modules/tournaments/tournaments.module");
-const tournament_entity_1 = require("./Modules/tournaments/entities/tournament.entity");
-const editors_entity_1 = require("./Modules/tournaments/entities/editors.entity");
-const question_entity_1 = require("./Modules/tournaments/entities/question.entity");
-const sourse_entity_1 = require("./Modules/tournaments/entities/sourse.entity");
+const tournament_entity_1 = require("./modules/tournaments/entities/tournament.entity");
+const editors_entity_1 = require("./modules/tournaments/entities/editors.entity");
+const question_entity_1 = require("./modules/tournaments/entities/question.entity");
+const sourse_entity_1 = require("./modules/tournaments/entities/sourse.entity");
 const auth_module_1 = require("./modules/auth/auth.module");
 let AppModule = class AppModule {
 };

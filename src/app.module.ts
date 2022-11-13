@@ -19,7 +19,7 @@ import { AuthModule } from './modules/auth/auth.module';
     TypeOrmModule.forRoot({
       autoLoadEntities: true,
       type: 'mysql',
-      host: '127.0.0.1',
+      host: 'andvarif.beget.tech',
       port: 3306,
       username: 'andvarif_what_db',
       password: '!Db105_Ra88',

@@ -26,6 +26,8 @@ let AuthController = class AuthController {
         response.cookie('access_token', token.access_token, {
             httpOnly: true,
             maxAge: 86400000,
+            sameSite: 'none',
+            secure: true,
         });
         return req.user;
     }
@@ -35,6 +37,8 @@ let AuthController = class AuthController {
         response.cookie('access_token', token.access_token, {
             httpOnly: true,
             maxAge: 86400000,
+            sameSite: 'none',
+            secure: true,
         });
         return user;
     }

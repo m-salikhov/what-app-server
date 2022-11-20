@@ -5,8 +5,9 @@ import * as fs from 'fs';
 import { join } from 'path';
 
 const httpsOptions = {
-  key: fs.readFileSync(join(process.cwd(), './src/secret/key.pem')).toString(),
-  cert: fs.readFileSync('~/what-server/what-app-server/src/secret/cert.pem'),
+  // key: fs.readFileSync(join(process.cwd(), './src/secret/key.pem')).toString(),
+  key: fs.readFileSync('src/secret/key.pem'),
+  cert: fs.readFileSync(join(process.cwd(), './src/secret/key.pem')).toString(),
 };
 
 async function bootstrap() {

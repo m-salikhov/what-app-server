@@ -29,7 +29,7 @@ AppModule = __decorate([
             typeorm_1.TypeOrmModule.forRoot({
                 autoLoadEntities: true,
                 type: 'mysql',
-                host: 'localhost',
+                host: '***REMOVED***',
                 port: 3306,
                 username: '***REMOVED***',
                 password: '***REMOVED***',

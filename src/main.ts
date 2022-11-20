@@ -2,9 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import * as fs from 'fs';
+import { join } from 'path';
 
 const httpsOptions = {
-  key: fs.readFileSync('~/what-server/what-app-server/src/secret/key.pem'),
+  key: fs.readFileSync(join(process.cwd(), './src/secret/key.pem')).toString(),
   cert: fs.readFileSync('~/what-server/what-app-server/src/secret/cert.pem'),
 };
 

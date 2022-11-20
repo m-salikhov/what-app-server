@@ -29,7 +29,7 @@ AppModule = __decorate([
             typeorm_1.TypeOrmModule.forRoot({
                 autoLoadEntities: true,
                 type: 'mysql',
-                host: 'localhost',
+                host: 'andvarif.beget.tech',
                 port: 3306,
                 username: 'andvarif_what_db',
                 password: '!Db105_Ra88',

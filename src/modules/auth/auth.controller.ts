@@ -24,7 +24,6 @@ export class AuthController {
       httpOnly: true,
       maxAge: 86_400_000,
       sameSite: 'none',
-      secure: true,
     });
     return req.user;
   }

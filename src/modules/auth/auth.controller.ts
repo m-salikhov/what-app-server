@@ -24,6 +24,7 @@ export class AuthController {
       httpOnly: true,
       maxAge: 86_400_000,
       sameSite: 'none',
+      secure: true,
     });
     return req.user;
   }
@@ -36,6 +37,8 @@ export class AuthController {
     response.cookie('access_token', token.access_token, {
       httpOnly: true,
       maxAge: 86_400_000,
+      sameSite: 'none',
+      secure: true,
     });
     return user;
   }

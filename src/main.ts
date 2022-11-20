@@ -4,8 +4,8 @@ import * as cookieParser from 'cookie-parser';
 import * as fs from 'fs';
 
 const httpsOptions = {
-  key: fs.readFileSync('./secret/key.pem'),
-  cert: fs.readFileSync('./secret/cert.pem'),
+  key: fs.readFileSync('~/what-server/what-app-server/src/secret/key.pem'),
+  cert: fs.readFileSync('~/what-server/what-app-server/src/secret/cert.pem'),
 };
 
 async function bootstrap() {

@@ -55,7 +55,12 @@ export class AuthController {
   @Get('logout')
   logout(@Res({ passthrough: true }) response: Response, @Req() req) {
     console.log(req.cookies);
-    response.cookie('access_token', '');
+    response.cookie('access_token', '', {
+      httpOnly: true,
+      maxAge: 1_000,
+      sameSite: 'none',
+      secure: true,
+    });
     return 'logout';
   }
 }

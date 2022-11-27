@@ -4,16 +4,18 @@ import * as cookieParser from 'cookie-parser';
 import * as fs from 'fs';
 import { join } from 'path';
 
-const httpsOptions = {
-  // key: fs.readFileSync(join(process.cwd(), './src/secret/key.pem')).toString(),
-  key: fs.readFileSync('src/secret/key.pem'),
-  cert: fs
-    .readFileSync(join(process.cwd(), './src/secret/cert.pem'))
-    .toString(),
-};
+// const httpsOptions = {
+//   // key: fs.readFileSync(join(process.cwd(), './src/secret/key.pem')).toString(),
+//   key: fs.readFileSync('src/secret/key.pem'),
+//   cert: fs
+//     .readFileSync(join(process.cwd(), './src/secret/cert.pem'))
+//     .toString(),
+// };
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { httpsOptions });
+  // const app = await NestFactory.create(AppModule, { httpsOptions });
+  const app = await NestFactory.create(AppModule);
+
   app.use(cookieParser());
   app.enableCors({
     origin: [

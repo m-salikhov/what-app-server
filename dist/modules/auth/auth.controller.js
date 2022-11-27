@@ -44,7 +44,12 @@ let AuthController = class AuthController {
     }
     logout(response, req) {
         console.log(req.cookies);
-        response.cookie('access_token', '');
+        response.cookie('access_token', '', {
+            httpOnly: true,
+            maxAge: 1000,
+            sameSite: 'none',
+            secure: true,
+        });
         return 'logout';
     }
 };

@@ -23,8 +23,8 @@ async function bootstrap() {
       'http://62.217.179.200:3000',
       'https://62.217.179.200',
       'http://62.217.179.200',
-      'https://sage-paletas-ab37e6.netlify.app',
-      'http://sage-paletas-ab37e6.netlify.app',
+      'https://4gk-base.netlify.app/',
+      'http://4gk-base.netlify.app/',
     ],
     credentials: true,
   });

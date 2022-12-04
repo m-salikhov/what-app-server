@@ -16,18 +16,18 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.use(cookieParser());
-  // app.enableCors({
-  //   origin: [
-  //     'https://localhost:3000',
-  //     'https://62.217.179.200:3000',
-  //     'http://62.217.179.200:3000',
-  //     'https://62.217.179.200',
-  //     'http://62.217.179.200',
-  //     'https://4gk-base.netlify.app',
-  //     'http://4gk-base.netlify.app',
-  //   ],
-  //   credentials: true,
-  // });
+  app.enableCors({
+    origin: [
+      'https://localhost:3000',
+      'https://62.217.179.200:3000',
+      'http://62.217.179.200:3000',
+      'https://62.217.179.200',
+      'http://62.217.179.200',
+      'https://4gk-base.netlify.app',
+      'http://4gk-base.netlify.app',
+    ],
+    credentials: true,
+  });
   await app.listen(process.env.PORT || 5000);
 }
 bootstrap();

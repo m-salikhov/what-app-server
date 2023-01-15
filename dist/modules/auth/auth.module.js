@@ -19,12 +19,13 @@ const jwt_1 = require("@nestjs/jwt");
 const local_strategy_1 = require("./strategies/local.strategy");
 const passport_1 = require("@nestjs/passport");
 const jwt_strategy_1 = require("./strategies/jwt.strategy");
+const userResult_entity_1 = require("../users/entity/userResult.entity");
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User]),
+            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, userResult_entity_1.UserResult, userResult_entity_1.ResultElem]),
             config_1.ConfigModule.forRoot(),
             users_module_1.UsersModule,
             passport_1.PassportModule,

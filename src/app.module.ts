@@ -11,6 +11,10 @@ import { Editor } from './modules/tournaments/entities/editors.entity';
 import { Question } from './modules/tournaments/entities/question.entity';
 import { Source } from './modules/tournaments/entities/sourse.entity';
 import { AuthModule } from './modules/auth/auth.module';
+import {
+  ResultElem,
+  UserResult,
+} from './modules/users/entity/userResult.entity';
 
 @Module({
   imports: [
@@ -24,7 +28,15 @@ import { AuthModule } from './modules/auth/auth.module';
       username: '***REMOVED***',
       password: '***REMOVED***',
       database: '***REMOVED***',
-      entities: [Tournament, User, Editor, Question, Source],
+      entities: [
+        Tournament,
+        User,
+        Editor,
+        Question,
+        Source,
+        UserResult,
+        ResultElem,
+      ],
       // entities: [__dirname + '/../**/*.entity.{js,ts}'],
       synchronize: true,
     }),

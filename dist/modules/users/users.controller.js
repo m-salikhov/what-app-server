@@ -27,6 +27,7 @@ exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const get_user_dto_1 = require("./dto/get-user.dto");
+const userResult_dto_1 = require("./dto/userResult.dto");
 const users_service_1 = require("./users.service");
 let UsersController = class UsersController {
     constructor(usersService) {
@@ -34,6 +35,9 @@ let UsersController = class UsersController {
     }
     async getLastTen(uuid) {
         return this.usersService.getUsernameByUUID(uuid);
+    }
+    async createTournament(userResultDto) {
+        return this.usersService.createUserResult(userResultDto);
     }
     async createUser(user) {
         return this.usersService.createUser(user);
@@ -57,6 +61,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getLastTen", null);
+__decorate([
+    (0, common_1.Post)('/userresult'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [userResult_dto_1.UserResultDto]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "createTournament", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),

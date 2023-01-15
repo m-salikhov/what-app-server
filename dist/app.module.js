@@ -20,6 +20,7 @@ const editors_entity_1 = require("./modules/tournaments/entities/editors.entity"
 const question_entity_1 = require("./modules/tournaments/entities/question.entity");
 const sourse_entity_1 = require("./modules/tournaments/entities/sourse.entity");
 const auth_module_1 = require("./modules/auth/auth.module");
+const userResult_entity_1 = require("./modules/users/entity/userResult.entity");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -34,7 +35,15 @@ AppModule = __decorate([
                 username: '***REMOVED***',
                 password: '***REMOVED***',
                 database: '***REMOVED***',
-                entities: [tournament_entity_1.Tournament, user_entity_1.User, editors_entity_1.Editor, question_entity_1.Question, sourse_entity_1.Source],
+                entities: [
+                    tournament_entity_1.Tournament,
+                    user_entity_1.User,
+                    editors_entity_1.Editor,
+                    question_entity_1.Question,
+                    sourse_entity_1.Source,
+                    userResult_entity_1.UserResult,
+                    userResult_entity_1.ResultElem,
+                ],
                 synchronize: true,
             }),
             users_module_1.UsersModule,

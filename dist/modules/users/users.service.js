@@ -11,6 +11,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
@@ -20,9 +27,12 @@ const typeorm_2 = require("typeorm");
 const user_entity_1 = require("./entity/user.entity");
 const get_user_dto_1 = require("./dto/get-user.dto");
 const jwt_guard_1 = require("../auth/guards/jwt.guard");
+const userResult_entity_1 = require("./entity/userResult.entity");
 let UsersService = class UsersService {
-    constructor(userRepo) {
+    constructor(userRepo, userResultRepo, resultElemRepo) {
         this.userRepo = userRepo;
+        this.userResultRepo = userResultRepo;
+        this.resultElemRepo = resultElemRepo;
     }
     async createUser(user) {
         const userCheck = await this.userRepo.findOne({
@@ -34,6 +44,30 @@ let UsersService = class UsersService {
         const newUser = Object.assign(Object.assign({}, user), { password: hash, date: Date.now() });
         console.log('user', newUser);
         return await this.userRepo.save(newUser);
+    }
+    async createUserResult(userResultDto) {
+        var e_1, _a;
+        const savedResultElems = [];
+        try {
+            for (var _b = __asyncValues(userResultDto.result), _c; _c = await _b.next(), !_c.done;) {
+                const resultElem = _c.value;
+                let resultElemToSave = new userResult_entity_1.ResultElem();
+                resultElemToSave = Object.assign(Object.assign({}, resultElemToSave), resultElem);
+                let savedElem = await this.resultElemRepo.save(resultElemToSave);
+                console.log('savedElem', savedElem);
+                savedResultElems.push(savedElem);
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        const newUserResult = Object.assign(Object.assign({}, userResultDto), { result: savedResultElems, date: Date.now() });
+        console.log('newUserResult', newUserResult);
+        return await this.userResultRepo.save(newUserResult);
     }
     async getUser(getUserDto) {
         let [key, value] = Object.entries(getUserDto)[0];
@@ -73,7 +107,11 @@ __decorate([
 UsersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __param(1, (0, typeorm_1.InjectRepository)(userResult_entity_1.UserResult)),
+    __param(2, (0, typeorm_1.InjectRepository)(userResult_entity_1.ResultElem)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository])
 ], UsersService);
 exports.UsersService = UsersService;
 //# sourceMappingURL=users.service.js.map

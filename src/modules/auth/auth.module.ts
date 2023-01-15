@@ -10,10 +10,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './strategies/local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { ResultElem, UserResult } from '../users/entity/userResult.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, UserResult, ResultElem]),
     ConfigModule.forRoot(),
     UsersModule,
     PassportModule,

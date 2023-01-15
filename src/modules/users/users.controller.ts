@@ -11,6 +11,7 @@ import {
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserDto, updatePassDto } from './dto/get-user.dto';
+import { UserResultDto } from './dto/userResult.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -20,6 +21,11 @@ export class UsersController {
   @Get('/username/:uuid')
   async getLastTen(@Param('uuid') uuid: string) {
     return this.usersService.getUsernameByUUID(uuid);
+  }
+
+  @Post('/userresult')
+  async createTournament(@Body() userResultDto: UserResultDto) {
+    return this.usersService.createUserResult(userResultDto);
   }
 
   @Post()

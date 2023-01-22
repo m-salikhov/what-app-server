@@ -37,6 +37,9 @@ export class ResultElem {
   @Column()
   num: number;
 
+  @Column({ default: 0 })
+  tour: number;
+
   @ManyToOne(() => UserResult, (res) => res.result, {
     onDelete: 'CASCADE',
   })

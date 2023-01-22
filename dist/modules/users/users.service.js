@@ -48,25 +48,27 @@ let UsersService = class UsersService {
     async createUserResult(userResultDto) {
         var e_1, _a;
         const savedResultElems = [];
-        try {
-            for (var _b = __asyncValues(userResultDto.result), _c; _c = await _b.next(), !_c.done;) {
-                const resultElem = _c.value;
-                let resultElemToSave = new userResult_entity_1.ResultElem();
-                resultElemToSave = Object.assign(Object.assign({}, resultElemToSave), resultElem);
-                let savedElem = await this.resultElemRepo.save(resultElemToSave);
-                console.log('savedElem', savedElem);
-                savedResultElems.push(savedElem);
-            }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
+        let tours = Math.max(...Object.keys(userResultDto.result).map((v) => +v));
+        for (let i = 1; i <= tours; i++) {
             try {
-                if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
+                for (var _b = (e_1 = void 0, __asyncValues(userResultDto.result[i])), _c; _c = await _b.next(), !_c.done;) {
+                    const resultElem = _c.value;
+                    let resultElemToSave = new userResult_entity_1.ResultElem();
+                    resultElemToSave = Object.assign(Object.assign(Object.assign({}, resultElemToSave), resultElem), { tour: i });
+                    let savedElem = await this.resultElemRepo.save(resultElemToSave);
+                    console.log('savedElem', savedElem);
+                    savedResultElems.push(savedElem);
+                }
             }
-            finally { if (e_1) throw e_1.error; }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
+                }
+                finally { if (e_1) throw e_1.error; }
+            }
         }
         const newUserResult = Object.assign(Object.assign({}, userResultDto), { result: savedResultElems, date: Date.now() });
-        console.log('newUserResult', newUserResult);
         return await this.userResultRepo.save(newUserResult);
     }
     async getUser(getUserDto) {

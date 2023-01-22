@@ -12,5 +12,6 @@ export declare class ResultElem {
     id: number;
     ans: boolean;
     num: number;
+    tour: number;
     userResult: UserResult;
 }

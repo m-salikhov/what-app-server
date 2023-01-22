@@ -48,13 +48,17 @@ export class UsersService {
 
     const savedResultElems: ResultElem[] = [];
 
-    for await (const resultElem of userResultDto.result) {
-      let resultElemToSave = new ResultElem();
+    let tours = Math.max(...Object.keys(userResultDto.result).map((v) => +v));
 
-      resultElemToSave = { ...resultElemToSave, ...resultElem };
-      let savedElem = await this.resultElemRepo.save(resultElemToSave);
-      console.log('savedElem', savedElem);
-      savedResultElems.push(savedElem);
+    for (let i = 1; i <= tours; i++) {
+      for await (const resultElem of userResultDto.result[i]) {
+        let resultElemToSave = new ResultElem();
+
+        resultElemToSave = { ...resultElemToSave, ...resultElem, tour: i };
+        let savedElem = await this.resultElemRepo.save(resultElemToSave);
+        console.log('savedElem', savedElem);
+        savedResultElems.push(savedElem);
+      }
     }
 
     const newUserResult: Omit<UserResult, 'id'> = {
@@ -62,7 +66,7 @@ export class UsersService {
       result: savedResultElems,
       date: Date.now(),
     };
-    console.log('newUserResult', newUserResult);
+
     return await this.userResultRepo.save(newUserResult);
   }
 

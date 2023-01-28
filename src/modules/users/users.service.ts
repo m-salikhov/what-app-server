@@ -100,14 +100,14 @@ export class UsersService {
 
   async getUserResultShort(id: string) {
     let result = await this.userResultRepo.find({
-      where: { id },
+      where: { userId: id },
     });
     return result;
   }
 
   async getUserResultFull(id: string) {
     const res = await this.userResultRepo.find({
-      where: { id },
+      where: { userId: id },
       relations: ['result'],
     });
     return res;

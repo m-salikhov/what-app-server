@@ -66,12 +66,13 @@ export class UsersService {
   }
 
   async createUserResult(userResultDto: UserResultDto) {
-    const resultCheck = await this.userResultRepo.find({
+    const resultCheck = await this.userResultRepo.findOne({
       where: {
         userId: userResultDto.userId,
         tournamentId: userResultDto.tournamentId,
       },
     });
+
     if (resultCheck) throw new ConflictException('Результат уже существует');
 
     const savedResultElems: ResultElem[] = [];

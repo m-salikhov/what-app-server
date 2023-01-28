@@ -39,12 +39,40 @@ export class UsersService {
     return await this.userRepo.save(newUser);
   }
 
+  async getUser(getUserDto: GetUserDto): Promise<User> {
+    let [key, value]: string[] = Object.entries(getUserDto)[0];
+    const user = await this.userRepo.findOne({
+      where: { [key]: value },
+    });
+    if (!user) throw new NotFoundException('user not found');
+    return user;
+  }
+
+  async getUsernameByUUID(uuid: string) {
+    const user = await this.userRepo.findOne({
+      where: { id: uuid },
+      select: { username: true },
+    });
+
+    return user.username;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  async updatePassword(passworObj: updatePassDto) {
+    const user = await this.userRepo.findOne({ where: { id: passworObj.id } });
+    const hash = await bcrypt.hash(passworObj.newPass, 10);
+    await this.userRepo.save({ ...user, password: hash });
+    return 'Пароль изменён';
+  }
+
   async createUserResult(userResultDto: UserResultDto) {
-    // const userCheck = await this.userRepo.findOne({
-    //   where: { email: user.email },
-    // });
-    // if (userCheck)
-    //   throw new ConflictException('Email уже существует в системе');
+    const resultCheck = await this.userResultRepo.find({
+      where: {
+        userId: userResultDto.userId,
+        tournamentId: userResultDto.tournamentId,
+      },
+    });
+    if (resultCheck) throw new ConflictException('Результат уже существует');
 
     const savedResultElems: ResultElem[] = [];
 
@@ -70,30 +98,19 @@ export class UsersService {
     return await this.userResultRepo.save(newUserResult);
   }
 
-  async getUser(getUserDto: GetUserDto): Promise<User> {
-    let [key, value]: string[] = Object.entries(getUserDto)[0];
-    const user = await this.userRepo.findOne({
-      where: { [key]: value },
+  async getUserResultShort(id: string) {
+    let result = await this.userResultRepo.find({
+      where: { id },
     });
-    if (!user) throw new NotFoundException('user not found');
-    return user;
+    return result;
   }
 
-  async getUsernameByUUID(uuid: string) {
-    const user = await this.userRepo.findOne({
-      where: { id: uuid },
-      select: { username: true },
+  async getUserResultFull(id: string) {
+    const res = await this.userResultRepo.find({
+      where: { id },
+      relations: ['result'],
     });
-
-    return user.username;
-  }
-
-  @UseGuards(JwtAuthGuard)
-  async updatePassword(passworObj: updatePassDto) {
-    const user = await this.userRepo.findOne({ where: { id: passworObj.id } });
-    const hash = await bcrypt.hash(passworObj.newPass, 10);
-    await this.userRepo.save({ ...user, password: hash });
-    return 'Пароль изменён';
+    return res;
   }
 
   async deleteUser(id: string) {

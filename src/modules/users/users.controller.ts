@@ -45,6 +45,16 @@ export class UsersController {
     return this.usersService.updatePassword(passObj);
   }
 
+  @Post('/userresultfull')
+  async getUserResultFull(@Body() idDto: { id: string }) {
+    return this.usersService.getUserResultFull(idDto.id);
+  }
+
+  @Post('/userresultshort')
+  async getUserResultShort(@Body() idDto: { id: string }) {
+    return this.usersService.getUserResultShort(idDto.id);
+  }
+
   @Delete(':id')
   delOneCar(@Param('id') id: string) {
     return this.usersService.deleteUser(id);

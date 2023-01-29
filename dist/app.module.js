@@ -30,11 +30,11 @@ AppModule = __decorate([
             typeorm_1.TypeOrmModule.forRoot({
                 autoLoadEntities: true,
                 type: 'mysql',
-                host: '***REMOVED***',
+                host: process.env.HOST,
                 port: 3306,
-                username: '***REMOVED***',
-                password: '***REMOVED***',
-                database: '***REMOVED***',
+                username: process.env.DB_USERNAME,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_NAME,
                 entities: [
                     tournament_entity_1.Tournament,
                     user_entity_1.User,

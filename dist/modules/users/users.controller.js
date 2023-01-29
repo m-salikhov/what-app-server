@@ -50,6 +50,12 @@ let UsersController = class UsersController {
     updateUser(passObj) {
         return this.usersService.updatePassword(passObj);
     }
+    async getUserResultFull(idDto) {
+        return this.usersService.getUserResultFull(idDto.id);
+    }
+    async getUserResultShort(idDto) {
+        return this.usersService.getUserResultShort(idDto.id);
+    }
     delOneCar(id) {
         return this.usersService.deleteUser(id);
     }
@@ -89,6 +95,20 @@ __decorate([
     __metadata("design:paramtypes", [get_user_dto_1.updatePassDto]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "updateUser", null);
+__decorate([
+    (0, common_1.Post)('/userresultfull'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getUserResultFull", null);
+__decorate([
+    (0, common_1.Post)('/userresultshort'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getUserResultShort", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),

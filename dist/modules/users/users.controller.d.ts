@@ -16,5 +16,11 @@ export declare class UsersController {
         date: number;
     }>;
     updateUser(passObj: updatePassDto): Promise<string>;
+    getUserResultFull(idDto: {
+        id: string;
+    }): Promise<import("./entity/userResult.entity").UserResult[]>;
+    getUserResultShort(idDto: {
+        id: string;
+    }): Promise<import("./entity/userResult.entity").UserResult[]>;
     delOneCar(id: string): Promise<import("./entity/user.entity").User>;
 }

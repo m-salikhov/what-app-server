@@ -45,8 +45,38 @@ let UsersService = class UsersService {
         console.log('user', newUser);
         return await this.userRepo.save(newUser);
     }
+    async getUser(getUserDto) {
+        let [key, value] = Object.entries(getUserDto)[0];
+        const user = await this.userRepo.findOne({
+            where: { [key]: value },
+        });
+        if (!user)
+            throw new common_1.NotFoundException('user not found');
+        return user;
+    }
+    async getUsernameByUUID(uuid) {
+        const user = await this.userRepo.findOne({
+            where: { id: uuid },
+            select: { username: true },
+        });
+        return user.username;
+    }
+    async updatePassword(passworObj) {
+        const user = await this.userRepo.findOne({ where: { id: passworObj.id } });
+        const hash = await bcrypt.hash(passworObj.newPass, 10);
+        await this.userRepo.save(Object.assign(Object.assign({}, user), { password: hash }));
+        return 'Пароль изменён';
+    }
     async createUserResult(userResultDto) {
         var e_1, _a;
+        const resultCheck = await this.userResultRepo.findOne({
+            where: {
+                userId: userResultDto.userId,
+                tournamentId: userResultDto.tournamentId,
+            },
+        });
+        if (resultCheck)
+            throw new common_1.ConflictException('Результат уже существует');
         const savedResultElems = [];
         let tours = Math.max(...Object.keys(userResultDto.result).map((v) => +v));
         for (let i = 1; i <= tours; i++) {
@@ -71,27 +101,24 @@ let UsersService = class UsersService {
         const newUserResult = Object.assign(Object.assign({}, userResultDto), { result: savedResultElems, date: Date.now() });
         return await this.userResultRepo.save(newUserResult);
     }
-    async getUser(getUserDto) {
-        let [key, value] = Object.entries(getUserDto)[0];
-        const user = await this.userRepo.findOne({
-            where: { [key]: value },
+    async getUserResultShort(id) {
+        let result = await this.userResultRepo.find({
+            where: { userId: id },
         });
-        if (!user)
-            throw new common_1.NotFoundException('user not found');
-        return user;
+        return result;
     }
-    async getUsernameByUUID(uuid) {
-        const user = await this.userRepo.findOne({
-            where: { id: uuid },
-            select: { username: true },
+    async getUserResultFull(id) {
+        const res = await this.userResultRepo.find({
+            where: { userId: id },
+            relations: ['result'],
+            select: {
+                result: {
+                    ans: true,
+                    num: true,
+                },
+            },
         });
-        return user.username;
-    }
-    async updatePassword(passworObj) {
-        const user = await this.userRepo.findOne({ where: { id: passworObj.id } });
-        const hash = await bcrypt.hash(passworObj.newPass, 10);
-        await this.userRepo.save(Object.assign(Object.assign({}, user), { password: hash }));
-        return 'Пароль изменён';
+        return res;
     }
     async deleteUser(id) {
         const user = await this.userRepo.findOne({ where: { id } });

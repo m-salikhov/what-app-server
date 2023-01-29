@@ -110,6 +110,12 @@ export class UsersService {
     const res = await this.userResultRepo.find({
       where: { userId: id },
       relations: ['result'],
+      select: {
+        result: {
+          ans: true,
+          num: true,
+        },
+      },
     });
     return res;
   }

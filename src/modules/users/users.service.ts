@@ -33,7 +33,11 @@ export class UsersService {
       throw new ConflictException('Email уже существует в системе');
 
     const hash = await bcrypt.hash(user.password, 8);
-    const newUser = { ...user, password: hash, date: Date.now() };
+    const newUser = this.userRepo.create({
+      ...user,
+      password: hash,
+      date: Date.now(),
+    });
 
     const { password, ...rest } = await this.userRepo.save(newUser);
     console.log('rest', rest);

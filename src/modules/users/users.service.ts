@@ -13,6 +13,7 @@ import { GetUserDto, updatePassDto } from './dto/get-user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { UserResultDto } from './dto/userResult.dto';
 import { UserResult, ResultElem } from './entity/userResult.entity';
+import crypto from 'crypto';
 
 @Injectable()
 export class UsersService {
@@ -35,6 +36,7 @@ export class UsersService {
     const hash = await bcrypt.hash(user.password, 8);
     const newUser = this.userRepo.create({
       ...user,
+      id: crypto.randomUUID(),
       password: hash,
       date: Date.now(),
     });

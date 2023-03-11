@@ -13,7 +13,7 @@ import { GetUserDto, updatePassDto } from './dto/get-user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { UserResultDto } from './dto/userResult.dto';
 import { UserResult, ResultElem } from './entity/userResult.entity';
-import crypto from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -34,7 +34,7 @@ export class UsersService {
       throw new ConflictException('Email уже существует в системе');
 
     const hash = await bcrypt.hash(user.password, 8);
-    const id = crypto.randomUUID();
+    const id = uuidv4();
     console.log('id', id);
     const newUser = this.userRepo.create({
       ...user,

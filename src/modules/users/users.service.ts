@@ -40,6 +40,7 @@ export class UsersService {
       password: hash,
       date: Date.now(),
     });
+    console.log('newUser', newUser);
 
     const { password, ...rest } = await this.userRepo.save(newUser);
     console.log('rest', rest);

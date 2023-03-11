@@ -25,7 +25,7 @@ export class UsersService {
     private resultElemRepo: Repository<ResultElem>,
   ) {}
 
-  async createUser(user: CreateUserDto): Promise<User> {
+  async createUser(user: CreateUserDto): Promise<Omit<User, 'password'>> {
     const userCheck = await this.userRepo.findOne({
       where: { email: user.email },
     });
@@ -36,7 +36,8 @@ export class UsersService {
     const newUser = { ...user, password: hash, date: Date.now() };
     console.log('user', newUser);
 
-    return await this.userRepo.save(newUser);
+    const { password, ...rest } = await this.userRepo.save(newUser);
+    return rest;
   }
 
   async getUser(getUserDto: GetUserDto): Promise<User> {

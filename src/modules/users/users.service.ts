@@ -34,9 +34,9 @@ export class UsersService {
 
     const hash = await bcrypt.hash(user.password, 8);
     const newUser = { ...user, password: hash, date: Date.now() };
-    console.log('user', newUser);
 
     const { password, ...rest } = await this.userRepo.save(newUser);
+    console.log('rest', rest);
     return rest;
   }
 

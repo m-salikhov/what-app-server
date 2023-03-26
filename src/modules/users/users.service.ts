@@ -95,7 +95,6 @@ export class UsersService {
 
         resultElemToSave = { ...resultElemToSave, ...resultElem, tour: i };
         let savedElem = await this.resultElemRepo.save(resultElemToSave);
-        console.log('savedElem', savedElem);
         savedResultElems.push(savedElem);
       }
     }

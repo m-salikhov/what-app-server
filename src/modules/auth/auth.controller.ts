@@ -54,7 +54,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('logout')
   logout(@Res({ passthrough: true }) response: Response, @Req() req) {
-    console.log(req.cookies);
     response.cookie('access_token', '', {
       httpOnly: true,
       maxAge: 1_000,

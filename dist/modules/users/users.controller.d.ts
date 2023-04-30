@@ -7,7 +7,7 @@ export declare class UsersController {
     constructor(usersService: UsersService);
     getLastTen(uuid: string): Promise<string>;
     createTournament(userResultDto: UserResultDto): Promise<Omit<import("./entity/userResult.entity").UserResult, "id"> & import("./entity/userResult.entity").UserResult>;
-    createUser(user: CreateUserDto): Promise<import("./entity/user.entity").User>;
+    createUser(user: CreateUserDto): Promise<Omit<import("./entity/user.entity").User, "password">>;
     getUser(getUserDto: GetUserDto): Promise<{
         id: string;
         username: string;

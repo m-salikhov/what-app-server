@@ -27,6 +27,8 @@ const editors_entity_1 = require("./entities/editors.entity");
 const question_entity_1 = require("./entities/question.entity");
 const sourse_entity_1 = require("./entities/sourse.entity");
 const tournament_entity_1 = require("./entities/tournament.entity");
+const normalizeTournamentData_1 = require("./helpers/normalizeTournamentData");
+const parseLink_1 = require("./helpers/parseLink");
 let TournamentsService = class TournamentsService {
     constructor(tournamentRepo, editorRepo, questionRepo, sourceRepo) {
         this.tournamentRepo = tournamentRepo;
@@ -80,14 +82,15 @@ let TournamentsService = class TournamentsService {
         const savedTournament = await this.tournamentRepo.save(newTournament);
         return savedTournament.id;
     }
+    async createTournamentByLink(link) {
+        return (0, parseLink_1.default)(link);
+    }
     async getTournamentById(id) {
         const tournament = await this.tournamentRepo.findOne({
             where: { id },
             relations: ['editors', 'questions'],
         });
-        return tournament
-            ? this.normalizeTournament(tournament)
-            : 'Tournament not found';
+        return tournament;
     }
     async getRandomQuestions(n) {
         const qb = this.questionRepo.createQueryBuilder('question');
@@ -102,7 +105,7 @@ let TournamentsService = class TournamentsService {
                 relations: ['tournament'],
             });
         }));
-        return this.normalizeQuestions(random);
+        return (0, normalizeTournamentData_1.normalizeQuestions)(random);
     }
     async getRandomTournaments(n) {
         const qb = this.tournamentRepo.createQueryBuilder('tournament');
@@ -137,21 +140,6 @@ let TournamentsService = class TournamentsService {
             where: { uploaderUuid: uploaderId },
         });
         return tournaments;
-    }
-    normalizeQuestions(arr) {
-        return arr.map((el) => {
-            const normSources = el.source.map((el) => el.link);
-            return Object.assign(Object.assign({}, el), { source: normSources });
-        });
-    }
-    normalizeEditors(editors) {
-        return editors.map((el) => el.name);
-    }
-    normalizeTournament(res) {
-        const normEditors = this.normalizeEditors(res.editors);
-        const normQuestions = this.normalizeQuestions(res.questions);
-        const tournament = Object.assign(Object.assign({}, res), { editors: normEditors, questions: normQuestions });
-        return tournament;
     }
 };
 TournamentsService = __decorate([

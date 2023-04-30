@@ -7,7 +7,6 @@ import { Editor } from './entities/editors.entity';
 import { Question } from './entities/question.entity';
 import { Source } from './entities/sourse.entity';
 import { Tournament } from './entities/tournament.entity';
-import { normalizeQuestions } from './helpers/normalizeTournamentData';
 import parseLink from './helpers/parseLink';
 
 @Injectable()
@@ -71,10 +70,9 @@ export class TournamentsService {
       where: { id },
       relations: ['editors', 'questions'],
     });
-    // return tournament
-    //   ? this.normalizeTournament(tournament)
-    //   : 'Tournament not found';
-    return tournament;
+    return tournament
+      ? this.normalizeTournament(tournament)
+      : 'Tournament not found';
   }
 
   async getRandomQuestions(n: string) {
@@ -95,7 +93,7 @@ export class TournamentsService {
       }),
     );
 
-    return normalizeQuestions(random);
+    return this.normalizeQuestions(random);
   }
 
   async getRandomTournaments(n: string) {
@@ -139,5 +137,27 @@ export class TournamentsService {
       where: { uploaderUuid: uploaderId },
     });
     return tournaments;
+  }
+
+  normalizeQuestions(arr: Question[]): QuestionDto[] {
+    return arr.map((el) => {
+      const normSources = el.source.map((el) => el.link);
+      return { ...el, source: normSources };
+    });
+  }
+
+  normalizeEditors(editors: Editor[]): string[] {
+    return editors.map((el) => el.name);
+  }
+
+  normalizeTournament(res: Tournament) {
+    const normEditors = this.normalizeEditors(res.editors);
+    const normQuestions = this.normalizeQuestions(res.questions);
+    const tournament: TournamentDto = {
+      ...res,
+      editors: normEditors,
+      questions: normQuestions,
+    };
+    return tournament;
   }
 }

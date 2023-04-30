@@ -24,6 +24,9 @@ let TournamentsController = class TournamentsController {
     async createTournament(tournament) {
         return this.tournamentsService.createTournamet(tournament);
     }
+    async createTournamentByLink(linkDTO) {
+        return this.tournamentsService.createTournamentByLink(linkDTO.link);
+    }
     async getAllTournamentsShort() {
         return this.tournamentsService.getAllTournamentsShort();
     }
@@ -51,6 +54,13 @@ __decorate([
     __metadata("design:paramtypes", [tournament_dto_1.TournamentDto]),
     __metadata("design:returntype", Promise)
 ], TournamentsController.prototype, "createTournament", null);
+__decorate([
+    (0, common_1.Post)('/createbylink'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], TournamentsController.prototype, "createTournamentByLink", null);
 __decorate([
     (0, common_1.Get)('/allshort'),
     __metadata("design:type", Function),

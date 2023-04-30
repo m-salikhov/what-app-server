@@ -11,6 +11,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __asyncValues = (this && this.__asyncValues) || function (o) {
     if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
     var m = o[Symbol.asyncIterator], i;
@@ -28,6 +39,7 @@ const user_entity_1 = require("./entity/user.entity");
 const get_user_dto_1 = require("./dto/get-user.dto");
 const jwt_guard_1 = require("../auth/guards/jwt.guard");
 const userResult_entity_1 = require("./entity/userResult.entity");
+const uuid_1 = require("uuid");
 let UsersService = class UsersService {
     constructor(userRepo, userResultRepo, resultElemRepo) {
         this.userRepo = userRepo;
@@ -41,9 +53,10 @@ let UsersService = class UsersService {
         if (userCheck)
             throw new common_1.ConflictException('Email уже существует в системе');
         const hash = await bcrypt.hash(user.password, 8);
-        const newUser = Object.assign(Object.assign({}, user), { password: hash, date: Date.now() });
-        console.log('user', newUser);
-        return await this.userRepo.save(newUser);
+        const id = (0, uuid_1.v4)();
+        const newUser = this.userRepo.create(Object.assign(Object.assign({}, user), { id, password: hash, date: Date.now() }));
+        const _a = await this.userRepo.save(newUser), { password } = _a, rest = __rest(_a, ["password"]);
+        return rest;
     }
     async getUser(getUserDto) {
         let [key, value] = Object.entries(getUserDto)[0];
@@ -86,7 +99,6 @@ let UsersService = class UsersService {
                     let resultElemToSave = new userResult_entity_1.ResultElem();
                     resultElemToSave = Object.assign(Object.assign(Object.assign({}, resultElemToSave), resultElem), { tour: i });
                     let savedElem = await this.resultElemRepo.save(resultElemToSave);
-                    console.log('savedElem', savedElem);
                     savedResultElems.push(savedElem);
                 }
             }

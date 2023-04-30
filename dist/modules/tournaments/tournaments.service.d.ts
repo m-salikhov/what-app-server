@@ -12,13 +12,11 @@ export declare class TournamentsService {
     private sourceRepo;
     constructor(tournamentRepo: Repository<Tournament>, editorRepo: Repository<Editor>, questionRepo: Repository<Question>, sourceRepo: Repository<Source>);
     createTournamet(tournament: TournamentDto): Promise<number>;
-    getTournamentById(id: number): Promise<TournamentDto | "Tournament not found">;
+    createTournamentByLink(link: string): Promise<Omit<TournamentDto, "uploaderUuid" | "uploader">>;
+    getTournamentById(id: number): Promise<Tournament>;
     getRandomQuestions(n: string): Promise<QuestionDto[]>;
     getRandomTournaments(n: string): Promise<string[]>;
     getLastAddTournaments(n: number): Promise<number | Tournament[]>;
     getAllTournamentsShort(): Promise<Tournament[]>;
     getTournamentsByUploader(uploaderId: string): Promise<Tournament[]>;
-    normalizeQuestions(arr: Question[]): QuestionDto[];
-    normalizeEditors(editors: Editor[]): string[];
-    normalizeTournament(res: Tournament): TournamentDto;
 }

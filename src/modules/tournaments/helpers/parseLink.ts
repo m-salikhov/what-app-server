@@ -177,12 +177,13 @@ const parseLink = async (link: string) => {
 
   //список редакторов
   const $editors = $('.editor');
-  const editorsText = $editors
+  const editorsText: string[] = $editors
     .text()
     .replace(/редактор:|редакторы:/gi, '%')
     .split('% ')
     .slice(1);
-  const editors = [...new Set(editorsText)];
+  const editors =
+    editorsText.length > 0 ? [...new Set(editorsText)] : ['Редактор не указан'];
 
   //дата отыгрыша
   let date = 0;

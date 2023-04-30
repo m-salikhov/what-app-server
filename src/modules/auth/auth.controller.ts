@@ -22,7 +22,7 @@ export class AuthController {
     const token = await this.authService.login(req.user);
     response.cookie('access_token', token.access_token, {
       httpOnly: true,
-      maxAge: 259_200_000,
+      maxAge: 259200000,
       sameSite: 'none',
       secure: true,
     });
@@ -36,7 +36,7 @@ export class AuthController {
     const user = await this.authService.getUser(req.user.id);
     response.cookie('access_token', token.access_token, {
       httpOnly: true,
-      maxAge: 259_200_000,
+      maxAge: 259200000,
       sameSite: 'none',
       secure: true,
     });

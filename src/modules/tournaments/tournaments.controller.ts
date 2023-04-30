@@ -13,6 +13,11 @@ export class TournamentsController {
     return this.tournamentsService.createTournamet(tournament);
   }
 
+  @Post('/createbylink')
+  async createTournamentByLink(@Body() linkDTO: { link: string }) {
+    return this.tournamentsService.createTournamentByLink(linkDTO.link);
+  }
+
   @Get('/allshort')
   async getAllTournamentsShort() {
     return this.tournamentsService.getAllTournamentsShort();

@@ -1,5 +1,5 @@
 export class QuestionDto {
-  id: number;
+  id?: number;
   type?: 'regular' | 'double' | 'triple' | 'other' | 'outside';
   qNumber: number;
   tourNumber: number;

@@ -4,9 +4,12 @@ const getTourNumber = (
   qNumber: number,
 ) => {
   const remainder = questionsQuantity % tours;
-  if (!remainder) {
-    const num = questionsQuantity / tours;
-    return Math.ceil(qNumber / num);
+  const tourLength = (questionsQuantity - remainder) / tours;
+
+  if (qNumber <= questionsQuantity - remainder) {
+    return Math.ceil(qNumber / tourLength);
+  } else {
+    return tours;
   }
 };
 export default getTourNumber;

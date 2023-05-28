@@ -20,7 +20,7 @@ import { ResultElem, UserResult } from '../users/entity/userResult.entity';
     PassportModule,
     JwtModule.register({
       secret: process.env.SECRET,
-      signOptions: { expiresIn: '2h' },
+      signOptions: { expiresIn: '2d' },
     }),
   ],
   controllers: [AuthController],

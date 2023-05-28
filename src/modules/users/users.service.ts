@@ -2,7 +2,6 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-  UseGuards,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,7 +9,6 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entity/user.entity';
 import { GetUserDto, updatePassDto } from './dto/get-user.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { UserResultDto } from './dto/userResult.dto';
 import { UserResult, ResultElem } from './entity/userResult.entity';
 import { v4 as uuidv4 } from 'uuid';
@@ -54,7 +52,7 @@ export class UsersService {
     const user = await this.userRepo.findOne({
       where: { [key]: value },
     });
-    if (!user) throw new NotFoundException('user not found');
+    if (!user) throw new NotFoundException('Пользователь не найден');
     return user;
   }
 
@@ -67,7 +65,6 @@ export class UsersService {
     return user.username;
   }
 
-  @UseGuards(JwtAuthGuard)
   async updatePassword(passworObj: updatePassDto) {
     const user = await this.userRepo.findOne({ where: { id: passworObj.id } });
     const hash = await bcrypt.hash(passworObj.newPass, 10);

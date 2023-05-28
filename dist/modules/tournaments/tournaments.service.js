@@ -27,7 +27,6 @@ const editors_entity_1 = require("./entities/editors.entity");
 const question_entity_1 = require("./entities/question.entity");
 const sourse_entity_1 = require("./entities/sourse.entity");
 const tournament_entity_1 = require("./entities/tournament.entity");
-const normalizeTournamentData_1 = require("./helpers/normalizeTournamentData");
 const parseLink_1 = require("./helpers/parseLink");
 let TournamentsService = class TournamentsService {
     constructor(tournamentRepo, editorRepo, questionRepo, sourceRepo) {
@@ -37,7 +36,7 @@ let TournamentsService = class TournamentsService {
         this.sourceRepo = sourceRepo;
     }
     async createTournamet(tournament) {
-        var e_1, _a, e_2, _b;
+        var _a, e_1, _b, _c, _d, e_2, _e, _f;
         const savedEditors = [];
         await Promise.all(tournament.editors.map(async (editor) => {
             const editorToSave = new editors_entity_1.Editor();
@@ -47,34 +46,48 @@ let TournamentsService = class TournamentsService {
         }));
         const savedQuestions = [];
         try {
-            for (var _c = __asyncValues(tournament.questions), _d; _d = await _c.next(), !_d.done;) {
-                const question = _d.value;
-                const savedSources = [];
+            for (var _g = true, _h = __asyncValues(tournament.questions), _j; _j = await _h.next(), _a = _j.done, !_a;) {
+                _c = _j.value;
+                _g = false;
                 try {
-                    for (var _e = (e_2 = void 0, __asyncValues(question.source)), _f; _f = await _e.next(), !_f.done;) {
-                        const source = _f.value;
-                        const sourceToSave = new sourse_entity_1.Source();
-                        sourceToSave.link = source;
-                        await this.sourceRepo.save(sourceToSave);
-                        savedSources.push(sourceToSave);
-                    }
-                }
-                catch (e_2_1) { e_2 = { error: e_2_1 }; }
-                finally {
+                    const question = _c;
+                    const savedSources = [];
                     try {
-                        if (_f && !_f.done && (_b = _e.return)) await _b.call(_e);
+                        for (var _k = true, _l = (e_2 = void 0, __asyncValues(question.source)), _m; _m = await _l.next(), _d = _m.done, !_d;) {
+                            _f = _m.value;
+                            _k = false;
+                            try {
+                                const source = _f;
+                                const sourceToSave = new sourse_entity_1.Source();
+                                sourceToSave.link = source;
+                                await this.sourceRepo.save(sourceToSave);
+                                savedSources.push(sourceToSave);
+                            }
+                            finally {
+                                _k = true;
+                            }
+                        }
                     }
-                    finally { if (e_2) throw e_2.error; }
+                    catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                    finally {
+                        try {
+                            if (!_k && !_d && (_e = _l.return)) await _e.call(_l);
+                        }
+                        finally { if (e_2) throw e_2.error; }
+                    }
+                    const newQuestion = this.questionRepo.create(Object.assign(Object.assign({}, question), { source: savedSources }));
+                    const savedQuestion = await this.questionRepo.save(newQuestion);
+                    savedQuestions.push(savedQuestion);
                 }
-                const newQuestion = this.questionRepo.create(Object.assign(Object.assign({}, question), { source: savedSources }));
-                const savedQuestion = await this.questionRepo.save(newQuestion);
-                savedQuestions.push(savedQuestion);
+                finally {
+                    _g = true;
+                }
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
         finally {
             try {
-                if (_d && !_d.done && (_a = _c.return)) await _a.call(_c);
+                if (!_g && !_a && (_b = _h.return)) await _b.call(_h);
             }
             finally { if (e_1) throw e_1.error; }
         }
@@ -90,7 +103,9 @@ let TournamentsService = class TournamentsService {
             where: { id },
             relations: ['editors', 'questions'],
         });
-        return tournament;
+        return tournament
+            ? this.normalizeTournament(tournament)
+            : 'Tournament not found';
     }
     async getRandomQuestions(n) {
         const qb = this.questionRepo.createQueryBuilder('question');
@@ -105,7 +120,7 @@ let TournamentsService = class TournamentsService {
                 relations: ['tournament'],
             });
         }));
-        return (0, normalizeTournamentData_1.normalizeQuestions)(random);
+        return this.normalizeQuestions(random);
     }
     async getRandomTournaments(n) {
         const qb = this.tournamentRepo.createQueryBuilder('tournament');
@@ -140,6 +155,21 @@ let TournamentsService = class TournamentsService {
             where: { uploaderUuid: uploaderId },
         });
         return tournaments;
+    }
+    normalizeQuestions(arr) {
+        return arr.map((el) => {
+            const normSources = el.source.map((el) => el.link);
+            return Object.assign(Object.assign({}, el), { source: normSources });
+        });
+    }
+    normalizeEditors(editors) {
+        return editors.map((el) => el.name);
+    }
+    normalizeTournament(res) {
+        const normEditors = this.normalizeEditors(res.editors);
+        const normQuestions = this.normalizeQuestions(res.questions);
+        const tournament = Object.assign(Object.assign({}, res), { editors: normEditors, questions: normQuestions });
+        return tournament;
     }
 };
 TournamentsService = __decorate([

@@ -61,7 +61,7 @@ export class TournamentsService {
     return savedTournament.id;
   }
 
-  async createTournamentByLink(link: string) {
+  async parseTournamentByLink(link: string) {
     return parseLink(link);
   }
 

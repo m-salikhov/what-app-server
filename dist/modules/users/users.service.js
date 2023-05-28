@@ -81,7 +81,7 @@ let UsersService = class UsersService {
         return 'Пароль изменён';
     }
     async createUserResult(userResultDto) {
-        var e_1, _a;
+        var _a, e_1, _b, _c;
         const resultCheck = await this.userResultRepo.findOne({
             where: {
                 userId: userResultDto.userId,
@@ -94,18 +94,25 @@ let UsersService = class UsersService {
         let tours = Math.max(...Object.keys(userResultDto.result).map((v) => +v));
         for (let i = 1; i <= tours; i++) {
             try {
-                for (var _b = (e_1 = void 0, __asyncValues(userResultDto.result[i])), _c; _c = await _b.next(), !_c.done;) {
-                    const resultElem = _c.value;
-                    let resultElemToSave = new userResult_entity_1.ResultElem();
-                    resultElemToSave = Object.assign(Object.assign(Object.assign({}, resultElemToSave), resultElem), { tour: i });
-                    let savedElem = await this.resultElemRepo.save(resultElemToSave);
-                    savedResultElems.push(savedElem);
+                for (var _d = true, _e = (e_1 = void 0, __asyncValues(userResultDto.result[i])), _f; _f = await _e.next(), _a = _f.done, !_a;) {
+                    _c = _f.value;
+                    _d = false;
+                    try {
+                        const resultElem = _c;
+                        let resultElemToSave = new userResult_entity_1.ResultElem();
+                        resultElemToSave = Object.assign(Object.assign(Object.assign({}, resultElemToSave), resultElem), { tour: i });
+                        let savedElem = await this.resultElemRepo.save(resultElemToSave);
+                        savedResultElems.push(savedElem);
+                    }
+                    finally {
+                        _d = true;
+                    }
                 }
             }
             catch (e_1_1) { e_1 = { error: e_1_1 }; }
             finally {
                 try {
-                    if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
+                    if (!_d && !_a && (_b = _e.return)) await _b.call(_e);
                 }
                 finally { if (e_1) throw e_1.error; }
             }

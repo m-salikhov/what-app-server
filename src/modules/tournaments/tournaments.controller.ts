@@ -13,9 +13,10 @@ export class TournamentsController {
     return this.tournamentsService.createTournamet(tournament);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('/createbylink')
-  async createTournamentByLink(@Body() linkDTO: { link: string }) {
-    return this.tournamentsService.createTournamentByLink(linkDTO.link);
+  async parseTournamentByLink(@Body() linkDTO: { link: string }) {
+    return this.tournamentsService.parseTournamentByLink(linkDTO.link);
   }
 
   @Get('/allshort')

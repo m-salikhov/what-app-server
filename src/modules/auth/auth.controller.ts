@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { Response } from 'express';
@@ -22,7 +14,7 @@ export class AuthController {
     const token = await this.authService.login(req.user);
     response.cookie('access_token', token.access_token, {
       httpOnly: true,
-      maxAge: 259200000,
+      maxAge: 172800000,
       sameSite: 'none',
       secure: true,
     });
@@ -36,20 +28,12 @@ export class AuthController {
     const user = await this.authService.getUser(req.user.id);
     response.cookie('access_token', token.access_token, {
       httpOnly: true,
-      maxAge: 259200000,
+      maxAge: 172800000,
       sameSite: 'none',
       secure: true,
     });
     return user;
   }
-
-  // @UseGuards(JwtAuthGuard)
-  // @Get('protected')
-  // test(@Req() req, @Res({ passthrough: true }) response: Response) {
-  //   console.log(req.cookies);
-  //   response.cookie('key', 'value');
-  //   return req.user;
-  // }
 
   @UseGuards(JwtAuthGuard)
   @Get('logout')

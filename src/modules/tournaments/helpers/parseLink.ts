@@ -39,12 +39,6 @@ const parseLink = async (link: string) => {
       type: 'regular',
     };
   });
-  //добавление картинки, когда картинка лежит в первом p без класса razdatka
-  $qsText.each((i, elem) => {
-    if ($(elem).find('img').attr('src')) {
-      questions[i].add = $(elem).find('img').attr('src');
-    }
-  });
 
   //Добавление номера вопроса. Нельзя использовать просто индекс так как бывает вопросы 0, 00 и т.п.
   const $Question = $('.Question');
@@ -52,6 +46,13 @@ const parseLink = async (link: string) => {
     const n = +$(elem).text().slice(7, -1);
     questions[i].qNumber = n;
     if (n < 1) questions[i].type = 'outside';
+  });
+
+  //добавление картинки, когда картинка лежит в первом p без класса razdatka
+  $qsText.each((i, elem) => {
+    if ($(elem).find('img').attr('src')) {
+      questions[i].add = $(elem).find('img').attr('src');
+    }
   });
 
   //обработка вопроса с раздаткой, если есть класс razdatka
@@ -74,7 +75,7 @@ const parseLink = async (link: string) => {
     //Добавляет текст (и картинка и без)
     if (razdatka.length) {
       const questionChildNodes = elem.childNodes;
-      questionChildNodes.forEach((v, k) => {
+      questionChildNodes.forEach((v) => {
         if (v.type === 'text' && $(v).text().trim()) {
           questions[i].text = $(v).text().trim();
         }
@@ -98,6 +99,7 @@ const parseLink = async (link: string) => {
             .replace(/\s\s+/g, ' ')
             .trim();
           break;
+
         case AnsClasses.AlterAnswer:
           questions[i].alterAnswer = $(v)
             .text()
@@ -105,6 +107,7 @@ const parseLink = async (link: string) => {
             .replace(/\s\s+/g, ' ')
             .trim();
           break;
+
         case AnsClasses.Author:
           questions[i].author = $(v)
             .text()
@@ -112,6 +115,7 @@ const parseLink = async (link: string) => {
             .replace(/\s\s+/g, ' ')
             .trim();
           break;
+
         case AnsClasses.Source:
           const sourceStr = $(v)
             .text()
@@ -119,6 +123,7 @@ const parseLink = async (link: string) => {
             .replace(/\s\s+/g, ' ')
             .trim();
 
+          //если источников больше одного
           const flag = /^1.\s/.test(sourceStr);
           if (!flag) {
             questions[i].source = [sourceStr];
@@ -131,8 +136,8 @@ const parseLink = async (link: string) => {
 
             questions[i].source = sourceArrNorm;
           }
-
           break;
+
         case AnsClasses.Comment:
           questions[i].comment = $(v)
             .text()
@@ -155,8 +160,8 @@ const parseLink = async (link: string) => {
   //кол-во туров в турнире. h2 используется только для разбиения по турам
   let tours = 0;
   const $tours = $('h2');
-  $tours.each((i, v) => {
-    const tourText = $(v).text();
+  $tours.each((i, elem) => {
+    const tourText = $(elem).text();
     if (tourText.match(/тур|блок/gi)) tours++;
   });
 
@@ -199,6 +204,7 @@ const parseLink = async (link: string) => {
     date = Date.parse(dateTextSplited.reverse().join('.'));
   }
 
+  //сборка турнира
   const t: Omit<TournamentDto, 'uploaderUuid' | 'uploader'> = {
     title,
     date,

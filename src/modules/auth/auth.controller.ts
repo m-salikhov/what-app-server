@@ -1,8 +1,13 @@
 import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { JwtAuthGuard } from './guards/jwt.guard';
+import { User } from '../users/entity/user.entity';
+
+interface RequestAuth extends Request {
+  user: User;
+}
 
 @Controller('auth')
 export class AuthController {
@@ -10,8 +15,12 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Req() req, @Res({ passthrough: true }) response: Response) {
+  async login(
+    @Req() req: RequestAuth,
+    @Res({ passthrough: true }) response: Response,
+  ) {
     const token = await this.authService.login(req.user);
+
     response.cookie('access_token', token.access_token, {
       httpOnly: true,
       maxAge: 172800000,
@@ -23,7 +32,10 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('logfirst')
-  async loginFirst(@Req() req, @Res({ passthrough: true }) response: Response) {
+  async loginFirst(
+    @Req() req: RequestAuth,
+    @Res({ passthrough: true }) response: Response,
+  ) {
     const token = await this.authService.login(req.user);
     const user = await this.authService.getUser(req.user.id);
     response.cookie('access_token', token.access_token, {
@@ -37,7 +49,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('logout')
-  logout(@Res({ passthrough: true }) response: Response, @Req() req) {
+  logout(@Res({ passthrough: true }) response: Response) {
     response.cookie('access_token', '', {
       httpOnly: true,
       maxAge: 1_000,

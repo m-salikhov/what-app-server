@@ -139,18 +139,18 @@ export class TournamentsService {
     return tournaments;
   }
 
-  normalizeQuestions(arr: Question[]): QuestionDto[] {
+  private normalizeQuestions(arr: Question[]): QuestionDto[] {
     return arr.map((el) => {
       const normSources = el.source.map((el) => el.link);
       return { ...el, source: normSources };
     });
   }
 
-  normalizeEditors(editors: Editor[]): string[] {
+  private normalizeEditors(editors: Editor[]): string[] {
     return editors.map((el) => el.name);
   }
 
-  normalizeTournament(res: Tournament) {
+  private normalizeTournament(res: Tournament) {
     const normEditors = this.normalizeEditors(res.editors);
     const normQuestions = this.normalizeQuestions(res.questions);
     const tournament: TournamentDto = {

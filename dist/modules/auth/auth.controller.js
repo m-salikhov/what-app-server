@@ -25,7 +25,7 @@ let AuthController = class AuthController {
         const token = await this.authService.login(req.user);
         response.cookie('access_token', token.access_token, {
             httpOnly: true,
-            maxAge: 259200000,
+            maxAge: 172800000,
             sameSite: 'none',
             secure: true,
         });
@@ -36,13 +36,13 @@ let AuthController = class AuthController {
         const user = await this.authService.getUser(req.user.id);
         response.cookie('access_token', token.access_token, {
             httpOnly: true,
-            maxAge: 259200000,
+            maxAge: 172800000,
             sameSite: 'none',
             secure: true,
         });
         return user;
     }
-    logout(response, req) {
+    logout(response) {
         response.cookie('access_token', '', {
             httpOnly: true,
             maxAge: 1000,
@@ -74,9 +74,8 @@ __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Get)('logout'),
     __param(0, (0, common_1.Res)({ passthrough: true })),
-    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "logout", null);
 AuthController = __decorate([

@@ -20,7 +20,9 @@ export class UsersController {
 
   @Post()
   async createUser(@Body() user: CreateUserDto) {
-    return this.usersService.createUser(user);
+    const { password, ...newUserWithoutPass } =
+      await this.usersService.createUser(user);
+    return newUserWithoutPass;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -38,31 +40,31 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Put()
-  updateUser(@Body() passObj: updatePassDto) {
-    return this.usersService.updatePassword(passObj);
+  async updateUser(@Body() passObj: updatePassDto) {
+    return await this.usersService.updatePassword(passObj);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('/userresult')
   async createTournament(@Body() userResultDto: UserResultDto) {
-    return this.usersService.createUserResult(userResultDto);
+    return await this.usersService.createUserResult(userResultDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('/userresultfull')
   async getUserResultFull(@Body() idDto: { id: string }) {
-    return this.usersService.getUserResultFull(idDto.id);
+    return await this.usersService.getUserResultFull(idDto.id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('/userresultshort')
   async getUserResultShort(@Body() idDto: { id: string }) {
-    return this.usersService.getUserResultShort(idDto.id);
+    return await this.usersService.getUserResultShort(idDto.id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  delOneCar(@Param('id') id: string) {
-    return this.usersService.deleteUser(id);
+  async delOneCar(@Param('id') id: string) {
+    return await this.usersService.deleteUser(id);
   }
 }

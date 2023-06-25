@@ -9,7 +9,7 @@ export declare class UsersService {
     private userResultRepo;
     private resultElemRepo;
     constructor(userRepo: Repository<User>, userResultRepo: Repository<UserResult>, resultElemRepo: Repository<ResultElem>);
-    createUser(user: CreateUserDto): Promise<Omit<User, 'password'>>;
+    createUser(user: CreateUserDto): Promise<User>;
     getUser(getUserDto: GetUserDto): Promise<User>;
     getUsernameByUUID(uuid: string): Promise<string>;
     updatePassword(passworObj: updatePassDto): Promise<string>;

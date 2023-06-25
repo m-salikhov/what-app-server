@@ -12,40 +12,17 @@ const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
-const user_entity_1 = require("./modules/users/entity/user.entity");
 const users_module_1 = require("./modules/users/users.module");
 const tournaments_module_1 = require("./modules/tournaments/tournaments.module");
-const tournament_entity_1 = require("./modules/tournaments/entities/tournament.entity");
-const editors_entity_1 = require("./modules/tournaments/entities/editors.entity");
-const question_entity_1 = require("./modules/tournaments/entities/question.entity");
-const sourse_entity_1 = require("./modules/tournaments/entities/sourse.entity");
 const auth_module_1 = require("./modules/auth/auth.module");
-const userResult_entity_1 = require("./modules/users/entity/userResult.entity");
+const typeorm_datasource_1 = require("./typeorm.datasource");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot({ isGlobal: true }),
-            typeorm_1.TypeOrmModule.forRoot({
-                autoLoadEntities: true,
-                type: 'mysql',
-                host: process.env.HOST,
-                port: 3306,
-                username: process.env.DB_USERNAME,
-                password: process.env.DB_PASSWORD,
-                database: process.env.DB_NAME,
-                entities: [
-                    tournament_entity_1.Tournament,
-                    user_entity_1.User,
-                    editors_entity_1.Editor,
-                    question_entity_1.Question,
-                    sourse_entity_1.Source,
-                    userResult_entity_1.UserResult,
-                    userResult_entity_1.ResultElem,
-                ],
-                synchronize: true,
-            }),
+            typeorm_1.TypeOrmModule.forRoot(typeorm_datasource_1.dataSourceOptions),
             users_module_1.UsersModule,
             tournaments_module_1.TournamentsModule,
             auth_module_1.AuthModule,

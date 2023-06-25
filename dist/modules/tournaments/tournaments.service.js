@@ -95,7 +95,7 @@ let TournamentsService = class TournamentsService {
         const savedTournament = await this.tournamentRepo.save(newTournament);
         return savedTournament.id;
     }
-    async createTournamentByLink(link) {
+    async parseTournamentByLink(link) {
         return (0, parseLink_1.default)(link);
     }
     async getTournamentById(id) {

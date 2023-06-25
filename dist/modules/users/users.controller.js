@@ -25,6 +25,7 @@ var __rest = (this && this.__rest) || function (s, e) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
+const jwt_guard_1 = require("../auth/guards/jwt.guard");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const get_user_dto_1 = require("./dto/get-user.dto");
 const userResult_dto_1 = require("./dto/userResult.dto");
@@ -33,47 +34,29 @@ let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
+    async createUser(user) {
+        const _a = await this.usersService.createUser(user), { password } = _a, newUserWithoutPass = __rest(_a, ["password"]);
+        return newUserWithoutPass;
+    }
     async getLastTen(uuid) {
         return this.usersService.getUsernameByUUID(uuid);
     }
+    async updateUser(passObj) {
+        return await this.usersService.updatePassword(passObj);
+    }
     async createTournament(userResultDto) {
-        return this.usersService.createUserResult(userResultDto);
-    }
-    async createUser(user) {
-        return this.usersService.createUser(user);
-    }
-    async getUser(getUserDto) {
-        const _user = await this.usersService.getUser(getUserDto);
-        const { password } = _user, user = __rest(_user, ["password"]);
-        return user;
-    }
-    updateUser(passObj) {
-        return this.usersService.updatePassword(passObj);
+        return await this.usersService.createUserResult(userResultDto);
     }
     async getUserResultFull(idDto) {
-        return this.usersService.getUserResultFull(idDto.id);
+        return await this.usersService.getUserResultFull(idDto.id);
     }
     async getUserResultShort(idDto) {
-        return this.usersService.getUserResultShort(idDto.id);
+        return await this.usersService.getUserResultShort(idDto.id);
     }
-    delOneCar(id) {
-        return this.usersService.deleteUser(id);
+    async delOneCar(id) {
+        return await this.usersService.deleteUser(id);
     }
 };
-__decorate([
-    (0, common_1.Get)('/username/:uuid'),
-    __param(0, (0, common_1.Param)('uuid')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], UsersController.prototype, "getLastTen", null);
-__decorate([
-    (0, common_1.Post)('/userresult'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [userResult_dto_1.UserResultDto]),
-    __metadata("design:returntype", Promise)
-], UsersController.prototype, "createTournament", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
@@ -82,20 +65,31 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "createUser", null);
 __decorate([
-    (0, common_1.Post)('getuser'),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('/username/:uuid'),
+    __param(0, (0, common_1.Param)('uuid')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [get_user_dto_1.GetUserDto]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "getUser", null);
+], UsersController.prototype, "getLastTen", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Put)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [get_user_dto_1.updatePassDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UsersController.prototype, "updateUser", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
+    (0, common_1.Post)('/userresult'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [userResult_dto_1.UserResultDto]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "createTournament", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Post)('/userresultfull'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -103,6 +97,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getUserResultFull", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Post)('/userresultshort'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -110,11 +105,12 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getUserResultShort", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UsersController.prototype, "delOneCar", null);
 UsersController = __decorate([
     (0, common_1.Controller)('users'),

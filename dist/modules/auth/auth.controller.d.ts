@@ -1,9 +1,14 @@
 import { AuthService } from './auth.service';
-import { Response } from 'express';
+import { Response, Request } from 'express';
+import { User } from '../users/entity/user.entity';
+interface RequestAuth extends Request {
+    user: User;
+}
 export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
-    login(req: any, response: Response): Promise<any>;
-    loginFirst(req: any, response: Response): Promise<import("../users/entity/user.entity").User>;
-    logout(response: Response, req: any): string;
+    login(req: RequestAuth, response: Response): Promise<User>;
+    loginFirst(req: RequestAuth, response: Response): Promise<User>;
+    logout(response: Response): string;
 }
+export {};

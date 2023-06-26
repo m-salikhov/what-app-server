@@ -75,18 +75,18 @@ export class TournamentsService {
       : 'Tournament not found';
   }
 
-  async getRandomQuestions(n: string) {
+  async getRandomQuestions(n: number) {
     const qb = this.questionRepo.createQueryBuilder('question');
 
     const randomIds = await qb
       .select('question.id')
       .orderBy('RAND()')
-      .limit(+n)
+      .limit(n)
       .getMany();
 
     const random = await Promise.all(
-      randomIds.map(async (v) => {
-        return await this.questionRepo.findOne({
+      randomIds.map((v) => {
+        return this.questionRepo.findOne({
           where: { id: v.id },
           relations: ['tournament'],
         });
@@ -96,13 +96,13 @@ export class TournamentsService {
     return this.normalizeQuestions(random);
   }
 
-  async getRandomTournaments(n: string) {
+  async getRandomTournaments(n: number) {
     const qb = this.tournamentRepo.createQueryBuilder('tournament');
 
     const randomTitles = await qb
       .select('tournament.title')
       .orderBy('RAND()')
-      .limit(+n)
+      .limit(n)
       .getMany();
 
     const randomTitlesNormalize = randomTitles.map((v) => v.title);

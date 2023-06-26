@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { TournamentDto } from './dto/tournament.dto';
 import { TournamentsService } from './tournaments.service';
@@ -24,28 +32,28 @@ export class TournamentsController {
     return this.tournamentsService.getAllTournamentsShort();
   }
 
-  @Get('/allbyuploader/:id')
-  async getTournamentsByUploader(@Param('id') id: string) {
-    return this.tournamentsService.getTournamentsByUploader(id);
+  @Get('/allbyuploader/:uuid')
+  async getTournamentsByUploader(@Param('uuid') uuid: string) {
+    return this.tournamentsService.getTournamentsByUploader(uuid);
   }
 
   @Get('/last/:n')
-  async getLastTen(@Param('n') n: string) {
-    return this.tournamentsService.getLastAddTournaments(+n);
+  async getLastTen(@Param('n', ParseIntPipe) n: number) {
+    return this.tournamentsService.getLastAddTournaments(n);
   }
 
   @Get('/random/:n')
-  async getRandomQuestions(@Param('n') n: string) {
+  async getRandomQuestions(@Param('n', ParseIntPipe) n: number) {
     return this.tournamentsService.getRandomQuestions(n);
   }
 
   @Get(':id')
-  async getTournamentById(@Param('id') id: string) {
-    return this.tournamentsService.getTournamentById(+id);
+  async getTournamentById(@Param('id', ParseIntPipe) id: number) {
+    return this.tournamentsService.getTournamentById(id);
   }
 
   @Get('/randomt/:n')
-  async getRandomTournaments(@Param('n') n: string) {
+  async getRandomTournaments(@Param('n', ParseIntPipe) n: number) {
     return this.tournamentsService.getRandomTournaments(n);
   }
 }

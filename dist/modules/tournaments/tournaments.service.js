@@ -112,10 +112,10 @@ let TournamentsService = class TournamentsService {
         const randomIds = await qb
             .select('question.id')
             .orderBy('RAND()')
-            .limit(+n)
+            .limit(n)
             .getMany();
-        const random = await Promise.all(randomIds.map(async (v) => {
-            return await this.questionRepo.findOne({
+        const random = await Promise.all(randomIds.map((v) => {
+            return this.questionRepo.findOne({
                 where: { id: v.id },
                 relations: ['tournament'],
             });
@@ -127,7 +127,7 @@ let TournamentsService = class TournamentsService {
         const randomTitles = await qb
             .select('tournament.title')
             .orderBy('RAND()')
-            .limit(+n)
+            .limit(n)
             .getMany();
         const randomTitlesNormalize = randomTitles.map((v) => v.title);
         return randomTitlesNormalize;

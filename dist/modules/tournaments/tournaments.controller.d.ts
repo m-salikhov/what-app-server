@@ -6,9 +6,9 @@ export declare class TournamentsController {
     createTournament(tournament: TournamentDto): Promise<number>;
     parseTournamentByLink(link: string): Promise<Omit<TournamentDto, "uploaderUuid" | "uploader">>;
     getAllTournamentsShort(): Promise<import("./entities/tournament.entity").Tournament[]>;
-    getTournamentsByUploader(id: string): Promise<import("./entities/tournament.entity").Tournament[]>;
-    getLastTen(n: string): Promise<number | import("./entities/tournament.entity").Tournament[]>;
-    getRandomQuestions(n: string): Promise<import("./dto/question.dto").QuestionDto[]>;
-    getTournamentById(id: string): Promise<TournamentDto | "Tournament not found">;
-    getRandomTournaments(n: string): Promise<string[]>;
+    getTournamentsByUploader(uuid: string): Promise<import("./entities/tournament.entity").Tournament[]>;
+    getLastTen(n: number): Promise<number | import("./entities/tournament.entity").Tournament[]>;
+    getRandomQuestions(n: number): Promise<import("./dto/question.dto").QuestionDto[]>;
+    getTournamentById(id: number): Promise<TournamentDto | "Tournament not found">;
+    getRandomTournaments(n: number): Promise<string[]>;
 }

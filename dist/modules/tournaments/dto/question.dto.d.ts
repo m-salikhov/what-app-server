@@ -1,6 +1,5 @@
 export declare class QuestionDto {
-    id?: number;
-    type?: 'regular' | 'double' | 'triple' | 'other' | 'outside';
+    type: 'regular' | 'double' | 'triple' | 'other' | 'outside';
     qNumber: number;
     tourNumber: number;
     add?: string;

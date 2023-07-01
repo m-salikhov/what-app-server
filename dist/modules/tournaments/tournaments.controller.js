@@ -30,17 +30,17 @@ let TournamentsController = class TournamentsController {
     async getAllTournamentsShort() {
         return this.tournamentsService.getAllTournamentsShort();
     }
-    async getTournamentsByUploader(id) {
-        return this.tournamentsService.getTournamentsByUploader(id);
+    async getTournamentsByUploader(uuid) {
+        return this.tournamentsService.getTournamentsByUploader(uuid);
     }
     async getLastTen(n) {
-        return this.tournamentsService.getLastAddTournaments(+n);
+        return this.tournamentsService.getLastAddTournaments(n);
     }
     async getRandomQuestions(n) {
         return this.tournamentsService.getRandomQuestions(n);
     }
     async getTournamentById(id) {
-        return this.tournamentsService.getTournamentById(+id);
+        return this.tournamentsService.getTournamentById(id);
     }
     async getRandomTournaments(n) {
         return this.tournamentsService.getRandomTournaments(n);
@@ -69,38 +69,38 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], TournamentsController.prototype, "getAllTournamentsShort", null);
 __decorate([
-    (0, common_1.Get)('/allbyuploader/:id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Get)('/allbyuploader/:uuid'),
+    __param(0, (0, common_1.Param)('uuid')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], TournamentsController.prototype, "getTournamentsByUploader", null);
 __decorate([
     (0, common_1.Get)('/last/:n'),
-    __param(0, (0, common_1.Param)('n')),
+    __param(0, (0, common_1.Param)('n', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], TournamentsController.prototype, "getLastTen", null);
 __decorate([
     (0, common_1.Get)('/random/:n'),
-    __param(0, (0, common_1.Param)('n')),
+    __param(0, (0, common_1.Param)('n', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], TournamentsController.prototype, "getRandomQuestions", null);
 __decorate([
     (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], TournamentsController.prototype, "getTournamentById", null);
 __decorate([
     (0, common_1.Get)('/randomt/:n'),
-    __param(0, (0, common_1.Param)('n')),
+    __param(0, (0, common_1.Param)('n', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], TournamentsController.prototype, "getRandomTournaments", null);
 TournamentsController = __decorate([

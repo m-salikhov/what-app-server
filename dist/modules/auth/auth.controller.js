@@ -25,7 +25,7 @@ let AuthController = class AuthController {
         const token = await this.authService.login(req.user);
         response.cookie('access_token', token.access_token, {
             httpOnly: true,
-            maxAge: 172800000,
+            maxAge: Number(process.env.COOKIES_MAX_AGE),
             sameSite: 'none',
             secure: true,
         });
@@ -36,7 +36,7 @@ let AuthController = class AuthController {
         const user = await this.authService.getUser(req.user.id);
         response.cookie('access_token', token.access_token, {
             httpOnly: true,
-            maxAge: 172800000,
+            maxAge: Number(process.env.COOKIES_MAX_AGE),
             sameSite: 'none',
             secure: true,
         });

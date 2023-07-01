@@ -1,6 +1,5 @@
 import { QuestionDto } from './question.dto';
 export declare class TournamentDto {
-    id?: number;
     title: string;
     date: number;
     questionsQuantity: number;

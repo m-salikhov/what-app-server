@@ -14,8 +14,8 @@ export declare class TournamentsService {
     createTournamet(tournament: TournamentDto): Promise<number>;
     parseTournamentByLink(link: string): Promise<Omit<TournamentDto, "uploaderUuid" | "uploader">>;
     getTournamentById(id: number): Promise<TournamentDto | "Tournament not found">;
-    getRandomQuestions(n: string): Promise<QuestionDto[]>;
-    getRandomTournaments(n: string): Promise<string[]>;
+    getRandomQuestions(n: number): Promise<QuestionDto[]>;
+    getRandomTournaments(n: number): Promise<string[]>;
     getLastAddTournaments(n: number): Promise<number | Tournament[]>;
     getAllTournamentsShort(): Promise<Tournament[]>;
     getTournamentsByUploader(uploaderId: string): Promise<Tournament[]>;

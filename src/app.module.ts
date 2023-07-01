@@ -10,7 +10,6 @@ import { dataSourceOptions } from './typeorm.datasource';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(dataSourceOptions),
     UsersModule,
     TournamentsModule,

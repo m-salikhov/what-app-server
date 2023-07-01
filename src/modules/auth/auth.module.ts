@@ -15,6 +15,7 @@ import { ResultElem, UserResult } from '../users/entity/userResult.entity';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, UserResult, ResultElem]),
+    ConfigModule.forRoot(),
     UsersModule,
     PassportModule,
     JwtModule.register({

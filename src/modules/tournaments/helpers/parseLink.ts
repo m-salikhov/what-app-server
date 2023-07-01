@@ -151,6 +151,27 @@ const parseLink = async (link: string) => {
     });
   });
 
+  //Чистка текста вопроса от фразы "Раздаточный материал" при нестандартной вёрстке
+  questions.forEach((q, i) => {
+    const startString = q.text.indexOf('Раздаточный материал: ');
+    if (startString === -1) return;
+
+    const textWithAddBlock: string = q.text.slice(
+      startString + 'Раздаточный материал: '.length,
+    );
+
+    const haveAdd = !textWithAddBlock.includes('[ ]');
+
+    if (!haveAdd) {
+      questions[i].text = textWithAddBlock.slice(3).trim();
+      return;
+    }
+
+    const endAddBlock = textWithAddBlock.indexOf(']');
+    const qAdd = textWithAddBlock.slice(1, endAddBlock).trim();
+    questions[i].add = qAdd;
+  });
+
   //количество зачетных вопросов в турнире
   let questionsQuantity = 0;
   questions.forEach((v) => {

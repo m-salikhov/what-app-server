@@ -15,12 +15,11 @@ import { ResultElem, UserResult } from '../users/entity/userResult.entity';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, UserResult, ResultElem]),
-    ConfigModule.forRoot(),
     UsersModule,
     PassportModule,
     JwtModule.register({
       secret: process.env.SECRET,
-      signOptions: { expiresIn: '2d' },
+      signOptions: { expiresIn: process.env.JWT_EXPIRED },
     }),
   ],
   controllers: [AuthController],

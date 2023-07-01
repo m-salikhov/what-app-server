@@ -23,7 +23,7 @@ export class AuthController {
 
     response.cookie('access_token', token.access_token, {
       httpOnly: true,
-      maxAge: 172800000,
+      maxAge: Number(process.env.COOKIES_MAX_AGE),
       sameSite: 'none',
       secure: true,
     });
@@ -40,7 +40,7 @@ export class AuthController {
     const user = await this.authService.getUser(req.user.id);
     response.cookie('access_token', token.access_token, {
       httpOnly: true,
-      maxAge: 172800000,
+      maxAge: Number(process.env.COOKIES_MAX_AGE),
       sameSite: 'none',
       secure: true,
     });
@@ -52,7 +52,7 @@ export class AuthController {
   logout(@Res({ passthrough: true }) response: Response) {
     response.cookie('access_token', '', {
       httpOnly: true,
-      maxAge: 1_000,
+      maxAge: 1000,
       sameSite: 'none',
       secure: true,
     });

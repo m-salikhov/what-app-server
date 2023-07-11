@@ -16,24 +16,8 @@ enum AnsClasses {
 const parseLink = async (link: string) => {
   const questions: Omit<QuestionDto, 'id'>[] = [];
 
-  // const html = await axios.get(link).then((res) => res.data);
-  // const $ = cheerio.load(html);
-  get('https://encrypted.google.com/', (res) => {
-    console.log('statusCode:', res.statusCode);
-    console.log('headers:', res.headers);
-
-    res.on('data', (d) => {
-      process.stdout.write(d);
-    });
-  }).on('error', (e) => {
-    console.error(e);
-  });
-
-  const response = await fetch(link);
-  // Convert the response into text
-  const body = await response.text();
-
-  const $ = cheerio.load(body);
+  const html = await axios.get(link).then((res) => res.data);
+  const $ = cheerio.load(html);
 
   //название турнира
   const title = $('h1').text();

@@ -13,6 +13,7 @@ exports.LoginUserDto = void 0;
 const class_validator_1 = require("class-validator");
 class LoginUserDto {
 }
+exports.LoginUserDto = LoginUserDto;
 __decorate([
     (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
@@ -21,5 +22,4 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], LoginUserDto.prototype, "password", void 0);
-exports.LoginUserDto = LoginUserDto;
 //# sourceMappingURL=login-user.dto.js.map

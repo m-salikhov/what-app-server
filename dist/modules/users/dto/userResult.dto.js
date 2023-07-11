@@ -13,6 +13,7 @@ exports.UserResultDto = void 0;
 const class_validator_1 = require("class-validator");
 class UserResultDto {
 }
+exports.UserResultDto = UserResultDto;
 __decorate([
     (0, class_validator_1.IsUUID)(),
     __metadata("design:type", String)
@@ -33,5 +34,4 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
 ], UserResultDto.prototype, "resultNumber", void 0);
-exports.UserResultDto = UserResultDto;
 //# sourceMappingURL=userResult.dto.js.map

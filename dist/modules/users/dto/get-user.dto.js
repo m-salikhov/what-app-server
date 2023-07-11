@@ -13,6 +13,7 @@ exports.updatePassDto = exports.GetUserDto = void 0;
 const class_validator_1 = require("class-validator");
 class GetUserDto {
 }
+exports.GetUserDto = GetUserDto;
 __decorate([
     (0, class_validator_1.IsUUID)(),
     __metadata("design:type", String)
@@ -25,9 +26,9 @@ __decorate([
     (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
 ], GetUserDto.prototype, "email", void 0);
-exports.GetUserDto = GetUserDto;
 class updatePassDto {
 }
+exports.updatePassDto = updatePassDto;
 __decorate([
     (0, class_validator_1.IsUUID)(),
     __metadata("design:type", String)
@@ -36,5 +37,4 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], updatePassDto.prototype, "newPass", void 0);
-exports.updatePassDto = updatePassDto;
 //# sourceMappingURL=get-user.dto.js.map

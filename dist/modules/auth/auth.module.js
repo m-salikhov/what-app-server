@@ -20,9 +20,9 @@ const local_strategy_1 = require("./strategies/local.strategy");
 const passport_1 = require("@nestjs/passport");
 const jwt_strategy_1 = require("./strategies/jwt.strategy");
 const userResult_entity_1 = require("../users/entity/userResult.entity");
-let AuthModule = class AuthModule {
+let AuthModule = exports.AuthModule = class AuthModule {
 };
-AuthModule = __decorate([
+exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
             typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, userResult_entity_1.UserResult, userResult_entity_1.ResultElem]),
@@ -38,5 +38,4 @@ AuthModule = __decorate([
         providers: [auth_service_1.AuthService, users_service_1.UsersService, local_strategy_1.LocalStrategy, jwt_strategy_1.JwtStrategy],
     })
 ], AuthModule);
-exports.AuthModule = AuthModule;
 //# sourceMappingURL=auth.module.js.map

@@ -15,9 +15,9 @@ const users_module_1 = require("./modules/users/users.module");
 const tournaments_module_1 = require("./modules/tournaments/tournaments.module");
 const auth_module_1 = require("./modules/auth/auth.module");
 const typeorm_datasource_1 = require("./typeorm.datasource");
-let AppModule = class AppModule {
+let AppModule = exports.AppModule = class AppModule {
 };
-AppModule = __decorate([
+exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             typeorm_1.TypeOrmModule.forRoot(typeorm_datasource_1.dataSourceOptions),
@@ -29,5 +29,4 @@ AppModule = __decorate([
         providers: [app_service_1.AppService],
     })
 ], AppModule);
-exports.AppModule = AppModule;
 //# sourceMappingURL=app.module.js.map

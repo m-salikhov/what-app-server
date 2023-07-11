@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Editor = void 0;
 const typeorm_1 = require("typeorm");
-let Editor = class Editor {
+let Editor = exports.Editor = class Editor {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
@@ -21,8 +21,7 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Editor.prototype, "name", void 0);
-Editor = __decorate([
+exports.Editor = Editor = __decorate([
     (0, typeorm_1.Entity)()
 ], Editor);
-exports.Editor = Editor;
 //# sourceMappingURL=editors.entity.js.map

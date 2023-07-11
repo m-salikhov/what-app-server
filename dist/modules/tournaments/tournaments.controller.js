@@ -17,7 +17,7 @@ const common_1 = require("@nestjs/common");
 const jwt_guard_1 = require("../auth/guards/jwt.guard");
 const tournament_dto_1 = require("./dto/tournament.dto");
 const tournaments_service_1 = require("./tournaments.service");
-let TournamentsController = class TournamentsController {
+let TournamentsController = exports.TournamentsController = class TournamentsController {
     constructor(tournamentsService) {
         this.tournamentsService = tournamentsService;
     }
@@ -103,9 +103,8 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], TournamentsController.prototype, "getRandomTournaments", null);
-TournamentsController = __decorate([
+exports.TournamentsController = TournamentsController = __decorate([
     (0, common_1.Controller)('tournaments'),
     __metadata("design:paramtypes", [tournaments_service_1.TournamentsService])
 ], TournamentsController);
-exports.TournamentsController = TournamentsController;
 //# sourceMappingURL=tournaments.controller.js.map

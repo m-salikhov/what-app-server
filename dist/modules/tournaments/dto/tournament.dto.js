@@ -13,6 +13,7 @@ exports.getTournametDto = exports.TournamentDto = void 0;
 const class_validator_1 = require("class-validator");
 class TournamentDto {
 }
+exports.TournamentDto = TournamentDto;
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
@@ -49,7 +50,6 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], TournamentDto.prototype, "uploader", void 0);
-exports.TournamentDto = TournamentDto;
 class getTournametDto {
 }
 exports.getTournametDto = getTournametDto;

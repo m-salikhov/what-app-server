@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResultElem = exports.UserResult = void 0;
 const typeorm_1 = require("typeorm");
-let UserResult = class UserResult {
+let UserResult = exports.UserResult = class UserResult {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
@@ -45,11 +45,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => ResultElem, (elem) => elem.userResult),
     __metadata("design:type", Array)
 ], UserResult.prototype, "result", void 0);
-UserResult = __decorate([
+exports.UserResult = UserResult = __decorate([
     (0, typeorm_1.Entity)()
 ], UserResult);
-exports.UserResult = UserResult;
-let ResultElem = class ResultElem {
+let ResultElem = exports.ResultElem = class ResultElem {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
@@ -73,8 +72,7 @@ __decorate([
     }),
     __metadata("design:type", UserResult)
 ], ResultElem.prototype, "userResult", void 0);
-ResultElem = __decorate([
+exports.ResultElem = ResultElem = __decorate([
     (0, typeorm_1.Entity)()
 ], ResultElem);
-exports.ResultElem = ResultElem;
 //# sourceMappingURL=userResult.entity.js.map

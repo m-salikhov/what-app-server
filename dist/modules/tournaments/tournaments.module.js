@@ -15,14 +15,13 @@ const sourse_entity_1 = require("./entities/sourse.entity");
 const tournament_entity_1 = require("./entities/tournament.entity");
 const tournaments_controller_1 = require("./tournaments.controller");
 const tournaments_service_1 = require("./tournaments.service");
-let TournamentsModule = class TournamentsModule {
+let TournamentsModule = exports.TournamentsModule = class TournamentsModule {
 };
-TournamentsModule = __decorate([
+exports.TournamentsModule = TournamentsModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([tournament_entity_1.Tournament, editors_entity_1.Editor, sourse_entity_1.Source, question_entity_1.Question])],
         controllers: [tournaments_controller_1.TournamentsController],
         providers: [tournaments_service_1.TournamentsService],
     })
 ], TournamentsModule);
-exports.TournamentsModule = TournamentsModule;
 //# sourceMappingURL=tournaments.module.js.map

@@ -30,7 +30,7 @@ const create_user_dto_1 = require("./dto/create-user.dto");
 const get_user_dto_1 = require("./dto/get-user.dto");
 const userResult_dto_1 = require("./dto/userResult.dto");
 const users_service_1 = require("./users.service");
-let UsersController = class UsersController {
+let UsersController = exports.UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
@@ -112,9 +112,8 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "delOneCar", null);
-UsersController = __decorate([
+exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [users_service_1.UsersService])
 ], UsersController);
-exports.UsersController = UsersController;
 //# sourceMappingURL=users.controller.js.map

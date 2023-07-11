@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Source = void 0;
 const typeorm_1 = require("typeorm");
 const question_entity_1 = require("./question.entity");
-let Source = class Source {
+let Source = exports.Source = class Source {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
@@ -28,8 +28,7 @@ __decorate([
     }),
     __metadata("design:type", question_entity_1.Question)
 ], Source.prototype, "question", void 0);
-Source = __decorate([
+exports.Source = Source = __decorate([
     (0, typeorm_1.Entity)()
 ], Source);
-exports.Source = Source;
 //# sourceMappingURL=sourse.entity.js.map

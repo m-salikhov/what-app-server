@@ -13,7 +13,7 @@ exports.Question = void 0;
 const typeorm_1 = require("typeorm");
 const sourse_entity_1 = require("./sourse.entity");
 const tournament_entity_1 = require("./tournament.entity");
-let Question = class Question {
+let Question = exports.Question = class Question {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
@@ -65,8 +65,7 @@ __decorate([
     }),
     __metadata("design:type", tournament_entity_1.Tournament)
 ], Question.prototype, "tournament", void 0);
-Question = __decorate([
+exports.Question = Question = __decorate([
     (0, typeorm_1.Entity)()
 ], Question);
-exports.Question = Question;
 //# sourceMappingURL=question.entity.js.map

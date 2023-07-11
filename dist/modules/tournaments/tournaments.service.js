@@ -28,7 +28,7 @@ const question_entity_1 = require("./entities/question.entity");
 const sourse_entity_1 = require("./entities/sourse.entity");
 const tournament_entity_1 = require("./entities/tournament.entity");
 const parseLink_1 = require("./helpers/parseLink");
-let TournamentsService = class TournamentsService {
+let TournamentsService = exports.TournamentsService = class TournamentsService {
     constructor(tournamentRepo, editorRepo, questionRepo, sourceRepo) {
         this.tournamentRepo = tournamentRepo;
         this.editorRepo = editorRepo;
@@ -46,42 +46,32 @@ let TournamentsService = class TournamentsService {
         }));
         const savedQuestions = [];
         try {
-            for (var _g = true, _h = __asyncValues(tournament.questions), _j; _j = await _h.next(), _a = _j.done, !_a;) {
+            for (var _g = true, _h = __asyncValues(tournament.questions), _j; _j = await _h.next(), _a = _j.done, !_a; _g = true) {
                 _c = _j.value;
                 _g = false;
+                const question = _c;
+                const savedSources = [];
                 try {
-                    const question = _c;
-                    const savedSources = [];
-                    try {
-                        for (var _k = true, _l = (e_2 = void 0, __asyncValues(question.source)), _m; _m = await _l.next(), _d = _m.done, !_d;) {
-                            _f = _m.value;
-                            _k = false;
-                            try {
-                                const source = _f;
-                                const sourceToSave = new sourse_entity_1.Source();
-                                sourceToSave.link = source;
-                                await this.sourceRepo.save(sourceToSave);
-                                savedSources.push(sourceToSave);
-                            }
-                            finally {
-                                _k = true;
-                            }
-                        }
+                    for (var _k = true, _l = (e_2 = void 0, __asyncValues(question.source)), _m; _m = await _l.next(), _d = _m.done, !_d; _k = true) {
+                        _f = _m.value;
+                        _k = false;
+                        const source = _f;
+                        const sourceToSave = new sourse_entity_1.Source();
+                        sourceToSave.link = source;
+                        await this.sourceRepo.save(sourceToSave);
+                        savedSources.push(sourceToSave);
                     }
-                    catch (e_2_1) { e_2 = { error: e_2_1 }; }
-                    finally {
-                        try {
-                            if (!_k && !_d && (_e = _l.return)) await _e.call(_l);
-                        }
-                        finally { if (e_2) throw e_2.error; }
-                    }
-                    const newQuestion = this.questionRepo.create(Object.assign(Object.assign({}, question), { source: savedSources }));
-                    const savedQuestion = await this.questionRepo.save(newQuestion);
-                    savedQuestions.push(savedQuestion);
                 }
+                catch (e_2_1) { e_2 = { error: e_2_1 }; }
                 finally {
-                    _g = true;
+                    try {
+                        if (!_k && !_d && (_e = _l.return)) await _e.call(_l);
+                    }
+                    finally { if (e_2) throw e_2.error; }
                 }
+                const newQuestion = this.questionRepo.create(Object.assign(Object.assign({}, question), { source: savedSources }));
+                const savedQuestion = await this.questionRepo.save(newQuestion);
+                savedQuestions.push(savedQuestion);
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -172,7 +162,7 @@ let TournamentsService = class TournamentsService {
         return tournament;
     }
 };
-TournamentsService = __decorate([
+exports.TournamentsService = TournamentsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(tournament_entity_1.Tournament)),
     __param(1, (0, typeorm_1.InjectRepository)(editors_entity_1.Editor)),
@@ -183,5 +173,4 @@ TournamentsService = __decorate([
         typeorm_2.Repository,
         typeorm_2.Repository])
 ], TournamentsService);
-exports.TournamentsService = TournamentsService;
 //# sourceMappingURL=tournaments.service.js.map

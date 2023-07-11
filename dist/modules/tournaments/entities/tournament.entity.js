@@ -13,7 +13,7 @@ exports.Tournament = void 0;
 const typeorm_1 = require("typeorm");
 const editors_entity_1 = require("./editors.entity");
 const question_entity_1 = require("./question.entity");
-let Tournament = class Tournament {
+let Tournament = exports.Tournament = class Tournament {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
@@ -56,8 +56,7 @@ __decorate([
     (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
 ], Tournament.prototype, "editors", void 0);
-Tournament = __decorate([
+exports.Tournament = Tournament = __decorate([
     (0, typeorm_1.Entity)()
 ], Tournament);
-exports.Tournament = Tournament;
 //# sourceMappingURL=tournament.entity.js.map

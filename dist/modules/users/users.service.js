@@ -27,7 +27,7 @@ const typeorm_2 = require("typeorm");
 const user_entity_1 = require("./entity/user.entity");
 const userResult_entity_1 = require("./entity/userResult.entity");
 const uuid_1 = require("uuid");
-let UsersService = class UsersService {
+let UsersService = exports.UsersService = class UsersService {
     constructor(userRepo, userResultRepo, resultElemRepo) {
         this.userRepo = userRepo;
         this.userResultRepo = userResultRepo;
@@ -81,19 +81,14 @@ let UsersService = class UsersService {
         let tours = Math.max(...Object.keys(userResultDto.result).map((v) => +v));
         for (let i = 1; i <= tours; i++) {
             try {
-                for (var _d = true, _e = (e_1 = void 0, __asyncValues(userResultDto.result[i])), _f; _f = await _e.next(), _a = _f.done, !_a;) {
+                for (var _d = true, _e = (e_1 = void 0, __asyncValues(userResultDto.result[i])), _f; _f = await _e.next(), _a = _f.done, !_a; _d = true) {
                     _c = _f.value;
                     _d = false;
-                    try {
-                        const resultElem = _c;
-                        let resultElemToSave = new userResult_entity_1.ResultElem();
-                        resultElemToSave = Object.assign(Object.assign(Object.assign({}, resultElemToSave), resultElem), { tour: i });
-                        let savedElem = await this.resultElemRepo.save(resultElemToSave);
-                        savedResultElems.push(savedElem);
-                    }
-                    finally {
-                        _d = true;
-                    }
+                    const resultElem = _c;
+                    let resultElemToSave = new userResult_entity_1.ResultElem();
+                    resultElemToSave = Object.assign(Object.assign(Object.assign({}, resultElemToSave), resultElem), { tour: i });
+                    let savedElem = await this.resultElemRepo.save(resultElemToSave);
+                    savedResultElems.push(savedElem);
                 }
             }
             catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -133,7 +128,7 @@ let UsersService = class UsersService {
         return await this.userRepo.remove(user);
     }
 };
-UsersService = __decorate([
+exports.UsersService = UsersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
     __param(1, (0, typeorm_1.InjectRepository)(userResult_entity_1.UserResult)),
@@ -142,5 +137,4 @@ UsersService = __decorate([
         typeorm_2.Repository,
         typeorm_2.Repository])
 ], UsersService);
-exports.UsersService = UsersService;
 //# sourceMappingURL=users.service.js.map

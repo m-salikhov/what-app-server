@@ -13,13 +13,18 @@ enum AnsClasses {
 }
 
 const parseLink = async (link: string) => {
+  console.log('link', link);
   const questions: Omit<QuestionDto, 'id'>[] = [];
 
-  const html = await axios.get(link).then((res) => res.data);
+  const html = await axios
+    .get(link)
+    .then((res) => res.data)
+    .catch((e) => console.log('e', e));
   const $ = cheerio.load(html);
 
   //название турнира
   const title = $('h1').text();
+  console.log('title', title);
 
   //обработка текста обычного вопроса без радаток(также учитывает случай когда раздатка картинокй лежит просто в первом р)
   const $qsText = $('.question p:first-child');

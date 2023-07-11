@@ -3,6 +3,7 @@ import { QuestionDto } from '../dto/question.dto';
 import getTourNumber from './getTourNumber';
 import { TournamentDto } from '../dto/tournament.dto';
 import axios from 'axios';
+import { get } from 'https';
 
 enum AnsClasses {
   Answer = 'Answer',
@@ -17,6 +18,16 @@ const parseLink = async (link: string) => {
 
   // const html = await axios.get(link).then((res) => res.data);
   // const $ = cheerio.load(html);
+  get('https://encrypted.google.com/', (res) => {
+    console.log('statusCode:', res.statusCode);
+    console.log('headers:', res.headers);
+
+    res.on('data', (d) => {
+      process.stdout.write(d);
+    });
+  }).on('error', (e) => {
+    console.error(e);
+  });
 
   const response = await fetch(link);
   // Convert the response into text

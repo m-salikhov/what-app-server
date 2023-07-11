@@ -1,8 +1,8 @@
-import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { QuestionDto } from '../dto/question.dto';
 import getTourNumber from './getTourNumber';
 import { TournamentDto } from '../dto/tournament.dto';
+import axios from 'axios';
 
 enum AnsClasses {
   Answer = 'Answer',
@@ -20,6 +20,7 @@ const parseLink = async (link: string) => {
     .get(link)
     .then((res) => res.data)
     .catch((e) => console.log('error'));
+  console.log('html ', html);
   const $ = cheerio.load(html);
 
   //название турнира

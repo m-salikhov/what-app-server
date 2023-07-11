@@ -19,7 +19,7 @@ const parseLink = async (link: string) => {
   const html = await axios
     .get(link)
     .then((res) => res.data)
-    .catch((e) => console.log('e', e));
+    .catch((e) => console.log('error'));
   const $ = cheerio.load(html);
 
   //название турнира

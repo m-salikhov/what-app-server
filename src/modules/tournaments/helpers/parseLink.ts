@@ -13,15 +13,16 @@ enum AnsClasses {
 }
 
 const parseLink = async (link: string) => {
-  console.log('link', link);
   const questions: Omit<QuestionDto, 'id'>[] = [];
 
-  const html = await axios
-    .get(link)
-    .then((res) => res.data)
-    .catch((e) => console.log('error'));
-  console.log('html ', html);
-  const $ = cheerio.load(html);
+  // const html = await axios.get(link).then((res) => res.data);
+  // const $ = cheerio.load(html);
+
+  const response = await fetch(link);
+  // Convert the response into text
+  const body = await response.text();
+
+  const $ = cheerio.load(body);
 
   //название турнира
   const title = $('h1').text();

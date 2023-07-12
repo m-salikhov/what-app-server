@@ -15,12 +15,18 @@ const users_module_1 = require("./modules/users/users.module");
 const tournaments_module_1 = require("./modules/tournaments/tournaments.module");
 const auth_module_1 = require("./modules/auth/auth.module");
 const typeorm_datasource_1 = require("./typeorm.datasource");
+const path_1 = require("path");
+const serve_static_1 = require("@nestjs/serve-static");
 let AppModule = exports.AppModule = class AppModule {
 };
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             typeorm_1.TypeOrmModule.forRoot(typeorm_datasource_1.dataSourceOptions),
+            serve_static_1.ServeStaticModule.forRoot({
+                rootPath: (0, path_1.join)(__dirname, '..', '../public'),
+                serveRoot: '/public/',
+            }),
             users_module_1.UsersModule,
             tournaments_module_1.TournamentsModule,
             auth_module_1.AuthModule,

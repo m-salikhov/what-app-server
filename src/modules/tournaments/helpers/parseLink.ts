@@ -240,3 +240,5 @@ const parseLink = async (link: string) => {
 
   return t;
 };
+
+export default parseLink;

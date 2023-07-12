@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { get } from 'https';
 import * as cheerio from 'cheerio';
+import axios from 'axios';
 
 @Injectable()
 export class AppService {
@@ -9,9 +10,10 @@ export class AppService {
   }
 
   async test(link: string) {
-    const httpGet = (l: string): Promise<string> => {
+    //
+    const httpsGet = (https: string): Promise<string> => {
       return new Promise((resolve, reject) => {
-        get(l, (res) => {
+        get(https, (res) => {
           res.setEncoding('utf8');
           const body = [];
           res.on('data', (chunk) => body.push(chunk));
@@ -20,7 +22,15 @@ export class AppService {
       });
     };
 
-    const res = await httpGet(link);
+    const httpGet = async (http: string): Promise<string> =>
+      await axios
+        .get(http)
+        .then((res) => res.data)
+        .catch((e) => console.log(e));
+
+    const protocol = link.includes('https');
+
+    const res = protocol ? await httpsGet(link) : await httpGet(link);
 
     const $ = cheerio.load(res);
 

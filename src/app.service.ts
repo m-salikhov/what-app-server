@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { get } from 'https';
-import * as cheerio from 'cheerio';
-import axios from 'axios';
+import { promises as fs } from 'fs';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class AppService {
@@ -10,33 +9,22 @@ export class AppService {
   }
 
   async test(link: string) {
-    //
-    const httpsGet = (https: string): Promise<string> => {
-      return new Promise((resolve, reject) => {
-        get(https, (res) => {
-          res.setEncoding('utf8');
-          const body = [];
-          res.on('data', (chunk) => body.push(chunk));
-          res.on('end', () => resolve(body.join('')));
-        }).on('error', reject);
-      });
+    const downloadImage = async (url: string, path: string) => {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const arrayBuffer = await blob.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      await fs.writeFile(path, buffer);
     };
 
-    const httpGet = async (http: string): Promise<string> =>
-      await axios
-        .get(http)
-        .then((res) => res.data)
-        .catch((e) => console.log(e));
+    if (link.includes('imgur')) {
+      link = link + '.png';
+    }
 
-    const protocol = link.includes('https');
+    const fileName = 'andvarif-' + uuidv4().slice(1, 13) + '.png';
 
-    const res = protocol ? await httpsGet(link) : await httpGet(link);
+    await downloadImage(link, `./public/${fileName}`);
 
-    const $ = cheerio.load(res);
-
-    //название турнира
-    const title = $('h1').text();
-
-    return title;
+    return [`${process.env.HOST}:${process.env.PORT}/public/${fileName}`];
   }
 }

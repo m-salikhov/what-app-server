@@ -7,10 +7,16 @@ import { UsersModule } from './modules/users/users.module';
 import { TournamentsModule } from './modules/tournaments/tournaments.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { dataSourceOptions } from './typeorm.datasource';
+import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(dataSourceOptions),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '../public'), // added ../ to get one folder back
+      serveRoot: '/public/',
+    }),
     UsersModule,
     TournamentsModule,
     AuthModule,

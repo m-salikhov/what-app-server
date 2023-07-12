@@ -2,8 +2,7 @@ import * as cheerio from 'cheerio';
 import { QuestionDto } from '../dto/question.dto';
 import getTourNumber from './getTourNumber';
 import { TournamentDto } from '../dto/tournament.dto';
-import axios from 'axios';
-import { get } from 'https';
+import getHTML from './getHTML';
 
 enum AnsClasses {
   Answer = 'Answer',
@@ -16,7 +15,8 @@ enum AnsClasses {
 const parseLink = async (link: string) => {
   const questions: Omit<QuestionDto, 'id'>[] = [];
 
-  const html = await axios.get(link).then((res) => res.data);
+  const html = await getHTML(link);
+
   const $ = cheerio.load(html);
 
   //название турнира
@@ -240,5 +240,3 @@ const parseLink = async (link: string) => {
 
   return t;
 };
-
-export default parseLink;

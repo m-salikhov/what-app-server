@@ -24,6 +24,9 @@ export class TournamentsController {
   @UseGuards(JwtAuthGuard)
   @Post('/createbylink')
   async parseTournamentByLink(@Body('link') link: string) {
+    if (!link.includes('/print')) {
+      link = link + '/print';
+    }
     return this.tournamentsService.parseTournamentByLink(link);
   }
 
@@ -45,6 +48,11 @@ export class TournamentsController {
   @Get('/random/:n')
   async getRandomQuestions(@Param('n', ParseIntPipe) n: number) {
     return this.tournamentsService.getRandomQuestions(n);
+  }
+
+  @Get('/statistics')
+  async getStatistics() {
+    return this.tournamentsService.getStatistics();
   }
 
   @Get(':id')

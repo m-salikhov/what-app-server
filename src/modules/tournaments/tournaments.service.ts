@@ -139,6 +139,13 @@ export class TournamentsService {
     return tournaments;
   }
 
+  async getStatistics() {
+    const tc = await this.tournamentRepo.count();
+    const qc = await this.questionRepo.count();
+
+    return { tc, qc };
+  }
+
   private normalizeQuestions(arr: Question[]): QuestionDto[] {
     return arr.map((el) => {
       const normSources = el.source.map((el) => el.link);

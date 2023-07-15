@@ -21,7 +21,6 @@ export class TournamentsController {
     return this.tournamentsService.createTournamet(tournament);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('/createbylink')
   async parseTournamentByLink(@Body('link') link: string) {
     if (!link.includes('/print')) {

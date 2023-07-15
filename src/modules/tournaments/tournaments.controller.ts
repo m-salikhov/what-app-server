@@ -21,6 +21,11 @@ export class TournamentsController {
     return this.tournamentsService.createTournamet(tournament);
   }
 
+  @Post('/quest')
+  async createTournamentByQuest(@Body() tournament: TournamentDto) {
+    return this.tournamentsService.createTournamet(tournament);
+  }
+
   @Post('/createbylink')
   async parseTournamentByLink(@Body('link') link: string) {
     if (!link.includes('/print')) {

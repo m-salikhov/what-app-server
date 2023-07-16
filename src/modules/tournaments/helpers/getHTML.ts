@@ -1,5 +1,6 @@
 import { get } from 'https';
 import axios from 'axios';
+import { NotFoundException } from '@nestjs/common';
 
 async function getHTML(link: string) {
   const httpsGet = (https: string): Promise<string> => {
@@ -17,7 +18,9 @@ async function getHTML(link: string) {
     await axios
       .get(http)
       .then((res) => res.data)
-      .catch((e) => console.log(e));
+      .catch(() => {
+        throw new NotFoundException('Неверная ссылка');
+      });
 
   const protocol = link.includes('https');
 

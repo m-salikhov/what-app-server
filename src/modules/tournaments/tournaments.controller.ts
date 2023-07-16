@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -28,6 +29,11 @@ export class TournamentsController {
 
   @Post('/createbylink')
   async parseTournamentByLink(@Body('link') link: string) {
+    if (!link.includes('https://db.chgk.info/')) {
+      throw new BadRequestException(
+        'Ссылка должна вести на https://db.chgk.info/',
+      );
+    }
     if (!link.includes('/print')) {
       link = link + '/print';
     }

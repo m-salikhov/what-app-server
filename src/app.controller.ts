@@ -9,8 +9,4 @@ export class AppController {
   getHello(): string[] {
     return this.appService.getHello();
   }
-  @Post('/test')
-  post(@Body('link') link: string) {
-    return this.appService.test(link);
-  }
 }

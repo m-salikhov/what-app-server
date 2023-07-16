@@ -54,6 +54,8 @@ export class UsersService {
       where: { [key]: value },
     });
     if (!user) throw new NotFoundException('Пользователь не найден');
+    delete user.password;
+
     return user;
   }
 

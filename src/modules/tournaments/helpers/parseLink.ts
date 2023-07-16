@@ -3,6 +3,7 @@ import { QuestionDto } from '../dto/question.dto';
 import getTourNumber from './getTourNumber';
 import { TournamentDto } from '../dto/tournament.dto';
 import getHTML from './getHTML';
+import { NotFoundException } from '@nestjs/common';
 
 enum AnsClasses {
   Answer = 'Answer',
@@ -18,6 +19,12 @@ const parseLink = async (link: string) => {
   const html = await getHTML(link);
 
   const $ = cheerio.load(html);
+
+  //проверка открылась ли нужная страница на самом сайте базу чгк
+  const test = $('#site-slogan').text();
+  if (test) {
+    throw new NotFoundException('Неверно указана ссылка на страницу турнира');
+  }
 
   //название турнира
   const title = $('h1').text();

@@ -15,7 +15,6 @@ export class AuthService {
     const user = await this.usersService.getUser({ email });
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new UnauthorizedException('Неверный пароль');
-    delete user.password;
 
     return user;
   }
@@ -30,6 +29,7 @@ export class AuthService {
 
   async getUser(id: string) {
     const user = await this.usersService.getUser({ id });
+
     return user;
   }
 }

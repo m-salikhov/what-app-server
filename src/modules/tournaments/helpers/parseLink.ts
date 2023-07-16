@@ -28,7 +28,6 @@ const parseLink = async (link: string) => {
 
   //название турнира
   const title = $('h1').text();
-  console.log('title', title);
 
   //обработка текста обычного вопроса без радаток(также учитывает случай когда раздатка картинокй лежит просто в первом р)
   const $qsText = $('.question p:first-child');

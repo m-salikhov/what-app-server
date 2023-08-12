@@ -7,7 +7,8 @@ import { Editor } from './entities/editors.entity';
 import { Question } from './entities/question.entity';
 import { Source } from './entities/sourse.entity';
 import { Tournament } from './entities/tournament.entity';
-import parseLink from './helpers/parseLink';
+import getHTML from './helpers/getHTML';
+import parseTournamentHTML from './helpers/parseLink';
 
 @Injectable()
 export class TournamentsService {
@@ -62,7 +63,8 @@ export class TournamentsService {
   }
 
   async parseTournamentByLink(link: string) {
-    return parseLink(link);
+    const tournamentHTML = await getHTML(link);
+    return parseTournamentHTML(tournamentHTML);
   }
 
   async getTournamentById(id: number) {

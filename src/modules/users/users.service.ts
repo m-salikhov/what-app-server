@@ -57,15 +57,6 @@ export class UsersService {
     return user;
   }
 
-  async getUsernameByUUID(uuid: string) {
-    const user = await this.userRepo.findOne({
-      where: { id: uuid },
-      select: { username: true },
-    });
-
-    return user.username;
-  }
-
   async updatePassword(passworObj: updatePassDto) {
     const user = await this.userRepo.findOne({ where: { id: passworObj.id } });
     const hash = await bcrypt.hash(passworObj.newPass, 10);

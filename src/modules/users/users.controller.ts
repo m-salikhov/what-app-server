@@ -24,19 +24,6 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/username/:uuid')
-  async getLastTen(@Param('uuid') uuid: string) {
-    return this.usersService.getUsernameByUUID(uuid);
-  }
-
-  // @Post('getuser')
-  // async getUser(@Body() getUserDto: GetUserDto) {
-  //   const _user = await this.usersService.getUser(getUserDto);
-  //   const { password, ...user } = _user;
-  //   return user;
-  // }
-
-  @UseGuards(JwtAuthGuard)
   @Put()
   async updateUser(@Body() passObj: updatePassDto) {
     return await this.usersService.updatePassword(passObj);

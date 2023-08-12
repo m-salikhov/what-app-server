@@ -2,7 +2,6 @@ import * as cheerio from 'cheerio';
 import { QuestionDto } from '../dto/question.dto';
 import getTourNumber from './getTourNumber';
 import { TournamentDto } from '../dto/tournament.dto';
-import getHTML from './getHTML';
 import { NotFoundException } from '@nestjs/common';
 
 enum AnsClasses {
@@ -13,14 +12,12 @@ enum AnsClasses {
   Source = 'Sources',
 }
 
-const parseLink = async (link: string) => {
+const parseTournamentHTML = async (html: string) => {
   const questions: Omit<QuestionDto, 'id'>[] = [];
-
-  const html = await getHTML(link);
 
   const $ = cheerio.load(html);
 
-  //проверка открылась ли нужная страница на самом сайте базу чгк
+  //проверка открылась ли нужная страница на самом сайте базы чгк
   const test = $('#site-slogan').text();
   if (test) {
     throw new NotFoundException('Неверно указана ссылка на страницу турнира');
@@ -29,15 +26,17 @@ const parseLink = async (link: string) => {
   //название турнира
   const title = $('h1').text();
 
-  //обработка текста обычного вопроса без радаток(также учитывает случай когда раздатка картинокй лежит просто в первом р)
+  //обработка текста обычного вопроса без радаток или раздатка картинокй лежит в первом р и иницилизация вопроса
   const $qsText = $('.question p:first-child');
   $qsText.each((i, elem) => {
+    const questionText = $(elem)
+      .text()
+      .replace(/(\r\n|\n|\r|&nbsp|\.\.\.|Вопрос \d+:\s)/gm, '')
+      .replace(/\s\s+/g, ' ')
+      .trim();
+
     questions[i] = {
-      text: $(elem)
-        .text()
-        .replace(/(\r\n|\n|\r|&nbsp|\.\.\.|Вопрос \d+:\s)/gm, '')
-        .replace(/\s\s+/g, ' ')
-        .trim(),
+      text: questionText || '',
       answer: '',
       comment: '',
       qNumber: 0,
@@ -53,7 +52,11 @@ const parseLink = async (link: string) => {
   $Question.each((i, elem) => {
     const n = +$(elem).text().slice(7, -1);
     questions[i].qNumber = n;
-    if (n < 1) questions[i].type = 'outside';
+  });
+
+  //помечает нулевые вопросы нужным типом
+  questions.forEach((v) => {
+    if (v.qNumber < 0) v.type = 'outside';
   });
 
   //добавление картинки, когда картинка лежит в первом p без класса razdatka
@@ -92,8 +95,8 @@ const parseLink = async (link: string) => {
   });
 
   //обрабатывает блок ответа: ответ, комментарий, зачёт, автор, источники
-  const $t = $('.question .collapsible');
-  $t.each((i, elem) => {
+  const $answerBlock = $('.question .collapsible');
+  $answerBlock.each((i, elem) => {
     const ansParagraphs = $(elem).children('p');
 
     ansParagraphs.each((k, v) => {
@@ -180,13 +183,13 @@ const parseLink = async (link: string) => {
     questions[i].add = qAdd;
   });
 
-  //количество зачетных вопросов в турнире
+  //количество вопросов в турнире, не считая нулевые
   let questionsQuantity = 0;
   questions.forEach((v) => {
     if (v.type !== 'outside') questionsQuantity++;
   });
 
-  //кол-во туров в турнире. h2 используется только для разбиения по турам
+  //кол-во туров в турнире. h2 используется только для разбивки по турам
   let tours = 0;
   const $tours = $('h2');
   $tours.each((i, elem) => {
@@ -197,7 +200,7 @@ const parseLink = async (link: string) => {
   //Добавляет сквозную нумерацию вопросов при необходимости
   if (questionsQuantity - questions.at(-1).qNumber) {
     let currentNumber = 0;
-    questions.forEach((v, i) => {
+    questions.forEach((v) => {
       if (v.qNumber > 0) {
         v.qNumber = ++currentNumber;
       }
@@ -247,4 +250,4 @@ const parseLink = async (link: string) => {
   return t;
 };
 
-export default parseLink;
+export default parseTournamentHTML;

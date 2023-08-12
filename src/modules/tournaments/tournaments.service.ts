@@ -70,7 +70,7 @@ export class TournamentsService {
       throw new ConflictException('Турнир уже существует в системе');
 
     const tournamentHTML = await getHTML(link);
-    const parsedTournament = parseTournamentHTML(tournamentHTML);
+    const parsedTournament = await parseTournamentHTML(tournamentHTML);
     return { ...parsedTournament, link };
   }
 

@@ -3,6 +3,10 @@ import axios from 'axios';
 import { NotFoundException } from '@nestjs/common';
 
 async function getHTML(link: string) {
+  if (!link.includes('/print')) {
+    link = link + '/print';
+  }
+
   const httpsGet = (https: string): Promise<string> => {
     return new Promise((resolve, reject) => {
       get(https, (res) => {

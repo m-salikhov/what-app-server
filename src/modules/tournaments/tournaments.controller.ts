@@ -34,9 +34,7 @@ export class TournamentsController {
         'Ссылка должна вести на https://db.chgk.info/',
       );
     }
-    if (!link.includes('/print')) {
-      link = link + '/print';
-    }
+
     return this.tournamentsService.parseTournamentByLink(link);
   }
 

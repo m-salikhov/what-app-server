@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QuestionDto } from './dto/question.dto';
@@ -63,6 +63,12 @@ export class TournamentsService {
   }
 
   async parseTournamentByLink(link: string) {
+    const tournamentCheck = await this.tournamentRepo.findOne({
+      where: { link },
+    });
+    if (tournamentCheck)
+      throw new ConflictException('Турнир уже существует в системе');
+
     const tournamentHTML = await getHTML(link);
     const parsedTournament = parseTournamentHTML(tournamentHTML);
     return { ...parsedTournament, link };

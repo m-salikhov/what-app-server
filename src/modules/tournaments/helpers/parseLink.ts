@@ -237,7 +237,7 @@ const parseTournamentHTML = async (html: string) => {
   }
 
   //сборка турнира
-  const t: Omit<TournamentDto, 'uploaderUuid' | 'uploader'> = {
+  const t: Omit<TournamentDto, 'uploaderUuid' | 'uploader' | 'link'> = {
     title,
     date,
     questionsQuantity,

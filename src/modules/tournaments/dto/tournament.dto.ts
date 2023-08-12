@@ -20,6 +20,8 @@ export class TournamentDto {
   uploaderUuid: string;
   @IsNotEmpty()
   uploader: string;
+  @IsNotEmpty()
+  link: string;
 }
 
 export class getTournametDto {

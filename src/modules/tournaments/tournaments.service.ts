@@ -64,7 +64,8 @@ export class TournamentsService {
 
   async parseTournamentByLink(link: string) {
     const tournamentHTML = await getHTML(link);
-    return parseTournamentHTML(tournamentHTML);
+    const parsedTournament = parseTournamentHTML(tournamentHTML);
+    return { ...parsedTournament, link };
   }
 
   async getTournamentById(id: number) {

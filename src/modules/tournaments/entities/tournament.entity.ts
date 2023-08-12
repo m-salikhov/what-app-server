@@ -27,6 +27,8 @@ export class Tournament {
   uploaderUuid: string;
   @Column()
   uploader: string;
+  @Column({ default: '' })
+  link: string;
   @OneToMany(() => Question, (question) => question.tournament)
   questions: Question[];
   @ManyToMany(() => Editor)

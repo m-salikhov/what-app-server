@@ -56,7 +56,7 @@ const parseTournamentHTML = async (html: string) => {
 
   //помечает нулевые вопросы нужным типом
   questions.forEach((v) => {
-    if (v.qNumber < 0) v.type = 'outside';
+    if (v.qNumber < 1) v.type = 'outside';
   });
 
   //добавление картинки, когда картинка лежит в первом p без класса razdatka

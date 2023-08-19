@@ -12,7 +12,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(dataSourceOptions),
+    TypeOrmModule.forRoot({ ...dataSourceOptions, autoLoadEntities: true }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '../public'),
       serveRoot: '/public/',

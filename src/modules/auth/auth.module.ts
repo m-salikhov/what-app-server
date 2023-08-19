@@ -24,6 +24,6 @@ import { ResultElem, UserResult } from '../users/entity/userResult.entity';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UsersService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
 })
 export class AuthModule {}

@@ -1,14 +1,24 @@
-import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { Response, Request } from 'express';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { User } from '../users/entity/user.entity';
+import { StatsInterceptor } from '../stats/stats.interceptor';
 
-interface RequestAuth extends Request {
+export interface RequestAuth extends Request {
   user: User;
 }
 
+@UseInterceptors(StatsInterceptor)
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

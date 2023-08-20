@@ -51,7 +51,17 @@ export class StatsService {
 
   private getСommonStatsFromRequest(req: RequestAuth | Request) {
     const ip = req.ip;
-    const timestamp = new Date().toLocaleString();
+
+    const dateNow = Date.now();
+
+    const timestamp = new Intl.DateTimeFormat('ru', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+    }).format(dateNow);
 
     return { ip, timestamp };
   }

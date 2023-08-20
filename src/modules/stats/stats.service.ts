@@ -61,6 +61,7 @@ export class StatsService {
       hour: 'numeric',
       minute: 'numeric',
       second: 'numeric',
+      timeZone: 'Europe/Moscow',
     }).format(dateNow);
 
     return { ip, timestamp };

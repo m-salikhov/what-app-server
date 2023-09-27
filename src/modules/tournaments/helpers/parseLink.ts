@@ -13,7 +13,7 @@ enum AnsClasses {
 }
 
 const parseTournamentHTML = async (html: string) => {
-  const questions: Omit<QuestionDto, 'id'>[] = [];
+  const questions: QuestionDto[] = [];
 
   const $ = cheerio.load(html);
 

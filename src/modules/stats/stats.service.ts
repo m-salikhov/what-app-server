@@ -27,7 +27,7 @@ export class StatsService {
       userAgent,
     });
 
-    await this.openStatsRepo.save({
+    this.openStatsRepo.save({
       ...newStat,
     });
   }
@@ -44,7 +44,7 @@ export class StatsService {
       timestamp,
     });
 
-    await this.loginStatsRepo.save({
+    this.loginStatsRepo.save({
       ...newLoginStat,
     });
   }
@@ -52,7 +52,7 @@ export class StatsService {
   private getСommonStatsFromRequest(req: RequestAuth | Request) {
     const ip = req.ip;
 
-    const dateNow = Date.now();
+    const dateNow = new Date();
 
     const timestamp = new Intl.DateTimeFormat('ru', {
       year: 'numeric',

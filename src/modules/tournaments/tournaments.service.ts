@@ -35,9 +35,9 @@ export class TournamentsService {
     );
 
     const savedQuestions: Question[] = [];
-    for await (const question of tournament.questions) {
+    for (const question of tournament.questions) {
       const savedSources: Source[] = [];
-      for await (const source of question.source) {
+      for (const source of question.source) {
         const sourceToSave = new Source();
         sourceToSave.link = source;
         await this.sourceRepo.save(sourceToSave);

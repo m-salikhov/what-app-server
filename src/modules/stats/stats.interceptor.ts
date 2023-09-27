@@ -13,7 +13,9 @@ export class StatsInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const req = context.switchToHttp().getRequest();
+
     this.statsService.saveLoginStat(req);
+
     return next.handle();
   }
 }

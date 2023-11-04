@@ -120,12 +120,6 @@ export class TournamentsService {
   }
 
   async getLastAddTournaments(n: number) {
-    if (n === -1) {
-      //Подсчитывает макс. число страниц
-      const count = await this.tournamentRepo.count();
-      const t = Math.trunc(count / 10);
-      return count % 10 ? t + 1 : t;
-    }
     const tournaments = await this.tournamentRepo.find({
       order: { dateUpload: 'DESC' },
       select: { title: true, dateUpload: true, id: true },
@@ -134,6 +128,12 @@ export class TournamentsService {
     });
 
     return tournaments;
+  }
+
+  async getTournamentsAmountPages() {
+    const count = await this.tournamentRepo.count();
+    const t = Math.trunc(count / 10);
+    return count % 10 ? t + 1 : t;
   }
 
   async getAllTournamentsShort() {

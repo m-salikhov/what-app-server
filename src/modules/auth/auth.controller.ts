@@ -37,7 +37,9 @@ export class AuthController {
       sameSite: 'none',
       secure: true,
     });
-    return req.user;
+
+    const { password, ...user } = req.user;
+    return user;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -47,13 +49,16 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const token = await this.authService.login(req.user);
-    const user = await this.authService.getUser(req.user.id);
+
+    const { password, ...user } = await this.authService.getUser(req.user.id);
+
     response.cookie('access_token', token.access_token, {
       httpOnly: true,
       maxAge: Number(process.env.COOKIES_MAX_AGE),
       sameSite: 'none',
       secure: true,
     });
+
     return user;
   }
 
@@ -66,6 +71,7 @@ export class AuthController {
       sameSite: 'none',
       secure: true,
     });
+
     return 'logout';
   }
 }

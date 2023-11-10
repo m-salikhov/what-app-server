@@ -12,6 +12,7 @@ import { GetUserDto, updatePassDto } from './dto/get-user.dto';
 import { UserResultDto } from './dto/userResult.dto';
 import { UserResult, ResultElem } from './entity/userResult.entity';
 import { v4 as uuidv4 } from 'uuid';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
@@ -22,6 +23,7 @@ export class UsersService {
     private userResultRepo: Repository<UserResult>,
     @InjectRepository(ResultElem)
     private resultElemRepo: Repository<ResultElem>,
+    private jwtService: JwtService,
   ) {}
 
   async createUser(user: CreateUserDto) {
@@ -42,9 +44,13 @@ export class UsersService {
       date: Date.now(),
     });
 
-    const { password, ...rest } = await this.userRepo.save(newUser);
+    const { password, ...savedNewUser } = await this.userRepo.save(newUser);
 
-    return rest;
+    const payload = { username: savedNewUser.username, id: savedNewUser.id };
+
+    const access_token = this.jwtService.sign(payload);
+
+    return { savedNewUser, access_token };
   }
 
   async getUser(getUserDto: GetUserDto): Promise<User> {

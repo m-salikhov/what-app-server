@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
@@ -13,14 +14,29 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserDto, updatePassDto } from './dto/get-user.dto';
 import { UserResultDto } from './dto/userResult.dto';
 import { UsersService } from './users.service';
+import { Response } from 'express';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  async createUser(@Body() user: CreateUserDto) {
-    return await this.usersService.createUser(user);
+  async createUser(
+    @Body() user: CreateUserDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const { savedNewUser, access_token } = await this.usersService.createUser(
+      user,
+    );
+
+    response.cookie('access_token', access_token, {
+      httpOnly: true,
+      maxAge: 259200000,
+      sameSite: 'none',
+      secure: true,
+    });
+
+    return savedNewUser;
   }
 
   @UseGuards(JwtAuthGuard)

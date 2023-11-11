@@ -72,6 +72,6 @@ export class AuthController {
       secure: true,
     });
 
-    return 'logout';
+    return { message: 'logout' };
   }
 }

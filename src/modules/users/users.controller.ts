@@ -58,9 +58,9 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('/userresultshort')
-  async getUserResultShort(@Body() idDto: { id: string }) {
-    return await this.usersService.getUserResultShort(idDto.id);
+  @Get('/userresultshort/:id')
+  async getUserResultShort(@Param('id') id: string) {
+    return await this.usersService.getUserResultShort(id);
   }
 
   @UseGuards(JwtAuthGuard)

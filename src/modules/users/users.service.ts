@@ -67,7 +67,7 @@ export class UsersService {
     const user = await this.userRepo.findOne({ where: { id: passworObj.id } });
     const hash = await bcrypt.hash(passworObj.newPass, 10);
     await this.userRepo.save({ ...user, password: hash });
-    return 'Пароль изменён';
+    return { message: 'Пароль изменён' };
   }
 
   async createUserResult(userResultDto: UserResultDto) {
@@ -100,7 +100,9 @@ export class UsersService {
       date: Date.now(),
     };
 
-    return await this.userResultRepo.save(newUserResult);
+    const result = await this.userResultRepo.save(newUserResult);
+
+    return result;
   }
 
   async getUserResultShort(id: string) {

@@ -2,7 +2,10 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QuestionDto } from './dto/question.dto';
-import { TournamentDto } from './dto/tournament.dto';
+import {
+  TournamentDto,
+  getLastTournamentsShortsDto,
+} from './dto/tournament.dto';
 import { Editor } from './entities/editors.entity';
 import { Question } from './entities/question.entity';
 import { Source } from './entities/sourse.entity';
@@ -119,12 +122,12 @@ export class TournamentsService {
     return randomTitlesNormalize;
   }
 
-  async getLastAddTournaments(n: number) {
+  async getLastAddTournaments(options: getLastTournamentsShortsDto) {
     const tournaments = await this.tournamentRepo.find({
       order: { dateUpload: 'DESC' },
       select: { title: true, dateUpload: true, id: true },
-      skip: n,
-      take: 10,
+      skip: options.skip || 0,
+      take: options.amount,
     });
 
     return tournaments;

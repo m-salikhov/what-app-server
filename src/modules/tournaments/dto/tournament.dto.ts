@@ -31,8 +31,3 @@ export class getTournametDto {
   maxDateUpload?: number;
   minDateUploader?: number;
 }
-
-export class getLastTournamentsShortsDto {
-  amount: number;
-  skip?: number;
-}

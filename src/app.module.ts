@@ -14,7 +14,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
   imports: [
     TypeOrmModule.forRoot({ ...dataSourceOptions, autoLoadEntities: true }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '../public'),
+      rootPath: join(__dirname, '../public'), // added ../ to get one folder back
       serveRoot: '/public/',
     }),
     UsersModule,

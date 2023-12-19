@@ -9,10 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import {
-  TournamentDto,
-  getLastTournamentsShortsDto,
-} from './dto/tournament.dto';
+import { TournamentDto } from './dto/tournament.dto';
 import { TournamentsService } from './tournaments.service';
 
 @Controller('tournaments')
@@ -51,9 +48,9 @@ export class TournamentsController {
     return this.tournamentsService.getTournamentsByUploader(uuid);
   }
 
-  @Post('/lastshort')
-  async getLastTournamentsShort(@Body() options: getLastTournamentsShortsDto) {
-    return this.tournamentsService.getLastAddTournaments(options);
+  @Get('/last/:n')
+  async getLastTen(@Param('n', ParseIntPipe) n: number) {
+    return this.tournamentsService.getLastAddTournaments(n);
   }
 
   @Get('/random/:n')

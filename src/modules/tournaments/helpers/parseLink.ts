@@ -188,7 +188,7 @@ const parseTournamentHTML = async (html: string) => {
     if (q.answer.at(-1) === '.') {
       questions[i].answer = q.answer.slice(0, -1);
     }
-    if (q.alterAnswer.at(-1) === '.') {
+    if (q.alterAnswer && q.alterAnswer.at(-1) === '.') {
       questions[i].alterAnswer = q.alterAnswer.slice(0, -1);
     }
   });

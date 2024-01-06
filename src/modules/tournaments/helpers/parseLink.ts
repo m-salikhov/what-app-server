@@ -183,6 +183,16 @@ const parseTournamentHTML = async (html: string) => {
     questions[i].add = qAdd;
   });
 
+  //Чистка ответа и зачёта от точек в конце
+  questions.forEach((q, i) => {
+    if (q.answer.at(-1) === '.') {
+      questions[i].answer = q.answer.slice(0, -1);
+    }
+    if (q.alterAnswer.at(-1) === '.') {
+      questions[i].alterAnswer = q.alterAnswer.slice(0, -1);
+    }
+  });
+
   //количество вопросов в турнире, не считая нулевые
   let questionsQuantity = 0;
   questions.forEach((v) => {

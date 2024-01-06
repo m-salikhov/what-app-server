@@ -245,6 +245,9 @@ const parseTournamentHTML = async (html: string) => {
   } else {
     date = Date.parse(dateTextSplited.reverse().join('.'));
   }
+  if (!date) {
+    date = Date.now();
+  }
 
   //сборка турнира
   const t: Omit<TournamentDto, 'uploaderUuid' | 'uploader' | 'link'> = {

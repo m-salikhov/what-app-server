@@ -139,12 +139,6 @@ export class TournamentsService {
     return { tournaments, count, pageCount, hasMorePage };
   }
 
-  async getTournamentsAmountPages() {
-    const count = await this.tournamentRepo.count();
-    const t = Math.trunc(count / 10);
-    return count % 10 ? t + 1 : t;
-  }
-
   async getAllTournamentsShort() {
     const tournaments = await this.tournamentRepo.find();
     return tournaments;

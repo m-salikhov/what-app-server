@@ -50,14 +50,6 @@ export class TournamentsController {
     return this.tournamentsService.getTournamentsByUploader(uuid);
   }
 
-  // @Get('/last/:amount/:page')
-  // async getLastTen(
-  //   @Param('amount', ParseIntPipe) amount: number,
-  //   @Param('page') page: number,
-  // ) {
-  //   return this.tournamentsService.getLastAddTournaments(amount, page);
-  // }
-
   @Get('/last/last?')
   async getLastTen(
     @Query('amount', ParseIntPipe) amount: number,
@@ -79,11 +71,6 @@ export class TournamentsController {
   @Get('/statistics')
   async getStatistics() {
     return this.tournamentsService.getStatistics();
-  }
-
-  @Get('/amountpages')
-  async getTournamentsAmountPages() {
-    return this.tournamentsService.getTournamentsAmountPages();
   }
 
   @Get(':id')

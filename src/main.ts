@@ -9,6 +9,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.use(json({ limit: '50mb' }));
   app.useGlobalPipes(new ValidationPipe());
+  app.enableCors();
   await app.listen(process.env.PORT);
 }
 bootstrap();

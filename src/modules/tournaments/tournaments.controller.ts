@@ -4,8 +4,10 @@ import {
   Controller,
   Get,
   Param,
+  ParseBoolPipe,
   ParseIntPipe,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
@@ -48,9 +50,25 @@ export class TournamentsController {
     return this.tournamentsService.getTournamentsByUploader(uuid);
   }
 
-  @Get('/last/:n')
-  async getLastTen(@Param('n', ParseIntPipe) n: number) {
-    return this.tournamentsService.getLastAddTournaments(n);
+  // @Get('/last/:amount/:page')
+  // async getLastTen(
+  //   @Param('amount', ParseIntPipe) amount: number,
+  //   @Param('page') page: number,
+  // ) {
+  //   return this.tournamentsService.getLastAddTournaments(amount, page);
+  // }
+
+  @Get('/last/last?')
+  async getLastTen(
+    @Query('amount', ParseIntPipe) amount: number,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('withSkip', ParseBoolPipe) withSkip: boolean,
+  ) {
+    return this.tournamentsService.getLastAddTournaments(
+      amount,
+      page,
+      withSkip,
+    );
   }
 
   @Get('/random/:n')

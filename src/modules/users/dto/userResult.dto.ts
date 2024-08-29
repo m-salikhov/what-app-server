@@ -1,7 +1,7 @@
 import { IsUUID, IsNotEmpty } from 'class-validator';
 
 interface ResultType {
-  [key: number]: { num: number; ans: boolean }[];
+  [tourNumber: number]: { num: number; ans: boolean }[];
 }
 
 export class UserResultDto {

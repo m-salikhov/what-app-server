@@ -119,15 +119,24 @@ export class TournamentsService {
     return randomTitlesNormalize;
   }
 
-  async getLastAddTournaments(n: number) {
-    const tournaments = await this.tournamentRepo.find({
+  async getLastAddTournaments(amount: number, page: number, withSkip: boolean) {
+    const repo = this.tournamentRepo;
+    const skip = (page - 1) * amount;
+
+    const tournaments = await repo.find({
       order: { dateUpload: 'DESC' },
-      select: { title: true, dateUpload: true, id: true },
-      skip: n,
-      take: 10,
+      skip: withSkip ? skip : 0,
+      take: withSkip ? amount : amount * page,
     });
 
-    return tournaments;
+    const count = await repo.count();
+
+    const n = Math.trunc(count / amount);
+    const pageCount = count % 10 ? n + 1 : n;
+
+    const hasMorePage = count - skip - amount > 0 ? true : false;
+
+    return { tournaments, count, pageCount, hasMorePage };
   }
 
   async getTournamentsAmountPages() {

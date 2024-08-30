@@ -131,10 +131,9 @@ export class TournamentsService {
 
     const count = await repo.count();
 
-    const n = Math.trunc(count / amount);
-    const pageCount = count % 10 ? n + 1 : n;
+    const pageCount = Math.ceil(count / amount);
 
-    const hasMorePage = count - skip - amount > 0 ? true : false;
+    const hasMorePage = page < pageCount;
 
     return { tournaments, count, pageCount, hasMorePage };
   }

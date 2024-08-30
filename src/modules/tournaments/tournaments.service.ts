@@ -5,7 +5,7 @@ import { QuestionDto } from './dto/question.dto';
 import { TournamentDto } from './dto/tournament.dto';
 import { Editor } from './entities/editors.entity';
 import { Question } from './entities/question.entity';
-import { Source } from './entities/sourse.entity';
+import { Source } from './entities/source.entity';
 import { Tournament } from './entities/tournament.entity';
 import getHTML from './helpers/getHTML';
 import parseTournamentHTML from './helpers/parseLink';
@@ -23,7 +23,7 @@ export class TournamentsService {
     private sourceRepo: Repository<Source>,
   ) {}
 
-  async createTournamet(tournament: TournamentDto) {
+  async createTournament(tournament: TournamentDto) {
     const savedEditors: Editor[] = [];
     await Promise.all(
       tournament.editors.map(async (editor) => {

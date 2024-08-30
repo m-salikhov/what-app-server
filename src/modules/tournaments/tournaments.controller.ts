@@ -21,12 +21,12 @@ export class TournamentsController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async createTournament(@Body() tournament: TournamentDto) {
-    return this.tournamentsService.createTournamet(tournament);
+    return this.tournamentsService.createTournament(tournament);
   }
 
   @Post('/quest')
   async createTournamentByQuest(@Body() tournament: TournamentDto) {
-    return this.tournamentsService.createTournamet(tournament);
+    return this.tournamentsService.createTournament(tournament);
   }
 
   @Post('/createbylink')

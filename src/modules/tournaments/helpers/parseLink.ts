@@ -234,16 +234,11 @@ const parseTournamentHTML = async (html: string) => {
 
   //дата отыгрыша
   let date = 0;
-  const dateTextSplited = $('p')
-    .first()
-    .text()
-    .trim()
-    .slice(6, 17)
-    .split(/\D/g);
-  if (dateTextSplited[0].length === 4) {
-    date = Date.parse(dateTextSplited.join('.'));
+  const dateTextSplit = $('p').first().text().trim().slice(6, 17).split(/\D/g);
+  if (dateTextSplit[0].length === 4) {
+    date = Date.parse(dateTextSplit.join('.'));
   } else {
-    date = Date.parse(dateTextSplited.reverse().join('.'));
+    date = Date.parse(dateTextSplit.reverse().join('.'));
   }
   if (!date) {
     date = Date.now();

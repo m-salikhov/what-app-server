@@ -5,7 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Source } from './sourse.entity';
+import { Source } from './source.entity';
 import { Tournament } from './tournament.entity';
 
 @Entity()

@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+import { Request } from 'express';
 import { LoginStat } from './entities/loginstat.entity';
 import { RequestAuth } from '../auth/auth.controller';
 import { OpenStat } from './entities/openstat.entity';
@@ -16,7 +16,7 @@ export class StatsService {
   ) {}
 
   async saveOpenStat(req: Request) {
-    const { timestamp, ip } = this.getСommonStatsFromRequest(req);
+    const { timestamp, ip } = this.getCommonStatsFromRequest(req);
     const userAgent = req.headers['user-agent'];
     const host = req.headers.host;
 
@@ -33,7 +33,7 @@ export class StatsService {
   }
 
   async saveLoginStat(req: RequestAuth) {
-    const { timestamp, ip } = this.getСommonStatsFromRequest(req);
+    const { timestamp, ip } = this.getCommonStatsFromRequest(req);
     const username = req.user.username;
     const userID = req.user.id;
 
@@ -49,7 +49,7 @@ export class StatsService {
     });
   }
 
-  private getСommonStatsFromRequest(req: RequestAuth | Request) {
+  private getCommonStatsFromRequest(req: RequestAuth | Request) {
     const ip = req.ip;
 
     const dateNow = new Date();

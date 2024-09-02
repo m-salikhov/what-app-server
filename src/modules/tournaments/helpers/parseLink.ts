@@ -130,16 +130,20 @@ const parseTournamentHTML = async (html: string) => {
         case AnsClasses.Source:
           const sourceStr = $(v)
             .text()
-            .replace(/(\r\n|\n|\r|&nbsp|\.\.\.|Источник\(и\):)/gm, '')
+            .replace(/(Источник\(и\):)/gm, '')
             .replace(/\s\s+/g, ' ')
             .trim();
+
+          if (i == 2) {
+            console.log(sourceStr);
+          }
 
           //если источников больше одного
           const flag = /^1.\s/.test(sourceStr);
           if (!flag) {
             questions[i].source = [sourceStr];
           } else {
-            const sourceArr = sourceStr.split(/(^|\s)\d.\s/);
+            const sourceArr = sourceStr.split(/(^|\s)\d\.\s/g);
             const sourceArrNorm = sourceArr.filter((v) => {
               const s = v.trim();
               if (s) return s;

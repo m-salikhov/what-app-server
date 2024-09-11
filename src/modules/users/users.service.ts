@@ -109,6 +109,7 @@ export class UsersService {
   async getUserResultShort(id: string) {
     let result = await this.userResultRepo.find({
       where: { userId: id },
+      order: { date: 'DESC' },
     });
     return result;
   }
@@ -116,6 +117,7 @@ export class UsersService {
   async getUserResultFull(id: string) {
     const res = await this.userResultRepo.find({
       where: { userId: id },
+      order: { date: 'DESC' },
       relations: ['result'],
       select: {
         result: {

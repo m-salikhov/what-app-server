@@ -146,6 +146,7 @@ export class TournamentsService {
   async getTournamentsByUploader(uploaderId: string) {
     const tournaments = await this.tournamentRepo.find({
       where: { uploaderUuid: uploaderId },
+      order: { dateUpload: 'DESC' },
     });
     return tournaments;
   }

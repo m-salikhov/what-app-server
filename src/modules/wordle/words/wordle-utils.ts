@@ -17,10 +17,11 @@ const words: Words = JSON.parse(json);
 export function getRandom() {
   const k = Object.keys(words);
   const rl = k[getRandomInt(k.length)];
-  const rw = words[rl][getRandomInt(words[rl].length)];
-  return rw;
+  const word = words[rl][getRandomInt(words[rl].length)];
+  return { word };
 }
 
 export function checkExist(str: string) {
-  return words[str[0]].includes(str);
+  const isExist = words[str[0]].includes(str);
+  return { isExist };
 }

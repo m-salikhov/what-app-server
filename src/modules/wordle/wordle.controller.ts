@@ -6,7 +6,7 @@ export class WordleController {
   constructor(private readonly wordleService: WordleService) {}
 
   @Get('/random-word')
-  getUserResultShort() {
+  getRandomWord() {
     return this.wordleService.getRandomWord();
   }
 

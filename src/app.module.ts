@@ -8,6 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { dataSourceOptions } from './typeorm.datasource';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { WordleModule } from './modules/wordle/wordle.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     UsersModule,
     TournamentsModule,
     AuthModule,
+    WordleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

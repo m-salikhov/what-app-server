@@ -22,6 +22,6 @@ export function getRandom() {
 }
 
 export function checkExist(word: string) {
-  const isExist = words[word[0]].includes(word);
+  const isExist = words[word[0]]?.includes(word);
   return { isExist, word };
 }

@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QuestionDto } from './dto/question.dto';
@@ -9,6 +13,8 @@ import { Source } from './entities/source.entity';
 import { Tournament } from './entities/tournament.entity';
 import getHTML from './helpers/getHTML';
 import parseTournamentHTML from './helpers/parseLink';
+import { normalizeGotquestionsTournament } from './helpers/normalizeGotquestionsTournament';
+import { parseTournamentGotquestions } from './helpers/parseLinkGotquestions';
 
 @Injectable()
 export class TournamentsService {
@@ -54,6 +60,7 @@ export class TournamentsService {
 
     const newTournament = this.tournamentRepo.create({
       ...tournament,
+      dateUpload: Date.now(),
       editors: savedEditors,
       questions: savedQuestions,
     });
@@ -62,7 +69,7 @@ export class TournamentsService {
     return savedTournament.id;
   }
 
-  async parseTournamentByLink(link: string) {
+  async parseTournamentByLinkDbchgk(link: string) {
     const tournamentCheck = await this.tournamentRepo.findOne({
       where: { link },
     });
@@ -72,6 +79,21 @@ export class TournamentsService {
     const tournamentHTML = await getHTML(link);
     const parsedTournament = await parseTournamentHTML(tournamentHTML);
     return { ...parsedTournament, link };
+  }
+
+  async parseTournamentByLinkGotquestions(link: string) {
+    const tournamentCheck = await this.tournamentRepo.findOne({
+      where: { link },
+    });
+
+    if (tournamentCheck)
+      throw new ConflictException('Турнир уже существует в системе');
+
+    const pack = await parseTournamentGotquestions(link);
+
+    const tournament = normalizeGotquestionsTournament(pack);
+
+    return { ...tournament, link };
   }
 
   async getTournamentById(id: number) {

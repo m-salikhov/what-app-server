@@ -249,14 +249,17 @@ const parseTournamentHTML = async (html: string) => {
   }
 
   //сборка турнира
-  const t: Omit<TournamentDto, 'uploaderUuid' | 'uploader' | 'link'> = {
+  const t: TournamentDto = {
     title,
     date,
     questionsQuantity,
     tours,
     editors,
-    dateUpload: Date.now(),
     questions,
+    uploader: '',
+    uploaderUuid: '',
+    link: '',
+    dateUpload: 0,
   };
 
   return t;

@@ -8,9 +8,13 @@ function extractAuthorsNames(authors: any[]) {
 }
 
 function splitSourceString(sources: string) {
-  if (!sources.startsWith('1. ')) return [sources];
-
-  return sources.split(/\n/).map((s) => s.slice(3));
+  if (/^1[.)]/.test(sources)) {
+    return sources.split(/\n/).map((s) => s.slice(3));
+  } else if (/\n/.test(sources)) {
+    return sources.split(/\n/);
+  } else {
+    return [sources];
+  }
 }
 
 function normalizeGotquestionsQuestions(tours: Pack['tours']) {

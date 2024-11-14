@@ -9,9 +9,9 @@ function extractAuthorsNames(authors: any[]) {
 
 function splitSourceString(sources: string) {
   if (/^1[.)]/.test(sources)) {
-    return sources.split(/\n/).map((s) => s.slice(3));
+    return sources.split(/\n/).map((s) => s.slice(2).trim());
   } else if (/\n/.test(sources)) {
-    return sources.split(/\n/);
+    return sources.split(/\n/).map((s) => s.trim());
   } else {
     return [sources];
   }

@@ -97,9 +97,8 @@ export class TournamentsService {
       where: { id },
       relations: ['editors', 'questions'],
     });
-    return tournament
-      ? this.normalizeTournament(tournament)
-      : 'Tournament not found';
+
+    return tournament ? tournament : 'Турнир не найден';
   }
 
   async getRandomQuestions(n: number) {
@@ -120,7 +119,7 @@ export class TournamentsService {
       }),
     );
 
-    return this.normalizeQuestions(random);
+    return random;
   }
 
   async getRandomTournaments(n: number) {
@@ -174,27 +173,5 @@ export class TournamentsService {
     const qc = await this.questionRepo.count();
 
     return { tc, qc };
-  }
-
-  private normalizeQuestions(arr: Question[]): QuestionDto[] {
-    return arr.map((el) => {
-      const normSources = el.source.map((el) => el.link);
-      return { ...el, source: normSources };
-    });
-  }
-
-  private normalizeEditors(editors: Editor[]): string[] {
-    return editors.map((el) => el.name);
-  }
-
-  private normalizeTournament(res: Tournament) {
-    const normEditors = this.normalizeEditors(res.editors);
-    const normQuestions = this.normalizeQuestions(res.questions);
-    const tournament: TournamentDto = {
-      ...res,
-      editors: normEditors,
-      questions: normQuestions,
-    };
-    return tournament;
   }
 }

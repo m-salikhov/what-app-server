@@ -1,4 +1,4 @@
-interface GotquestionsPerson {
+export interface GotquestionsPerson {
   id: number;
   name: string;
   gender: string;

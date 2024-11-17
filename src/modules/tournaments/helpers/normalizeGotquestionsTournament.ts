@@ -1,7 +1,7 @@
 import { TournamentDto } from '../dto/tournament.dto';
-import { Pack } from '../Types/GotquestionsResponse';
+import { GotquestionsPerson, Pack } from '../Types/GotquestionsResponse';
 
-function extractAuthorsNames(authors: any[]) {
+function extractAuthorsNames(authors: GotquestionsPerson[]) {
   if (authors.length === 0) return 'автор не указан';
 
   return authors.map((a) => a.name).join(', ');
@@ -53,7 +53,7 @@ export function normalizeGotquestionsTournament(pack: Pack) {
     title: pack.title,
     questionsQuantity: questions.length,
     date: new Date(pack.startDate).getTime(),
-    tours: pack.tours.length,
+    tours: pack.tours.at(-1).number,
     editors: pack.editors.map((e) => e.name),
     uploader: '',
     uploaderUuid: '',

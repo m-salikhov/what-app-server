@@ -134,20 +134,18 @@ const parseTournamentHTML = async (html: string) => {
             .replace(/\s\s+/g, ' ')
             .trim();
 
-          if (i == 2) {
-            console.log(sourceStr);
-          }
-
           //если источников больше одного
           const flag = /^1.\s/.test(sourceStr);
           if (!flag) {
-            questions[i].source = [sourceStr];
+            questions[i].source = [{ link: sourceStr, id: 1 }];
           } else {
             const sourceArr = sourceStr.split(/(^|\s)\d\.\s/g);
-            const sourceArrNorm = sourceArr.filter((v) => {
-              const s = v.trim();
-              if (s) return s;
-            });
+            const sourceArrNorm = sourceArr
+              .filter((v) => {
+                const s = v.trim();
+                if (s) return s;
+              })
+              .map((s, i) => ({ link: s, id: i + 1 }));
 
             questions[i].source = sourceArrNorm;
           }
@@ -254,12 +252,12 @@ const parseTournamentHTML = async (html: string) => {
     date,
     questionsQuantity,
     tours,
-    editors,
-    questions,
     uploader: '',
     uploaderUuid: '',
     link: '',
     dateUpload: 0,
+    editors: editors.map((e, i) => ({ name: e, id: i + 1 })),
+    questions,
   };
 
   return t;

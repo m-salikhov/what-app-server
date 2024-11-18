@@ -30,7 +30,7 @@ export class TournamentsService {
     await Promise.all(
       tournament.editors.map(async (editor) => {
         const editorToSave = new Editor();
-        editorToSave.name = editor;
+        editorToSave.name = editor.name;
         await this.editorRepo.save(editorToSave);
         savedEditors.push(editorToSave);
       }),
@@ -41,7 +41,7 @@ export class TournamentsService {
       const savedSources: Source[] = [];
       for (const source of question.source) {
         const sourceToSave = new Source();
-        sourceToSave.link = source;
+        sourceToSave.link = source.link;
         await this.sourceRepo.save(sourceToSave);
         savedSources.push(sourceToSave);
       }

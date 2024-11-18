@@ -9,11 +9,17 @@ function extractAuthorsNames(authors: GotquestionsPerson[]) {
 
 function splitSourceString(sources: string) {
   if (/^1[.)]/.test(sources)) {
-    return sources.split(/\n/).map((s) => s.slice(2).trim());
+    return sources
+      .split(/\n/)
+      .map((s) => s.slice(2).trim())
+      .map((s, i) => ({ link: s, id: i + 1 }));
   } else if (/\n/.test(sources)) {
-    return sources.split(/\n/).map((s) => s.trim());
+    return sources
+      .split(/\n/)
+      .map((s) => s.trim())
+      .map((s, i) => ({ link: s, id: i + 1 }));
   } else {
-    return [sources];
+    return [{ link: sources, id: 1 }];
   }
 }
 
@@ -54,7 +60,7 @@ export function normalizeGotquestionsTournament(pack: Pack) {
     questionsQuantity: questions.length,
     date: new Date(pack.startDate).getTime(),
     tours: pack.tours.at(-1).number,
-    editors: pack.editors.map((e) => e.name),
+    editors: pack.editors.map((e) => ({ name: e.name, id: e.id })),
     uploader: '',
     uploaderUuid: '',
     link: '',

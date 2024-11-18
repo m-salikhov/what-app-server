@@ -8,5 +8,8 @@ export class QuestionDto {
   alterAnswer?: string;
   comment?: string;
   author: string;
-  source: string[];
+  source: {
+    id: number;
+    link: string;
+  }[];
 }

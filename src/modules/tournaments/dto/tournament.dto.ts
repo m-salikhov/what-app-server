@@ -11,9 +11,10 @@ export class TournamentDto {
   @IsNotEmpty()
   tours: number;
   @IsArray()
-  questions: QuestionDto[];
-  @IsArray()
-  editors: string[];
+  editors: {
+    id: number;
+    name: string;
+  }[];
   @IsNotEmpty()
   dateUpload: number;
   @IsUUID()
@@ -22,6 +23,8 @@ export class TournamentDto {
   uploader: string;
   @IsNotEmpty()
   link: string;
+  @IsArray()
+  questions: QuestionDto[];
 }
 
 export class getTournametDto {

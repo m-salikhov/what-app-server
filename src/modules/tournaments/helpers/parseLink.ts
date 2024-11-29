@@ -36,6 +36,7 @@ const parseTournamentHTML = async (html: string) => {
       .trim();
 
     questions[i] = {
+      id: i + 1,
       text: questionText || '',
       answer: '',
       comment: '',

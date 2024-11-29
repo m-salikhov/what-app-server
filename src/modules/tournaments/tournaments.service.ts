@@ -46,8 +46,10 @@ export class TournamentsService {
         savedSources.push(sourceToSave);
       }
 
+      const { id, ...questionWithoutId } = question;
+
       const newQuestion = this.questionRepo.create({
-        ...question,
+        ...questionWithoutId,
         source: savedSources,
       });
       const savedQuestion = await this.questionRepo.save(newQuestion);

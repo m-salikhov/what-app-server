@@ -35,6 +35,7 @@ function normalizeGotquestionsQuestions(tours: Pack['tours']) {
         : q.razdatkaText;
 
       questions[q.number - 1] = {
+        id: q.number,
         qNumber: q.number,
         tourNumber: tour.number,
         text: q.text,

@@ -52,9 +52,9 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('/userresultfull')
-  async getUserResultFull(@Body() idDto: { id: string }) {
-    return await this.usersService.getUserResultFull(idDto.id);
+  @Get('/userresultfull/:id')
+  async getUserResultFull(@Param('id') id: string) {
+    return await this.usersService.getUserResultFull(id);
   }
 
   @UseGuards(JwtAuthGuard)

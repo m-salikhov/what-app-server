@@ -4,33 +4,13 @@ import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { LoginStat } from './entities/loginstat.entity';
 import { RequestAuth } from '../auth/auth.controller';
-import { OpenStat } from './entities/openstat.entity';
 
 @Injectable()
 export class StatsService {
   constructor(
-    @InjectRepository(OpenStat)
-    private openStatsRepo: Repository<OpenStat>,
     @InjectRepository(LoginStat)
     private loginStatsRepo: Repository<LoginStat>,
   ) {}
-
-  async saveOpenStat(req: Request) {
-    const { timestamp, ip } = this.getCommonStatsFromRequest(req);
-    const userAgent = req.headers['user-agent'];
-    const host = req.headers.host;
-
-    const newStat = this.openStatsRepo.create({
-      host,
-      ip,
-      timestamp,
-      userAgent,
-    });
-
-    this.openStatsRepo.save({
-      ...newStat,
-    });
-  }
 
   async saveLoginStat(req: RequestAuth) {
     const { timestamp, ip } = this.getCommonStatsFromRequest(req);

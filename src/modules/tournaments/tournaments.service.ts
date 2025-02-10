@@ -158,7 +158,9 @@ export class TournamentsService {
   }
 
   async getAllTournamentsShort() {
-    const tournaments = await this.tournamentRepo.find();
+    const tournaments = await this.tournamentRepo.find({
+      order: { dateUpload: 'DESC' },
+    });
     return tournaments;
   }
 

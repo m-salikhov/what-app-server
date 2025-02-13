@@ -100,8 +100,9 @@ export class TournamentsService {
       const tournament = await parseTournamentGotquestions(link);
       return tournament;
     } catch (error) {
+      console.log(error);
+
       throw new BadRequestException(
-        console.log(error)
         'Не удаётся распарсить турнир, проверьте ссылку',
       );
     }

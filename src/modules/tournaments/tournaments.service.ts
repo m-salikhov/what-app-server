@@ -101,6 +101,7 @@ export class TournamentsService {
       return tournament;
     } catch (error) {
       throw new BadRequestException(
+        console.log(error)
         'Не удаётся распарсить турнир, проверьте ссылку',
       );
     }

@@ -17,12 +17,6 @@ const parseTournamentHTML = async (html: string) => {
 
   const $ = cheerio.load(html);
 
-  //проверка открылась ли нужная страница на самом сайте базы чгк
-  const test = $('#site-slogan').text();
-  if (test) {
-    throw new NotFoundException('Неверно указана ссылка на страницу турнира');
-  }
-
   //название турнира
   const title = $('h1').text();
 

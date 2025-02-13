@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QuestionDto } from './dto/question.dto';
@@ -9,7 +13,6 @@ import { Source } from './entities/source.entity';
 import { Tournament } from './entities/tournament.entity';
 import getHTML from './helpers/getHTML';
 import parseTournamentHTML from './helpers/parseLink';
-import { normalizeGotquestionsTournament } from './helpers/normalizeGotquestionsTournament';
 import { parseTournamentGotquestions } from './helpers/parseLinkGotquestions';
 
 @Injectable()
@@ -74,9 +77,15 @@ export class TournamentsService {
     if (tournamentCheck)
       throw new ConflictException('Турнир уже существует в системе');
 
-    const tournamentHTML = await getHTML(link);
-    const parsedTournament = await parseTournamentHTML(tournamentHTML);
-    return { ...parsedTournament, link };
+    try {
+      const tournamentHTML = await getHTML(link);
+      const parsedTournament = await parseTournamentHTML(tournamentHTML);
+      return { ...parsedTournament, link };
+    } catch (error) {
+      throw new BadRequestException(
+        'Не удаётся распарсить турнир, проверьте ссылку',
+      );
+    }
   }
 
   async parseTournamentByLinkGotquestions(link: string) {
@@ -87,11 +96,14 @@ export class TournamentsService {
     if (tournamentCheck)
       throw new ConflictException('Турнир уже существует в системе');
 
-    const pack = await parseTournamentGotquestions(link);
-
-    const tournament = normalizeGotquestionsTournament(pack);
-
-    return { ...tournament, link };
+    try {
+      const tournament = await parseTournamentGotquestions(link);
+      return tournament;
+    } catch (error) {
+      throw new BadRequestException(
+        'Не удаётся распарсить турнир, проверьте ссылку',
+      );
+    }
   }
 
   async getTournamentById(id: number) {

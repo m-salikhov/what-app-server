@@ -109,12 +109,23 @@ export class TournamentsService {
   }
 
   async getTournamentById(id: number) {
-    const tournament = await this.tournamentRepo.findOne({
+    let tournament = await this.tournamentRepo.findOne({
       where: { id },
       relations: ['editors', 'questions'],
     });
 
-    return tournament ? tournament : 'Турнир не найден';
+    if (!tournament) {
+      throw new BadRequestException('Турнир не найден');
+    }
+
+    //TODO: поправить БД, чтобы сохраняла даты как числа
+    tournament = {
+      ...tournament,
+      dateUpload: +tournament.dateUpload,
+      date: +tournament.date,
+    };
+
+    return tournament;
   }
 
   async getRandomQuestions(n: number) {
@@ -126,7 +137,7 @@ export class TournamentsService {
       .limit(n)
       .getMany();
 
-    const random = await Promise.all(
+    const randomQuestions = await Promise.all(
       randomIds.map((v) => {
         return this.questionRepo.findOne({
           where: { id: v.id },
@@ -135,21 +146,13 @@ export class TournamentsService {
       }),
     );
 
-    return random;
-  }
+    //TODO: поправить БД, чтобы сохраняла даты как числа
+    randomQuestions.forEach((v) => {
+      v.tournament.dateUpload = +v.tournament.dateUpload;
+      v.tournament.date = +v.tournament.date;
+    });
 
-  async getRandomTournaments(n: number) {
-    const qb = this.tournamentRepo.createQueryBuilder('tournament');
-
-    const randomTitles = await qb
-      .select('tournament.title')
-      .orderBy('RAND()')
-      .limit(n)
-      .getMany();
-
-    const randomTitlesNormalize = randomTitles.map((v) => v.title);
-
-    return randomTitlesNormalize;
+    return randomQuestions;
   }
 
   async getLastAddTournaments(amount: number, page: number, withSkip: boolean) {
@@ -160,6 +163,12 @@ export class TournamentsService {
       order: { dateUpload: 'DESC' },
       skip: withSkip ? skip : 0,
       take: withSkip ? amount : amount * page,
+    });
+
+    //TODO: поправить БД, чтобы сохраняла даты как числа
+    tournaments.forEach((v) => {
+      v.dateUpload = +v.dateUpload;
+      v.date = +v.date;
     });
 
     const count = await repo.count();
@@ -175,6 +184,13 @@ export class TournamentsService {
     const tournaments = await this.tournamentRepo.find({
       order: { dateUpload: 'DESC' },
     });
+
+    //TODO: поправить БД, чтобы сохраняла даты как числа
+    tournaments.forEach((v) => {
+      v.dateUpload = +v.dateUpload;
+      v.date = +v.date;
+    });
+
     return tournaments;
   }
 
@@ -183,6 +199,13 @@ export class TournamentsService {
       where: { uploaderUuid: uploaderId },
       order: { dateUpload: 'DESC' },
     });
+
+    //TODO: поправить БД, чтобы сохраняла даты как числа
+    tournaments.forEach((v) => {
+      v.dateUpload = +v.dateUpload;
+      v.date = +v.date;
+    });
+
     return tournaments;
   }
 

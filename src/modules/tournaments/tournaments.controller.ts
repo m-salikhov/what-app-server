@@ -79,9 +79,4 @@ export class TournamentsController {
   async getTournamentById(@Param('id', ParseIntPipe) id: number) {
     return this.tournamentsService.getTournamentById(id);
   }
-
-  @Get('/randomt/:n')
-  async getRandomTournaments(@Param('n', ParseIntPipe) n: number) {
-    return this.tournamentsService.getRandomTournaments(n);
-  }
 }

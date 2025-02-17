@@ -26,11 +26,3 @@ export class TournamentDto {
   @IsArray()
   questions: QuestionDto[];
 }
-
-export class getTournametDto {
-  title?: string;
-  date?: number;
-  editor?: string;
-  maxDateUpload?: number;
-  minDateUploader?: number;
-}

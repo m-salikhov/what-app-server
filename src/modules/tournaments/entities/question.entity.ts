@@ -35,5 +35,5 @@ export class Question {
   @ManyToOne(() => Tournament, (tournament) => tournament.questions, {
     onDelete: 'CASCADE',
   })
-  tournament: Tournament;
+  tournament?: Tournament;
 }

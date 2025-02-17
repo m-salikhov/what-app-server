@@ -59,6 +59,9 @@ export class UsersService {
     });
     if (!user) throw new NotFoundException('Пользователь не найден');
 
+    //TODO исправить БД, чтобы сохраняла числа
+    user.date = +user.date;
+
     return user;
   }
 
@@ -105,15 +108,19 @@ export class UsersService {
   }
 
   async getUserResultShort(id: string) {
-    let result = await this.userResultRepo.find({
+    const result = await this.userResultRepo.find({
       where: { userId: id },
       order: { date: 'DESC' },
     });
+
+    //TODO исправить БД, чтобы сохраняла числа
+    result.forEach((v) => (v.date = +v.date));
+
     return result;
   }
 
   async getUserResultFull(id: string) {
-    const res = await this.userResultRepo.find({
+    const result = await this.userResultRepo.find({
       where: { userId: id },
       order: { date: 'DESC' },
       relations: ['result'],
@@ -124,7 +131,11 @@ export class UsersService {
         },
       },
     });
-    return res;
+
+    //TODO исправить БД, чтобы сохраняла числа
+    result.forEach((v) => (v.date = +v.date));
+
+    return result;
   }
 
   async deleteUser(id: string) {

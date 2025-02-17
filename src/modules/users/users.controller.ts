@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreateUserDto } from './dto/create-user.dto';
-import { updatePassDto } from './dto/get-user.dto';
+import { GetUserDto, updatePassDto } from './dto/get-user.dto';
 import { UserResultDto } from './dto/userResult.dto';
 import { UsersService } from './users.service';
 import { Response } from 'express';
@@ -40,7 +40,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put()
+  @Put('/changepassword')
   async updateUser(@Body() passObj: updatePassDto) {
     return await this.usersService.updatePassword(passObj);
   }
@@ -49,6 +49,12 @@ export class UsersController {
   @Post('/userresult')
   async createTournament(@Body() userResultDto: UserResultDto) {
     return await this.usersService.createUserResult(userResultDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/getuser')
+  async getUser(@Body() getUserDto: GetUserDto) {
+    return await this.usersService.getUser(getUserDto);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -77,16 +77,20 @@ export const parseTournamentGotquestions = async (link: string) => {
       }
 
       // раздатка
-      const addElement = element.querySelector(
+      const addBlockFull = element.querySelector(
+        '.flex.items-end.justify-between.pt-1.pb-2 + div',
+      );
+      const addElement = addBlockFull.querySelector(
         '.relative.border.border-dotted.border-ntr.p-2.my-1',
       );
       if (addElement) {
-        // q.add = addElement.querySelector('span').textContent;
         const textAdd = addElement.querySelector('span');
         const imgAdd = addElement.querySelector('img');
-        imgAdd
-          ? (q.add = imgAdd.getAttribute('src'))
-          : (q.add = textAdd.textContent);
+        if (imgAdd) {
+          q.add = imgAdd.getAttribute('src');
+        } else if (textAdd) {
+          q.add = textAdd.textContent;
+        }
       }
 
       // блоки с текстом (вопрос, ответ, зачёт, комментарий, источники)

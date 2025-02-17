@@ -76,18 +76,17 @@ export const parseTournamentGotquestions = async (link: string) => {
         q.type = 'outside';
       }
 
-      // раздатка текстом
-      const addText = element.querySelector(
+      // раздатка
+      const addElement = element.querySelector(
         '.relative.border.border-dotted.border-ntr.p-2.my-1',
       );
-      if (addText) {
-        q.add = addText.textContent;
-      }
-
-      // раздатка картинкой
-      const img = element.querySelector('img');
-      if (img) {
-        q.add = img.getAttribute('src');
+      if (addElement) {
+        // q.add = addElement.querySelector('span').textContent;
+        const textAdd = addElement.querySelector('span');
+        const imgAdd = addElement.querySelector('img');
+        imgAdd
+          ? (q.add = imgAdd.getAttribute('src'))
+          : (q.add = textAdd.textContent);
       }
 
       // блоки с текстом (вопрос, ответ, зачёт, комментарий, источники)

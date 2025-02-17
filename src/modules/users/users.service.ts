@@ -40,9 +40,7 @@ export class UsersService {
     const newUser = this.userRepo.create({
       ...user,
       id,
-      role: 'user',
       password: hash,
-      date: Date.now(),
     });
 
     const { password, ...savedNewUser } = await this.userRepo.save(newUser);

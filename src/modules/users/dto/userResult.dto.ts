@@ -1,9 +1,6 @@
-import { IsUUID, IsNotEmpty } from 'class-validator';
+import { IsUUID, IsNotEmpty, IsArray } from 'class-validator';
 
-interface ResultType {
-  [tourNumber: number]: { num: number; ans: boolean }[];
-}
-
+type ResultType = { num: number; ans: boolean; tour: number }[];
 export class UserResultDto {
   @IsUUID()
   userId: string;
@@ -15,5 +12,6 @@ export class UserResultDto {
   tournamentLength: number;
   @IsNotEmpty()
   resultNumber: number;
+  @IsArray()
   result: ResultType;
 }

@@ -83,17 +83,11 @@ export class UsersService {
     if (resultCheck) throw new ConflictException('Результат уже существует');
 
     const savedResultElems: ResultElem[] = [];
-
-    let tours = Math.max(...Object.keys(userResultDto.result).map((v) => +v));
-
-    for (let i = 1; i <= tours; i++) {
-      for await (const resultElem of userResultDto.result[i]) {
-        let resultElemToSave = new ResultElem();
-
-        resultElemToSave = { ...resultElemToSave, ...resultElem, tour: i };
-        let savedElem = await this.resultElemRepo.save(resultElemToSave);
-        savedResultElems.push(savedElem);
-      }
+    for await (const resultElem of userResultDto.result) {
+      let resultElemToSave = new ResultElem();
+      resultElemToSave = { ...resultElemToSave, ...resultElem };
+      let savedElem = await this.resultElemRepo.save(resultElemToSave);
+      savedResultElems.push(savedElem);
     }
 
     const newUserResult: Omit<UserResult, 'id'> = {
@@ -124,12 +118,6 @@ export class UsersService {
       where: { userId: id },
       order: { date: 'DESC' },
       relations: ['result'],
-      select: {
-        result: {
-          ans: true,
-          num: true,
-        },
-      },
     });
 
     //TODO исправить БД, чтобы сохраняла числа

@@ -242,7 +242,8 @@ const parseTournamentHTML = async (html: string) => {
   }
 
   //сборка турнира
-  const t: TournamentDto = {
+  const t: TournamentDto & { id: number } = {
+    id: 0,
     title,
     date,
     questionsQuantity,

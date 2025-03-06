@@ -121,7 +121,7 @@ export const parseTournamentGotquestions = async (link: string) => {
           if (sources.length > 1) {
             q.source = sources.map((s, i) => ({
               ...s,
-              link: s.link.slice(2).trim(),
+              link: /^\d/.test(s.link) ? s.link.slice(2).trim() : s.link,
             }));
           } else {
             q.source = sources;

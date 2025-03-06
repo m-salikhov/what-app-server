@@ -29,9 +29,9 @@ export class AuthController {
     @Req() req: RequestAuth,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const token = await this.authService.login(req.user);
+    const { access_token } = await this.authService.login(req.user);
 
-    response.cookie('access_token', token.access_token, {
+    response.cookie('access_token', access_token, {
       httpOnly: true,
       maxAge: Number(process.env.COOKIES_MAX_AGE),
       sameSite: 'none',
@@ -48,11 +48,11 @@ export class AuthController {
     @Req() req: RequestAuth,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const token = await this.authService.login(req.user);
+    const { access_token } = await this.authService.login(req.user);
 
     const { password, ...user } = await this.authService.getUser(req.user.id);
 
-    response.cookie('access_token', token.access_token, {
+    response.cookie('access_token', access_token, {
       httpOnly: true,
       maxAge: Number(process.env.COOKIES_MAX_AGE),
       sameSite: 'none',

@@ -70,6 +70,11 @@ export class TournamentsController {
     return this.tournamentsService.getRandomQuestions(n);
   }
 
+  @Get('/random-tournament?')
+  async getRandomTournament(@Query('userId') userId: string) {
+    return this.tournamentsService.getRandomTournament(userId);
+  }
+
   @Get('/statistics')
   async getStatistics() {
     return this.tournamentsService.getStatistics();

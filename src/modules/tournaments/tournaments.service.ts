@@ -14,6 +14,7 @@ import { Tournament } from './entities/tournament.entity';
 import getHTML from './helpers/getHTML';
 import parseTournamentHTML from './helpers/parseLink';
 import { parseTournamentGotquestions } from './helpers/parseLinkGotquestions';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class TournamentsService {
@@ -26,6 +27,7 @@ export class TournamentsService {
     private questionRepo: Repository<Question>,
     @InjectRepository(Source)
     private sourceRepo: Repository<Source>,
+    private usersService: UsersService,
   ) {}
 
   async createTournament(tournament: TournamentDto) {
@@ -126,6 +128,35 @@ export class TournamentsService {
     };
 
     return tournament;
+  }
+
+  async getRandomTournament(userId: string) {
+    const results = await this.usersService.getUserResultShort(userId);
+
+    const forbiddenIds = results.map((v) => v.tournamentId);
+
+    const query = this.tournamentRepo
+      .createQueryBuilder('tournament')
+      .orderBy('RAND()');
+
+    // Добавляем условие исключения только если есть запрещённые ID
+    if (forbiddenIds.length > 0) {
+      query.andWhere('tournament.id NOT IN (:...forbiddenIds)', {
+        forbiddenIds,
+      });
+    }
+
+    const randomTournament = await query.limit(1).getOne();
+
+    if (!randomTournament) {
+      throw new BadRequestException('Турниры закончились');
+    }
+
+    //TODO: поправить БД, чтобы сохраняла даты как числа
+    randomTournament.dateUpload = +randomTournament.dateUpload;
+    randomTournament.date = +randomTournament.date;
+
+    return randomTournament;
   }
 
   async getRandomQuestions(n: number) {

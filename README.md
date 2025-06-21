@@ -24,7 +24,7 @@ HOST=хост БД. localhost для локального запуска
 DB_USERNAME= имя пользователя. root для локального запуска  
 DB_NAME= название БД  
 JWT_EXPIRED=2d время жизни jwt  
-COOKIES_MAX_AGE=172800000 время жизни куки
+COOKIES_MAX_AGE=345600000 время жизни куки
 
 ---
 

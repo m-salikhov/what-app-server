@@ -11,8 +11,8 @@ import { Editor } from './entities/editors.entity';
 import { Question } from './entities/question.entity';
 import { Source } from './entities/source.entity';
 import { Tournament } from './entities/tournament.entity';
-import getHTML from './helpers/getHTML';
-import parseTournamentHTML from './helpers/parseLink';
+import { getHTML } from './helpers/getHTML';
+import { parseTournamentHTML } from './helpers/parseLink';
 import { parseTournamentGotquestions } from './helpers/parseLinkGotquestions';
 import { UsersService } from '../users/users.service';
 
@@ -115,6 +115,7 @@ export class TournamentsService {
       where: { id },
       relations: ['editors', 'questions'],
     });
+    console.log(tournament);
 
     if (!tournament) {
       throw new BadRequestException('Турнир не найден');

@@ -15,13 +15,13 @@ export class Tournament {
   id: number;
   @Column()
   title: string;
-  @Column({ type: 'varchar' })
+  @Column({ type: 'bigint' })
   date: number;
   @Column()
   tours: number;
   @Column()
   questionsQuantity: number;
-  @Column({ type: 'varchar' })
+  @Column({ type: 'bigint' })
   dateUpload: number;
   @Column()
   uploaderUuid: string;

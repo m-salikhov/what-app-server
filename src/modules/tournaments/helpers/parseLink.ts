@@ -12,7 +12,7 @@ enum AnsClasses {
   Source = 'Sources',
 }
 
-const parseTournamentHTML = async (html: string) => {
+export const parseTournamentHTML = async (html: string) => {
   const questions: QuestionDto[] = [];
 
   const $ = cheerio.load(html);
@@ -258,5 +258,3 @@ const parseTournamentHTML = async (html: string) => {
 
   return t;
 };
-
-export default parseTournamentHTML;

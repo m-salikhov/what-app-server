@@ -12,7 +12,10 @@ import { WordleModule } from './modules/wordle/wordle.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({ ...dataSourceOptions, autoLoadEntities: true }),
+    TypeOrmModule.forRoot({
+      ...dataSourceOptions,
+      autoLoadEntities: true,
+    }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../public'),
       serveRoot: '/public/',

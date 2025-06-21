@@ -2,7 +2,7 @@ import { get } from 'https';
 import axios from 'axios';
 import { NotFoundException } from '@nestjs/common';
 
-async function getHTML(link: string) {
+export async function getHTML(link: string) {
   if (!link.includes('/print')) {
     link = link + '/print';
   }
@@ -32,5 +32,3 @@ async function getHTML(link: string) {
 
   return res;
 }
-
-export default getHTML;

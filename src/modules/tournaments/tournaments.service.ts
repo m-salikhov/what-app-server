@@ -131,8 +131,12 @@ export class TournamentsService {
 
   async getRandomTournament(userId: string) {
     // получаем id турниров, которые пользователь сыграл
-    const results = await this.usersService.getUserResultShort(userId);
-    const forbiddenIds = results.map((v) => v.tournamentId);
+    const results = userId
+      ? await this.usersService.getUserResultShort(userId)
+      : [];
+
+    const forbiddenIds =
+      results.length > 0 ? results.map((v) => v.tournamentId) : [];
 
     const whereClause: FindOptionsWhere<Tournament> = {};
     // исключаем турниры, которые добавил пользователь

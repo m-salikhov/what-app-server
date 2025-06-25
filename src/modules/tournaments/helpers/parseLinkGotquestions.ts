@@ -18,7 +18,7 @@ export const parseTournamentGotquestions = async (link: string) => {
   const page = await browser.newPage();
 
   // Переходим на нужный сайт
-  await page.goto(link, { waitUntil: 'networkidle0' });
+  await page.goto(link, { waitUntil: 'networkidle0', timeout: 50000 });
 
   // Нажимаем на кнопку, чтобы открылись блоки ответов
   await page.click(

@@ -2,9 +2,10 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, In, Not, Repository } from 'typeorm';
 import { QuestionDto } from './dto/question.dto';
 import { TournamentDto } from './dto/tournament.dto';
 import { Editor } from './entities/editors.entity';
@@ -111,53 +112,54 @@ export class TournamentsService {
   }
 
   async getTournamentById(id: number) {
-    let tournament = await this.tournamentRepo.findOne({
+    const tournament = await this.tournamentRepo.findOne({
       where: { id },
       relations: ['editors', 'questions'],
     });
-    console.log(tournament);
 
     if (!tournament) {
       throw new BadRequestException('Турнир не найден');
     }
 
     //TODO: поправить БД, чтобы сохраняла даты как числа
-    tournament = {
+    return {
       ...tournament,
       dateUpload: +tournament.dateUpload,
       date: +tournament.date,
     };
-
-    return tournament;
   }
 
   async getRandomTournament(userId: string) {
+    // получаем id турниров, которые пользователь сыграл
     const results = await this.usersService.getUserResultShort(userId);
-
     const forbiddenIds = results.map((v) => v.tournamentId);
 
-    const query = this.tournamentRepo
-      .createQueryBuilder('tournament')
-      .orderBy('RAND()');
-
-    // Добавляем условие исключения только если есть запрещённые ID
+    const whereClause: FindOptionsWhere<Tournament> = {};
+    // исключаем турниры, которые добавил пользователь
+    if (userId) {
+      whereClause.uploaderUuid = Not(userId);
+    }
+    // исключаем турниры, которые пользователь сыграл
     if (forbiddenIds.length > 0) {
-      query.andWhere('tournament.id NOT IN (:...forbiddenIds)', {
-        forbiddenIds,
-      });
+      whereClause.id = Not(In(forbiddenIds));
     }
 
-    const randomTournament = await query.limit(1).getOne();
+    const tournament = await this.tournamentRepo
+      .createQueryBuilder('tournament')
+      .where(whereClause)
+      .orderBy('RAND()')
+      .limit(1)
+      .getOne();
 
-    if (!randomTournament) {
-      throw new BadRequestException('Турниры закончились');
+    if (!tournament) {
+      throw new NotFoundException('Турниры закончились');
     }
 
-    //TODO: поправить БД, чтобы сохраняла даты как числа
-    randomTournament.dateUpload = +randomTournament.dateUpload;
-    randomTournament.date = +randomTournament.date;
-
-    return randomTournament;
+    return {
+      ...tournament,
+      dateUpload: +tournament.dateUpload,
+      date: +tournament.date,
+    };
   }
 
   async getRandomQuestions(n: number) {

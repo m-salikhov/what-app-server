@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Post,
@@ -15,6 +16,7 @@ import { GetUserDto, updatePassDto } from './dto/get-user.dto';
 import { UserResultDto } from './dto/userResult.dto';
 import { UsersService } from './users.service';
 import { Response } from 'express';
+import { guest } from './constants/user.constants';
 
 @Controller('users')
 export class UsersController {
@@ -42,6 +44,12 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Put('/changepassword')
   async updateUser(@Body() passObj: updatePassDto) {
+    if (passObj.id === guest.id) {
+      return new ForbiddenException(
+        'Нельзя изменить пароль этого пользователя',
+      );
+    }
+
     return await this.usersService.updatePassword(passObj);
   }
 

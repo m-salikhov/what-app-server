@@ -45,9 +45,7 @@ export class UsersController {
   @Put('/changepassword')
   async updateUser(@Body() passObj: updatePassDto) {
     if (passObj.id === publicAccount.id) {
-      return new ForbiddenException(
-        'Нельзя изменить пароль этого пользователя',
-      );
+      throw new ForbiddenException('Нельзя изменить пароль этого пользователя');
     }
 
     return await this.usersService.updatePassword(passObj);

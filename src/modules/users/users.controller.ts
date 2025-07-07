@@ -33,7 +33,7 @@ export class UsersController {
 
     response.cookie('access_token', access_token, {
       httpOnly: true,
-      maxAge: 259200000,
+      maxAge: Number(process.env.COOKIES_MAX_AGE),
       sameSite: 'none',
       secure: true,
     });

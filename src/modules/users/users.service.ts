@@ -11,7 +11,6 @@ import { User } from './entity/user.entity';
 import { GetUserDto, updatePassDto } from './dto/get-user.dto';
 import { UserResultDto } from './dto/userResult.dto';
 import { UserResult, ResultElem } from './entity/userResult.entity';
-import { v4 as uuidv4 } from 'uuid';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -35,15 +34,11 @@ export class UsersService {
 
     const hash = await bcrypt.hash(user.password, 8);
 
-    const id = uuidv4();
-
-    const newUser = this.userRepo.create({
+    const { password, ...savedNewUser } = await this.userRepo.save({
       ...user,
-      id,
+      date: Date.now(),
       password: hash,
     });
-
-    const { password, ...savedNewUser } = await this.userRepo.save(newUser);
 
     const payload = { username: savedNewUser.username, id: savedNewUser.id };
 

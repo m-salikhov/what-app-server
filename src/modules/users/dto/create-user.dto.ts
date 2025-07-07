@@ -9,6 +9,4 @@ export class CreateUserDto {
   password: string;
   @IsNotEmpty()
   role: 'user' | 'superuser' | 'admin';
-  @IsNumber()
-  date: number;
 }

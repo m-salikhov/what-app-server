@@ -32,35 +32,40 @@ export class TournamentsService {
   ) {}
 
   async createTournament(tournament: TournamentDto) {
-    const savedEditors: Editor[] = [];
-    await Promise.all(
+    const tournamentCheck = await this.tournamentRepo.findOne({
+      where: { link: tournament.link },
+    });
+    if (tournamentCheck)
+      throw new ConflictException('Турнир уже существует в системе');
+
+    const savedEditors = await Promise.all(
       tournament.editors.map(async (editor) => {
-        const editorToSave = new Editor();
-        editorToSave.name = editor.name;
-        await this.editorRepo.save(editorToSave);
-        savedEditors.push(editorToSave);
+        const existingEditor = await this.editorRepo.findOne({
+          where: { name: editor.name },
+        });
+
+        if (existingEditor) return existingEditor;
+
+        return this.editorRepo.save({ name: editor.name });
       }),
     );
 
-    const savedQuestions: Question[] = [];
-    for (const question of tournament.questions) {
-      const savedSources: Source[] = [];
-      for (const source of question.source) {
-        const sourceToSave = new Source();
-        sourceToSave.link = source.link;
-        await this.sourceRepo.save(sourceToSave);
-        savedSources.push(sourceToSave);
-      }
+    const savedQuestions = await Promise.all(
+      tournament.questions.map(async (question) => {
+        const savedSources = await Promise.all(
+          question.source.map(async (source) => {
+            return this.sourceRepo.save({ link: source.link });
+          }),
+        );
 
-      const { id, ...questionWithoutId } = question;
+        const { id, ...questionWithoutId } = question;
 
-      const newQuestion = this.questionRepo.create({
-        ...questionWithoutId,
-        source: savedSources,
-      });
-      const savedQuestion = await this.questionRepo.save(newQuestion);
-      savedQuestions.push(savedQuestion);
-    }
+        return this.questionRepo.save({
+          ...questionWithoutId,
+          source: savedSources,
+        });
+      }),
+    );
 
     const newTournament = this.tournamentRepo.create({
       ...tournament,
@@ -68,6 +73,7 @@ export class TournamentsService {
       editors: savedEditors,
       questions: savedQuestions,
     });
+
     const savedTournament = await this.tournamentRepo.save(newTournament);
 
     return savedTournament.id;
@@ -103,8 +109,6 @@ export class TournamentsService {
       const tournament = await parseTournamentGotquestions(link);
       return tournament;
     } catch (error) {
-      console.log(error);
-
       throw new BadRequestException(
         'Не удаётся распарсить турнир, проверьте ссылку',
       );

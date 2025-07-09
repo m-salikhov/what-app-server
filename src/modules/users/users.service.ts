@@ -89,9 +89,6 @@ export class UsersService {
       order: { date: 'DESC' },
     });
 
-    //TODO исправить БД, чтобы сохраняла числа
-    result.forEach((v) => (v.date = +v.date));
-
     return result;
   }
 
@@ -101,9 +98,6 @@ export class UsersService {
       order: { date: 'DESC' },
       relations: ['result'],
     });
-
-    //TODO исправить БД, чтобы сохраняла числа
-    result.forEach((v) => (v.date = +v.date));
 
     return result;
   }

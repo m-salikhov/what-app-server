@@ -1,28 +1,54 @@
-import { IsNotEmpty, IsArray, IsUUID } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsArray,
+  IsUUID,
+  ValidateNested,
+  IsString,
+  IsInt,
+  IsUrl,
+} from 'class-validator';
 import { QuestionDto } from './question.dto';
+import { Type } from 'class-transformer';
+
+export class EditorDto {
+  @IsString()
+  name: string;
+}
 
 export class TournamentDto {
+  @IsString()
   @IsNotEmpty()
   title: string;
+
   @IsNotEmpty()
   date: number;
-  @IsNotEmpty()
+
+  @IsInt()
   questionsQuantity: number;
-  @IsNotEmpty()
+
+  @IsInt()
   tours: number;
-  @IsArray()
-  editors: {
-    id: number;
-    name: string;
-  }[];
+
   @IsNotEmpty()
   dateUpload: number;
+
   @IsUUID()
   uploaderUuid: string;
+
+  @IsString()
   @IsNotEmpty()
   uploader: string;
-  @IsNotEmpty()
+
+  @IsUrl()
   link: string;
+
   @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => EditorDto)
+  editors: EditorDto[];
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => QuestionDto)
   questions: QuestionDto[];
 }

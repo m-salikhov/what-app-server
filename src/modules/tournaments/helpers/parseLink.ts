@@ -1,8 +1,7 @@
 import * as cheerio from 'cheerio';
-import { QuestionDto } from '../dto/question.dto';
 import getTourNumber from './getTourNumber';
-import { TournamentDto } from '../dto/tournament.dto';
-import { NotFoundException } from '@nestjs/common';
+import { Question } from '../entities/question.entity';
+import { Tournament } from '../entities/tournament.entity';
 
 enum AnsClasses {
   Answer = 'Answer',
@@ -13,7 +12,7 @@ enum AnsClasses {
 }
 
 export const parseTournamentHTML = async (html: string) => {
-  const questions: QuestionDto[] = [];
+  const questions: Question[] = [];
 
   const $ = cheerio.load(html);
 
@@ -242,7 +241,7 @@ export const parseTournamentHTML = async (html: string) => {
   }
 
   //сборка турнира
-  const t: TournamentDto & { id: number } = {
+  const t: Tournament = {
     id: 0,
     title,
     date,

@@ -19,7 +19,7 @@ export class Question {
   @Column()
   tourNumber: number;
   @Column({ default: '' })
-  add: string;
+  add?: string;
   @Column({ type: 'mediumtext' })
   text: string;
   @Column({ type: 'mediumtext' })

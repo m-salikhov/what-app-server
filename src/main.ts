@@ -6,9 +6,18 @@ import { json } from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.use(cookieParser());
   app.use(json({ limit: '50mb' }));
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: false,
+      transform: true,
+    }),
+  );
+
   await app.listen(process.env.PORT);
 }
+
 bootstrap();

@@ -11,6 +11,7 @@ export class Source {
 
   @ManyToOne(() => Question, (question) => question.source, {
     onDelete: 'CASCADE',
+    nullable: true,
   })
-  question: Question;
+  question?: Question;
 }

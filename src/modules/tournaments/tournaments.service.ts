@@ -46,7 +46,7 @@ export class TournamentsService {
 
         if (existingEditor) return existingEditor;
 
-        return this.editorRepo.save({ name: editor.name });
+        return this.editorRepo.save(editor);
       }),
     );
 
@@ -54,14 +54,12 @@ export class TournamentsService {
       tournament.questions.map(async (question) => {
         const savedSources = await Promise.all(
           question.source.map(async (source) => {
-            return this.sourceRepo.save({ link: source.link });
+            return this.sourceRepo.save(source);
           }),
         );
 
-        const { id, ...questionWithoutId } = question;
-
         return this.questionRepo.save({
-          ...questionWithoutId,
+          ...question,
           source: savedSources,
         });
       }),

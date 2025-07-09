@@ -1,9 +1,8 @@
-import { NotFoundException } from '@nestjs/common';
-import { QuestionDto } from '../dto/question.dto';
 import puppeteer from 'puppeteer';
 import getTourNumber from './getTourNumber';
 import { convertGQdateToMs } from './convertGQdateToMs';
-import { TournamentDto } from '../dto/tournament.dto';
+import { Question } from '../entities/question.entity';
+import { Tournament } from '../entities/tournament.entity';
 
 function replaceSpacesWithDots(inputText: string) {
   // Заменяем пробелы на точки и добавляем точку в начале
@@ -45,7 +44,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 
   // Извлекаем данные для вопросов
   const questions = await page.evaluate(() => {
-    const questions: QuestionDto[] = [];
+    const questions: Question[] = [];
 
     // Находим все блоки вопросов
     const elements = document.querySelectorAll(
@@ -53,7 +52,7 @@ export const parseTournamentGotquestions = async (link: string) => {
     );
 
     elements.forEach((element, i) => {
-      let q: QuestionDto = {
+      let q: Question = {
         id: i + 1,
         qNumber: 0,
         tourNumber: 0,
@@ -171,7 +170,7 @@ export const parseTournamentGotquestions = async (link: string) => {
   await browser.close();
 
   //сборка турнира
-  const t: TournamentDto & { id: number } = {
+  const t: Tournament = {
     id: 0,
     title,
     tours,

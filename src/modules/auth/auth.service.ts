@@ -12,7 +12,7 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string) {
-    const user = await this.usersService.getUser({ email });
+    const user = await this.usersService.getUserByEmail(email);
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new UnauthorizedException('Неверный пароль');
 
@@ -27,8 +27,8 @@ export class AuthService {
     };
   }
 
-  async getUser(id: string) {
-    const user = await this.usersService.getUser({ id });
+  async getUserById(id: string) {
+    const user = await this.usersService.getUserById(id);
 
     return user;
   }

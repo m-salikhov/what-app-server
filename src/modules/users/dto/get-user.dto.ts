@@ -1,14 +1,10 @@
-import { IsEmail, IsNotEmpty, IsUUID } from 'class-validator';
-
-export class GetUserDto {
-  id?: string;
-  username?: string;
-  email?: string;
-}
+import { IsNotEmpty, IsUUID, Length } from 'class-validator';
 
 export class updatePassDto {
   @IsUUID()
   id: string;
+
   @IsNotEmpty()
+  @Length(4, 20)
   newPass: string;
 }

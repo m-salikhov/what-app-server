@@ -1,17 +1,51 @@
-import { IsUUID, IsNotEmpty, IsArray } from 'class-validator';
+import {
+  IsUUID,
+  IsInt,
+  IsString,
+  IsNotEmpty,
+  IsArray,
+  ValidateNested,
+  IsBoolean,
+  Min,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
-type ResultType = { num: number; ans: boolean; tour: number }[];
+class ResultItemDto {
+  @IsInt()
+  @Min(1)
+  num: number;
+
+  @IsBoolean()
+  ans: boolean;
+
+  @IsInt()
+  @Min(1)
+  tour: number;
+}
+
 export class UserResultDto {
   @IsUUID()
   userId: string;
-  @IsNotEmpty()
+
+  @IsInt()
+  @Min(1)
   tournamentId: number;
+
+  @IsString()
   @IsNotEmpty()
   title: string;
-  @IsNotEmpty()
+
+  @IsInt()
+  @Min(1)
   tournamentLength: number;
-  @IsNotEmpty()
+
+  @IsInt()
+  @Min(0)
   resultNumber: number;
+
   @IsArray()
-  result: ResultType;
+  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => ResultItemDto)
+  result: ResultItemDto[];
 }

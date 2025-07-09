@@ -8,10 +8,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entity/user.entity';
-import { GetUserDto, updatePassDto } from './dto/get-user.dto';
 import { UserResultDto } from './dto/userResult.dto';
 import { UserResult, ResultElem } from './entity/userResult.entity';
 import { JwtService } from '@nestjs/jwt';
+import { updatePassDto } from './dto/get-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -45,19 +45,6 @@ export class UsersService {
     const access_token = this.jwtService.sign(payload);
 
     return { savedNewUser, access_token };
-  }
-
-  async getUser(getUserDto: GetUserDto): Promise<User> {
-    let [key, value]: string[] = Object.entries(getUserDto)[0];
-    const user = await this.userRepo.findOne({
-      where: { [key]: value },
-    });
-    if (!user) throw new NotFoundException('Пользователь не найден');
-
-    //TODO исправить БД, чтобы сохраняла числа
-    user.date = +user.date;
-
-    return user;
   }
 
   async updatePassword(passwordObj: updatePassDto) {
@@ -125,5 +112,19 @@ export class UsersService {
     const user = await this.userRepo.findOne({ where: { id } });
     if (!user) throw new NotFoundException('user not found');
     return await this.userRepo.remove(user);
+  }
+
+  async getUserByEmail(email: string): Promise<User> {
+    const user = await this.userRepo.findOne({ where: { email } });
+    if (!user) throw new NotFoundException('Пользователь не найден');
+
+    return user;
+  }
+
+  async getUserById(id: string): Promise<User> {
+    const user = await this.userRepo.findOne({ where: { id } });
+    if (!user) throw new NotFoundException('Пользователь не найден');
+
+    return user;
   }
 }

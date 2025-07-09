@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Post,
@@ -38,8 +39,7 @@ export class AuthController {
       secure: true,
     });
 
-    const { password, ...user } = req.user;
-    return user;
+    return req.user;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -50,7 +50,7 @@ export class AuthController {
   ) {
     const { access_token } = await this.authService.login(req.user);
 
-    const { password, ...user } = await this.authService.getUser(req.user.id);
+    const user = await this.authService.getUserById(req.user.id);
 
     response.cookie('access_token', access_token, {
       httpOnly: true,

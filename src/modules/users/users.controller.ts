@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreateUserDto } from './dto/create-user.dto';
-import { GetUserDto, updatePassDto } from './dto/get-user.dto';
+import { updatePassDto } from './dto/get-user.dto';
 import { UserResultDto } from './dto/userResult.dto';
 import { UsersService } from './users.service';
 import { Response } from 'express';
@@ -58,9 +58,15 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('/getuser')
-  async getUser(@Body() getUserDto: GetUserDto) {
-    return await this.usersService.getUser(getUserDto);
+  @Get('/:email')
+  async getUser(@Param('email') email: string) {
+    console.log(process.env.NODE_ENV);
+    if (process.env.NODE_ENV !== 'development') {
+      throw new ForbiddenException(
+        'This route is only available in development mode',
+      );
+    }
+    return await this.usersService.getUserByEmail(email);
   }
 
   @UseGuards(JwtAuthGuard)

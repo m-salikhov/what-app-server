@@ -10,18 +10,25 @@ import {
 export class UserResult {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
   @Column()
   userId: string;
+
   @Column({ type: 'varchar' })
   date: number;
+
   @Column()
   tournamentId: number;
+
   @Column()
   title: string;
+
   @Column()
   tournamentLength: number;
+
   @Column()
   resultNumber: number;
+
   @OneToMany(() => ResultElem, (elem) => elem.userResult)
   result: ResultElem[];
 }

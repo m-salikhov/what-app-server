@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   Column,
   Entity,
@@ -15,6 +16,7 @@ export class UserResult {
   userId: string;
 
   @Column({ type: 'varchar' })
+  @Transform(({ value }) => Number(value), { toPlainOnly: true })
   date: number;
 
   @Column()

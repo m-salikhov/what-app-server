@@ -50,20 +50,21 @@ export class TournamentsService {
       }),
     );
 
-    const savedQuestions = await Promise.all(
-      tournament.questions.map(async (question) => {
-        const savedSources = await Promise.all(
-          question.source.map(async (source) => {
-            return this.sourceRepo.save(source);
-          }),
-        );
+    const savedQuestions = [];
+    for (const question of tournament.questions) {
+      const savedSources = [];
+      for (const source of question.source) {
+        const savedSource = await this.sourceRepo.save(source);
+        savedSources.push(savedSource);
+      }
 
-        return this.questionRepo.save({
-          ...question,
-          source: savedSources,
-        });
-      }),
-    );
+      const savedQuestion = await this.questionRepo.save({
+        ...question,
+        source: savedSources,
+      });
+
+      savedQuestions.push(savedQuestion);
+    }
 
     const newTournament = this.tournamentRepo.create({
       ...tournament,
@@ -123,12 +124,7 @@ export class TournamentsService {
       throw new BadRequestException('Турнир не найден');
     }
 
-    //TODO: поправить БД, чтобы сохраняла даты как числа
-    return {
-      ...tournament,
-      dateUpload: +tournament.dateUpload,
-      date: +tournament.date,
-    };
+    return tournament;
   }
 
   async getRandomTournament(userId: string) {
@@ -161,11 +157,7 @@ export class TournamentsService {
       throw new NotFoundException('Турниры закончились');
     }
 
-    return {
-      ...tournament,
-      dateUpload: +tournament.dateUpload,
-      date: +tournament.date,
-    };
+    return tournament;
   }
 
   async getRandomQuestions(n: number) {
@@ -186,12 +178,6 @@ export class TournamentsService {
       }),
     );
 
-    //TODO: поправить БД, чтобы сохраняла даты как числа
-    randomQuestions.forEach((v) => {
-      v.tournament.dateUpload = +v.tournament.dateUpload;
-      v.tournament.date = +v.tournament.date;
-    });
-
     return randomQuestions;
   }
 
@@ -203,12 +189,6 @@ export class TournamentsService {
       order: { dateUpload: 'DESC' },
       skip: withSkip ? skip : 0,
       take: withSkip ? amount : amount * page,
-    });
-
-    //TODO: поправить БД, чтобы сохраняла даты как числа
-    tournaments.forEach((v) => {
-      v.dateUpload = +v.dateUpload;
-      v.date = +v.date;
     });
 
     const count = await repo.count();
@@ -225,12 +205,6 @@ export class TournamentsService {
       order: { dateUpload: 'DESC' },
     });
 
-    //TODO: поправить БД, чтобы сохраняла даты как числа
-    tournaments.forEach((v) => {
-      v.dateUpload = +v.dateUpload;
-      v.date = +v.date;
-    });
-
     return tournaments;
   }
 
@@ -238,12 +212,6 @@ export class TournamentsService {
     const tournaments = await this.tournamentRepo.find({
       where: { uploaderUuid: uploaderId },
       order: { dateUpload: 'DESC' },
-    });
-
-    //TODO: поправить БД, чтобы сохраняла даты как числа
-    tournaments.forEach((v) => {
-      v.dateUpload = +v.dateUpload;
-      v.date = +v.date;
     });
 
     return tournaments;

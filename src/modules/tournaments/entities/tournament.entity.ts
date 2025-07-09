@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Editor } from './editors.entity';
 import { Question } from './question.entity';
+import { Transform } from 'class-transformer';
 
 @Entity()
 export class Tournament {
@@ -18,6 +19,7 @@ export class Tournament {
   title: string;
 
   @Column({ type: 'bigint' })
+  @Transform(({ value }) => Number(value), { toPlainOnly: true })
   date: number;
 
   @Column()
@@ -27,6 +29,7 @@ export class Tournament {
   questionsQuantity: number;
 
   @Column({ type: 'bigint' })
+  @Transform(({ value }) => Number(value), { toPlainOnly: true })
   dateUpload: number;
 
   @Column()

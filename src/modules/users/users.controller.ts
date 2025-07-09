@@ -60,7 +60,6 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('/:email')
   async getUser(@Param('email') email: string) {
-    console.log(process.env.NODE_ENV);
     if (process.env.NODE_ENV !== 'development') {
       throw new ForbiddenException(
         'This route is only available in development mode',

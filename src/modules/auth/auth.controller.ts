@@ -63,7 +63,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('logout')
+  @Post('logout')
   logout(@Res({ passthrough: true }) response: Response) {
     response.cookie('access_token', '', {
       httpOnly: true,

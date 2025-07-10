@@ -48,9 +48,8 @@ export class UsersService {
   }
 
   async updatePassword(passwordObj: updatePassDto) {
-    const user = await this.userRepo.findOne({ where: { id: passwordObj.id } });
-    const hash = await bcrypt.hash(passwordObj.newPass, 10);
-    await this.userRepo.save({ ...user, password: hash });
+    const hash = await bcrypt.hash(passwordObj.newPass, 8);
+    await this.userRepo.update(passwordObj.id, { password: hash });
     return { message: 'Пароль изменён' };
   }
 

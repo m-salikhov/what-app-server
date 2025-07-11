@@ -65,9 +65,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   logout(@Res({ passthrough: true }) response: Response) {
-    response.cookie('access_token', '', {
+    response.clearCookie('access_token', {
       httpOnly: true,
-      maxAge: 1000,
       sameSite: 'none',
       secure: true,
     });

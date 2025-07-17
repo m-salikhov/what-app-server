@@ -20,19 +20,16 @@ export const parseTournamentGotquestions = async (link: string) => {
   await page.goto(link, { waitUntil: 'networkidle0', timeout: 50000 });
 
   // Нажимаем на кнопку, чтобы открылись блоки ответов
-  await page.click(
-    replaceSpacesWithDots(
-      'cursor-pointer text-2xl flex items-center justify-center min-w-10 h-10 rounded-full text-primary font-icons notranslate',
-    ),
-  );
+  await page.click('button[title="Показать/скрыть все ответы"]');
 
   const title = await page.evaluate(() => {
     return document.querySelector('h1').textContent;
   });
 
+  // Извлекаем данные для редакторов
   const editors = await page.evaluate(() => {
     const editors = [];
-    const a = document.querySelectorAll('.p-4 .pb-1 a');
+    const a = document.querySelectorAll('.pb-1 a');
 
     a.forEach((e, i) => {
       const name = e.textContent;
@@ -47,9 +44,7 @@ export const parseTournamentGotquestions = async (link: string) => {
     const questions: Question[] = [];
 
     // Находим все блоки вопросов
-    const elements = document.querySelectorAll(
-      '.break-words.block.w-full.qScroll',
-    );
+    const elements = document.querySelectorAll('[number]');
 
     elements.forEach((element, i) => {
       let q: Question = {
@@ -65,11 +60,14 @@ export const parseTournamentGotquestions = async (link: string) => {
       };
 
       // имя автора лежит последней ссылкой в блоке вопроса
-      const a = element.querySelectorAll('a');
-      q.author = a[a.length - 1].textContent;
+      const author = element
+        .querySelector('[href*="/person/"]')
+        .textContent.trim();
 
       // номер вопроса
-      const qNumber = +a[0].textContent.replace('Вопрос ', '');
+      const qNumber = +element
+        .querySelector('[href*="/question/"]')
+        .textContent.replace('Вопрос ', '');
       // если номер вопроса не определен или ноль, то вопрос считаем вне турнира
       if (!qNumber) {
         q.type = 'outside';
@@ -132,6 +130,7 @@ export const parseTournamentGotquestions = async (link: string) => {
         ...q,
         qNumber,
         text,
+        author,
       });
     });
 
@@ -186,3 +185,40 @@ export const parseTournamentGotquestions = async (link: string) => {
 
   return t;
 };
+
+// export const parseTournamentGotquestions = async (link: string) => {
+//   const browser = await puppeteer.launch({
+//     args: ['--no-sandbox', '--disable-setuid-sandbox'],
+//   });
+//   const page = await browser.newPage();
+
+//   // Переходим на нужный сайт
+//   await page.goto(link, { waitUntil: 'networkidle0', timeout: 50000 });
+
+//   const visibilityButtonLocator = page.locator(
+//     'button[title="Показать/скрыть все ответы"]',
+//   );
+//   await visibilityButtonLocator.click();
+
+//   // Нажимаем на кнопку, чтобы открылись блоки ответов
+//   await page.click('button[title="Показать/скрыть все ответы"]');
+
+//   const title = await page.evaluate(() => {
+//     return document.querySelector('h1').textContent;
+//   });
+
+//   const elements = await page.$$('[number]');
+//   const numbers = [];
+
+//   for (const el of elements) {
+//     const value = await page.evaluate((e) => e.getAttribute('number'), el);
+//     numbers.push(Number(value)); // или value, если строка
+//   }
+
+//   browser.close();
+
+//   return {
+//     title,
+//     numbers,
+//   };
+// };

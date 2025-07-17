@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsUUID, Length } from 'class-validator';
 
-export class updatePassDto {
+export class UpdatePassDto {
   @IsUUID()
   id: string;
 

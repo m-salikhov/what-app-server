@@ -11,7 +11,7 @@ import { User } from './entity/user.entity';
 import { UserResultDto } from './dto/userResult.dto';
 import { UserResult, ResultElem } from './entity/userResult.entity';
 import { JwtService } from '@nestjs/jwt';
-import { updatePassDto } from './dto/get-user.dto';
+import { UpdatePassDto } from './dto/get-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -25,31 +25,37 @@ export class UsersService {
     private jwtService: JwtService,
   ) {}
 
-  async createUser(user: CreateUserDto) {
-    const userCheck = await this.userRepo.findOne({
-      where: { email: user.email },
+  async createUser(createUserDto: CreateUserDto) {
+    const emailCheck = await this.userRepo.findOne({
+      where: { email: createUserDto.email },
     });
-    if (userCheck)
-      throw new ConflictException('Email уже существует в системе');
+    if (emailCheck)
+      throw new ConflictException('Почта уже существует в системе');
 
-    const hash = await bcrypt.hash(user.password, 8);
+    const usernameCheck = await this.userRepo.findOne({
+      where: { username: createUserDto.username },
+    });
+    if (usernameCheck)
+      throw new ConflictException('Логин уже существует в системе');
 
-    const { password, ...savedNewUser } = await this.userRepo.save({
-      ...user,
+    const hash = await bcrypt.hash(createUserDto.password, 8);
+
+    const savedUser = await this.userRepo.save({
+      ...createUserDto,
       date: Date.now(),
       password: hash,
     });
 
-    const payload = { username: savedNewUser.username, id: savedNewUser.id };
+    const payload = { username: savedUser.username, id: savedUser.id };
 
     const access_token = this.jwtService.sign(payload);
 
-    return { savedNewUser, access_token };
+    return { savedUser, access_token };
   }
 
-  async updatePassword(passwordObj: updatePassDto) {
-    const hash = await bcrypt.hash(passwordObj.newPass, 8);
-    await this.userRepo.update(passwordObj.id, { password: hash });
+  async updatePassword(updatePassDto: UpdatePassDto) {
+    const hash = await bcrypt.hash(updatePassDto.newPass, 8);
+    await this.userRepo.update(updatePassDto.id, { password: hash });
     return { message: 'Пароль изменён' };
   }
 

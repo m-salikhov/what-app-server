@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreateUserDto } from './dto/create-user.dto';
-import { updatePassDto } from './dto/get-user.dto';
+import { UpdatePassDto } from './dto/get-user.dto';
 import { UserResultDto } from './dto/userResult.dto';
 import { UsersService } from './users.service';
 import { Response } from 'express';
@@ -24,11 +24,11 @@ export class UsersController {
 
   @Post()
   async createUser(
-    @Body() user: CreateUserDto,
+    @Body() createUserDto: CreateUserDto,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const { savedNewUser, access_token } = await this.usersService.createUser(
-      user,
+    const { savedUser, access_token } = await this.usersService.createUser(
+      createUserDto,
     );
 
     response.cookie('access_token', access_token, {
@@ -38,17 +38,17 @@ export class UsersController {
       secure: true,
     });
 
-    return savedNewUser;
+    return savedUser;
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('/changepassword')
-  async updateUser(@Body() passObj: updatePassDto) {
-    if (passObj.id === publicAccount.id) {
+  async updateUser(@Body() updatePassDto: UpdatePassDto) {
+    if (updatePassDto.id === publicAccount.id) {
       throw new ForbiddenException('Нельзя изменить пароль этого пользователя');
     }
 
-    return await this.usersService.updatePassword(passObj);
+    return await this.usersService.updatePassword(updatePassDto);
   }
 
   @UseGuards(JwtAuthGuard)

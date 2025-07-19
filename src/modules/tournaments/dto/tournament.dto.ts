@@ -6,6 +6,7 @@ import {
   IsString,
   IsInt,
   IsUrl,
+  ValidateIf,
 } from 'class-validator';
 import { QuestionDto } from './question.dto';
 import { Type } from 'class-transformer';
@@ -32,11 +33,12 @@ export class TournamentDto {
   @IsNotEmpty()
   dateUpload: number;
 
+  @IsString()
+  @ValidateIf((tournament: TournamentDto) => tournament.uploaderUuid !== '')
   @IsUUID()
   uploaderUuid: string;
 
   @IsString()
-  @IsNotEmpty()
   uploader: string;
 
   @IsUrl()

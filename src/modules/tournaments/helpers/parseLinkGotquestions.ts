@@ -22,6 +22,10 @@ export const parseTournamentGotquestions = async (link: string) => {
   // Нажимаем на кнопку, чтобы открылись блоки ответов
   await page.click('button[title="Показать/скрыть все ответы"]');
 
+  page.on('console', (msg) => {
+    console.log('Browser console:', msg.text());
+  });
+
   const title = await page.evaluate(() => {
     return document.querySelector('h1').textContent;
   });
@@ -54,15 +58,16 @@ export const parseTournamentGotquestions = async (link: string) => {
         author: '',
         text: '',
         answer: '',
-        comment: '',
+        comment: 'не указан',
         type: 'regular',
-        source: [],
+        source: [{ id: 1, link: 'не указан' }],
       };
 
       // имя автора лежит последней ссылкой в блоке вопроса
-      const author = element
-        .querySelector('[href*="/person/"]')
-        .textContent.trim();
+      const authorElement = element.querySelector('[href*="/person/"]');
+      const author = authorElement
+        ? authorElement.textContent.trim()
+        : 'не указан';
 
       // номер вопроса
       const qNumber = +element
@@ -116,13 +121,20 @@ export const parseTournamentGotquestions = async (link: string) => {
             .map((s) => s.trim())
             .map((s, i) => ({ link: s, id: i + 1 }));
 
-          if (sources.length > 1) {
+          if (sources.length === 1) {
+            q.source = sources;
+          } else if (sources.length > 1) {
             q.source = sources.map((s, i) => ({
               ...s,
               link: /^\d/.test(s.link) ? s.link.slice(2).trim() : s.link,
             }));
           } else {
-            q.source = sources;
+            q.source = [
+              {
+                id: 1,
+                link: 'Источник не указан',
+              },
+            ];
           }
         }
       });

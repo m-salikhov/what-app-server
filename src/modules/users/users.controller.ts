@@ -17,10 +17,14 @@ import { UserResultDto } from './dto/userResult.dto';
 import { UsersService } from './users.service';
 import { Response } from 'express';
 import { publicAccount } from './constants/user.constants';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post()
   async createUser(
@@ -33,7 +37,7 @@ export class UsersController {
 
     response.cookie('access_token', access_token, {
       httpOnly: true,
-      maxAge: Number(process.env.COOKIES_MAX_AGE),
+      maxAge: this.configService.get('COOKIES_MAX_AGE'),
       sameSite: 'none',
       secure: true,
     });
@@ -60,7 +64,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('/:email')
   async getUser(@Param('email') email: string) {
-    if (process.env.NODE_ENV !== 'development') {
+    if (this.configService.get('NODE_ENV') !== 'development') {
       throw new ForbiddenException(
         'This route is only available in development mode',
       );

@@ -68,6 +68,7 @@ export const parseTournamentGotquestions = async (link: string) => {
       const qNumber = +element
         .querySelector('[href*="/question/"]')
         .textContent.replace('Вопрос ', '');
+
       // если номер вопроса не определен или ноль, то вопрос считаем вне турнира
       if (!qNumber) {
         q.type = 'outside';

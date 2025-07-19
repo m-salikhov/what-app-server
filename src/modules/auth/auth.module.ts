@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/entity/user.entity';
 import { UsersModule } from '../users/users.module';
@@ -23,7 +22,6 @@ import { StatsModule } from '../stats/stats.module';
       LoginStat,
       StatsModule,
     ]),
-    ConfigModule.forRoot(),
     UsersModule,
     PassportModule,
     JwtModule.register({

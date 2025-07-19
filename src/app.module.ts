@@ -9,6 +9,7 @@ import { dataSourceOptions } from './typeorm.datasource';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { WordleModule } from './modules/wordle/wordle.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -16,10 +17,17 @@ import { WordleModule } from './modules/wordle/wordle.module';
       ...dataSourceOptions,
       autoLoadEntities: true,
     }),
+
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../public'),
       serveRoot: '/public/',
     }),
+
+    ConfigModule.forRoot({
+      envFilePath: '../.env',
+      isGlobal: true,
+    }),
+
     UsersModule,
     TournamentsModule,
     AuthModule,

@@ -13,10 +13,14 @@ import {
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { TournamentDto } from './dto/tournament.dto';
 import { TournamentsService } from './tournaments.service';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('tournaments')
 export class TournamentsController {
-  constructor(private readonly tournamentsService: TournamentsService) {}
+  constructor(
+    private readonly tournamentsService: TournamentsService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post()

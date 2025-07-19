@@ -14,6 +14,7 @@ import { Response, Request } from 'express';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { User } from '../users/entity/user.entity';
 import { StatsInterceptor } from '../stats/stats.interceptor';
+import { ConfigService } from '@nestjs/config';
 
 export interface RequestAuth extends Request {
   user: User;
@@ -22,7 +23,10 @@ export interface RequestAuth extends Request {
 @UseInterceptors(StatsInterceptor)
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private configService: ConfigService,
+  ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -34,7 +38,7 @@ export class AuthController {
 
     response.cookie('access_token', access_token, {
       httpOnly: true,
-      maxAge: Number(process.env.COOKIES_MAX_AGE),
+      maxAge: this.configService.get('COOKIES_MAX_AGE'),
       sameSite: 'none',
       secure: true,
     });
@@ -54,7 +58,7 @@ export class AuthController {
 
     response.cookie('access_token', access_token, {
       httpOnly: true,
-      maxAge: Number(process.env.COOKIES_MAX_AGE),
+      maxAge: this.configService.get('COOKIES_MAX_AGE'),
       sameSite: 'none',
       secure: true,
     });

@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, In, Not, Repository } from 'typeorm';
-import { QuestionDto } from './dto/question.dto';
 import { TournamentDto } from './dto/tournament.dto';
 import { Editor } from './entities/editors.entity';
 import { Question } from './entities/question.entity';

@@ -85,7 +85,7 @@ export const parseTournamentGotquestions = async (link: string) => {
         const textAdd = addElement.querySelector('span');
         const imgAdd = addElement.querySelector('img');
         if (imgAdd) {
-          q.add = imgAdd.getAttribute('src');
+          q.add = imgAdd.src;
         } else if (textAdd) {
           q.add = textAdd.textContent;
         }

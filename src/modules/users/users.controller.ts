@@ -10,14 +10,14 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePassDto } from './dto/get-user.dto';
 import { UserResultDto } from './dto/userResult.dto';
 import { UsersService } from './users.service';
 import { Response } from 'express';
-import { publicAccount } from './constants/user.constants';
 import { ConfigService } from '@nestjs/config';
+import { publicAccount } from 'src/Shared/constants/user.constants';
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 
 @Controller('users')
 export class UsersController {
@@ -46,7 +46,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put('/changepassword')
+  @Put('/change-password')
   async updateUser(@Body() updatePassDto: UpdatePassDto) {
     if (updatePassDto.id === publicAccount.id) {
       throw new ForbiddenException('Нельзя изменить пароль этого пользователя');
@@ -56,7 +56,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('/userresult')
+  @Post('/user-result')
   async createTournament(@Body() userResultDto: UserResultDto) {
     return await this.usersService.createUserResult(userResultDto);
   }
@@ -73,13 +73,13 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/userresultfull/:id')
+  @Get('/user-result-full/:id')
   async getUserResultFull(@Param('id') id: string) {
     return await this.usersService.getUserResultFull(id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/userresultshort/:id')
+  @Get('/user-result-short/:id')
   async getUserResultShort(@Param('id') id: string) {
     return await this.usersService.getUserResultShort(id);
   }

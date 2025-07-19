@@ -15,6 +15,7 @@ import { getHTML } from './helpers/getHTML';
 import { parseTournamentHTML } from './helpers/parseLink';
 import { parseTournamentGotquestions } from './helpers/parseLinkGotquestions';
 import { UsersService } from '../users/users.service';
+import { guestAccount } from 'src/Shared/constants/user.constants';
 
 @Injectable()
 export class TournamentsService {
@@ -70,6 +71,8 @@ export class TournamentsService {
       dateUpload: Date.now(),
       editors: savedEditors,
       questions: savedQuestions,
+      uploader: tournament.uploader || guestAccount.username,
+      uploaderUuid: tournament.uploaderUuid || guestAccount.id,
     });
 
     const savedTournament = await this.tournamentRepo.save(newTournament);

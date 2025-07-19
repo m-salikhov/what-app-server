@@ -10,30 +10,19 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { TournamentDto } from './dto/tournament.dto';
 import { TournamentsService } from './tournaments.service';
-import { ConfigService } from '@nestjs/config';
 
 @Controller('tournaments')
 export class TournamentsController {
-  constructor(
-    private readonly tournamentsService: TournamentsService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly tournamentsService: TournamentsService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   async createTournament(@Body() tournament: TournamentDto) {
     return this.tournamentsService.createTournament(tournament);
   }
 
-  @Post('/quest')
-  async createTournamentByQuest(@Body() tournament: TournamentDto) {
-    return this.tournamentsService.createTournament(tournament);
-  }
-
-  @Post('/createbylink')
+  @Post('/create-by-link')
   async parseTournamentByLink(@Body('link') link: string) {
     if (link.includes('gotquestions')) {
       return this.tournamentsService.parseTournamentByLinkGotquestions(link);
@@ -46,12 +35,12 @@ export class TournamentsController {
     }
   }
 
-  @Get('/allshort')
+  @Get('/all-short')
   async getAllTournamentsShort() {
     return this.tournamentsService.getAllTournamentsShort();
   }
 
-  @Get('/allbyuploader/:uuid')
+  @Get('/all-by-uploader/:uuid')
   async getTournamentsByUploader(@Param('uuid') uuid: string) {
     return this.tournamentsService.getTournamentsByUploader(uuid);
   }

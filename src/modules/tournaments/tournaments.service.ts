@@ -16,6 +16,7 @@ import { parseTournamentHTML } from './helpers/parseLink';
 import { parseTournamentGotquestions } from './helpers/parseLinkGotquestions';
 import { UsersService } from '../users/users.service';
 import { guestAccount } from 'src/Shared/constants/user.constants';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class TournamentsService {
@@ -29,6 +30,7 @@ export class TournamentsService {
     @InjectRepository(Source)
     private sourceRepo: Repository<Source>,
     private usersService: UsersService,
+    private readonly mailService: MailService,
   ) {}
 
   async createTournament(tournament: TournamentDto) {
@@ -76,6 +78,11 @@ export class TournamentsService {
     });
 
     const savedTournament = await this.tournamentRepo.save(newTournament);
+
+    await this.mailService.sendAdminEmail(
+      'Новый турнир',
+      `Турнир ${savedTournament.title} был загружен. Ссылка: ${savedTournament.link}`,
+    );
 
     return savedTournament.id;
   }

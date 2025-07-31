@@ -12,6 +12,7 @@ import { UserResultDto } from './dto/userResult.dto';
 import { UserResult, ResultElem } from './entity/userResult.entity';
 import { JwtService } from '@nestjs/jwt';
 import { UpdatePassDto } from './dto/get-user.dto';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class UsersService {
@@ -23,6 +24,7 @@ export class UsersService {
     @InjectRepository(ResultElem)
     private resultElemRepo: Repository<ResultElem>,
     private jwtService: JwtService,
+    private readonly mailService: MailService,
   ) {}
 
   async createUser(createUserDto: CreateUserDto) {
@@ -49,6 +51,11 @@ export class UsersService {
     const payload = { username: savedUser.username, id: savedUser.id };
 
     const access_token = this.jwtService.sign(payload);
+
+    await this.mailService.sendAdminEmail(
+      'Регистрация',
+      `Пользователь ${savedUser.username} зарегистрировался`,
+    );
 
     return { savedUser, access_token };
   }

@@ -7,9 +7,11 @@ import { Tournament } from './entities/tournament.entity';
 import { TournamentsController } from './tournaments.controller';
 import { TournamentsService } from './tournaments.service';
 import { UsersModule } from '../users/users.module';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
+    MailModule,
     TypeOrmModule.forFeature([Tournament, Editor, Source, Question]),
     UsersModule,
   ],

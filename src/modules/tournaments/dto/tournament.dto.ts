@@ -7,6 +7,7 @@ import {
   IsInt,
   IsUrl,
   ValidateIf,
+  IsNumber,
 } from 'class-validator';
 import { QuestionDto } from './question.dto';
 import { Type } from 'class-transformer';
@@ -29,6 +30,9 @@ export class TournamentDto {
 
   @IsInt()
   tours: number;
+
+  @IsNumber()
+  difficulty: number;
 
   @IsNotEmpty()
   dateUpload: number;

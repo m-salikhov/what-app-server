@@ -8,9 +8,11 @@ import { TournamentsController } from './tournaments.controller';
 import { TournamentsService } from './tournaments.service';
 import { UsersModule } from '../users/users.module';
 import { MailModule } from '../mail/mail.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     MailModule,
     TypeOrmModule.forFeature([Tournament, Editor, Source, Question]),
     UsersModule,

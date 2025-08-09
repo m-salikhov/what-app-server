@@ -24,7 +24,7 @@ export class UsersService {
     @InjectRepository(ResultElem)
     private resultElemRepo: Repository<ResultElem>,
     private jwtService: JwtService,
-    private readonly mailService: MailService,
+    private mailService: MailService,
   ) {}
 
   async createUser(createUserDto: CreateUserDto) {

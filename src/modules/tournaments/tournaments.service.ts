@@ -81,7 +81,10 @@ export class TournamentsService {
 
     await this.mailService.sendAdminEmail(
       'Новый турнир',
-      `Турнир ${savedTournament.title} был загружен. Ссылка: ${savedTournament.link}`,
+      `Название: ${savedTournament.title},
+      пользователь: ${savedTournament.uploader} 
+      источник: ${savedTournament.link}
+      ссылка: https://4gk-base.andvarif.ru/tournament/${savedTournament.id}`,
     );
 
     return savedTournament.id;
@@ -231,5 +234,13 @@ export class TournamentsService {
     const qc = await this.questionRepo.count();
 
     return { tc, qc };
+  }
+
+  async dev(
+    data: { id: number; link: string; title: string; difficulty: number }[],
+  ) {
+    const tournaments = await this.tournamentRepo.find();
+
+    return tournaments;
   }
 }

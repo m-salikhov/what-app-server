@@ -4,10 +4,11 @@ import { convertGQdateToMs } from './convertGQdateToMs';
 import { Question } from '../entities/question.entity';
 import { Tournament } from '../entities/tournament.entity';
 
-function replaceSpacesWithDots(inputText: string) {
-  // Заменяем пробелы на точки и добавляем точку в начале
-  const modifiedText = '.' + inputText.replace(/ /g, '.');
-  return modifiedText;
+function removeTrailingDot(str: string): string {
+  if (str.endsWith('.')) {
+    return str.slice(0, -1);
+  }
+  return str;
 }
 
 export const parseTournamentGotquestions = async (link: string) => {
@@ -22,13 +23,33 @@ export const parseTournamentGotquestions = async (link: string) => {
   // Нажимаем на кнопку, чтобы открылись блоки ответов
   await page.click('button[title="Показать/скрыть все ответы"]');
 
+  // если нужен лог внутри evaluate
   page.on('console', (msg) => {
     console.log('Browser console:', msg.text());
   });
 
+  // Извлекаем название
   const title = await page.evaluate(() => {
     return document.querySelector('h1').textContent;
   });
+
+  // проверяем есть ли Сложность и извлекаем
+  const isExist =
+    (await page.$('div.p-4 div.justify-between:has(span.font-light)')) !== null;
+  let difficulty: string | number = -1;
+
+  if (isExist) {
+    const element = await page.$(
+      'div.p-4 div.justify-between:has(span.font-light)',
+    );
+    const text = await element?.evaluate((el) => el.textContent);
+    const match = text?.match(/DL(\d+(?:\.\d+)?)/);
+    difficulty = match ? match[1] : -1;
+  }
+
+  if (difficulty !== -1) {
+    difficulty = Number(difficulty);
+  }
 
   // Извлекаем данные для редакторов
   const editors = await page.evaluate(() => {
@@ -46,7 +67,6 @@ export const parseTournamentGotquestions = async (link: string) => {
   // Извлекаем данные для вопросов
   const questions = await page.evaluate(() => {
     const questions: Question[] = [];
-
     // Находим все блоки вопросов
     const elements = document.querySelectorAll('[number]');
 
@@ -184,7 +204,7 @@ export const parseTournamentGotquestions = async (link: string) => {
   //сборка турнира
   const t: Tournament = {
     id: 0,
-    title,
+    title: removeTrailingDot(title),
     tours,
     questionsQuantity,
     date: convertGQdateToMs(date),
@@ -192,6 +212,7 @@ export const parseTournamentGotquestions = async (link: string) => {
     uploader: '',
     uploaderUuid: '',
     dateUpload: 0,
+    difficulty,
     editors,
     questions,
   };

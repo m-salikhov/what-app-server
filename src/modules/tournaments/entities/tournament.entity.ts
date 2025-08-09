@@ -41,6 +41,9 @@ export class Tournament {
   @Column({ default: '' })
   link: string;
 
+  @Column({ type: 'float', default: -1 })
+  difficulty: number;
+
   @OneToMany(() => Question, (question) => question.tournament)
   questions: Question[];
 

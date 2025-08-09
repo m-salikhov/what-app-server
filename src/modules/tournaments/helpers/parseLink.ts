@@ -251,6 +251,7 @@ export const parseTournamentHTML = async (html: string) => {
     uploaderUuid: '',
     link: '',
     dateUpload: 0,
+    difficulty: -1,
     editors: editors.map((e, i) => ({ name: e, id: i + 1 })),
     questions,
   };

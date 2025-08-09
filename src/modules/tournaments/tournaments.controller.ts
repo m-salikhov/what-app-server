@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  ForbiddenException,
   Get,
   Param,
   ParseBoolPipe,
@@ -12,10 +13,14 @@ import {
 } from '@nestjs/common';
 import { TournamentDto } from './dto/tournament.dto';
 import { TournamentsService } from './tournaments.service';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('tournaments')
 export class TournamentsController {
-  constructor(private readonly tournamentsService: TournamentsService) {}
+  constructor(
+    private readonly tournamentsService: TournamentsService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post()
   async createTournament(@Body() tournament: TournamentDto) {
@@ -76,5 +81,23 @@ export class TournamentsController {
   @Get(':id')
   async getTournamentById(@Param('id', ParseIntPipe) id: number) {
     return this.tournamentsService.getTournamentById(id);
+  }
+
+  @Post('/dev')
+  async getUser(
+    @Body()
+    data: {
+      id: number;
+      link: string;
+      title: string;
+      difficulty: number;
+    }[],
+  ) {
+    if (this.configService.get('NODE_ENV') !== 'development') {
+      throw new ForbiddenException(
+        'This route is only available in development mode',
+      );
+    }
+    return this.tournamentsService.dev(data);
   }
 }

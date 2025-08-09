@@ -36,7 +36,7 @@ export const parseTournamentGotquestions = async (link: string) => {
   // проверяем есть ли Сложность и извлекаем
   const isExist =
     (await page.$('div.p-4 div.justify-between:has(span.font-light)')) !== null;
-  let difficulty: string | number = -1;
+  let difficulty: string | number = 0;
 
   if (isExist) {
     const element = await page.$(
@@ -44,10 +44,10 @@ export const parseTournamentGotquestions = async (link: string) => {
     );
     const text = await element?.evaluate((el) => el.textContent);
     const match = text?.match(/DL(\d+(?:\.\d+)?)/);
-    difficulty = match ? match[1] : -1;
+    difficulty = match ? match[1] : 0;
   }
 
-  if (difficulty !== -1) {
+  if (difficulty !== 0) {
     difficulty = Number(difficulty);
   }
 

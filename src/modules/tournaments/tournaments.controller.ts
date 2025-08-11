@@ -29,15 +29,12 @@ export class TournamentsController {
 
   @Post('/create-by-link')
   async parseTournamentByLink(@Body('link') link: string) {
-    if (link.includes('gotquestions')) {
-      return this.tournamentsService.parseTournamentByLinkGotquestions(link);
-    } else if (link.includes('db.chgk.info')) {
-      return this.tournamentsService.parseTournamentByLinkDbchgk(link);
-    } else {
+    if (!link.includes('gotquestions.online'))
       throw new BadRequestException(
-        'Ссылка должна вести на https://db.chgk.info или https://www.gotquestions.online',
+        'Ссылка должна вести на https://www.gotquestions.online',
       );
-    }
+
+    return this.tournamentsService.parseTournamentByLinkGotquestions(link);
   }
 
   @Get('/all-short')

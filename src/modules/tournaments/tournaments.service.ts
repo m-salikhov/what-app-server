@@ -11,8 +11,6 @@ import { Editor } from './entities/editors.entity';
 import { Question } from './entities/question.entity';
 import { Source } from './entities/source.entity';
 import { Tournament } from './entities/tournament.entity';
-import { getHTML } from './helpers/getHTML';
-import { parseTournamentHTML } from './helpers/parseLink';
 import { parseTournamentGotquestions } from './helpers/parseLinkGotquestions';
 import { UsersService } from '../users/users.service';
 import { guestAccount } from 'src/Shared/constants/user.constants';
@@ -88,24 +86,6 @@ export class TournamentsService {
     );
 
     return savedTournament.id;
-  }
-
-  async parseTournamentByLinkDbchgk(link: string) {
-    const tournamentCheck = await this.tournamentRepo.findOne({
-      where: { link },
-    });
-    if (tournamentCheck)
-      throw new ConflictException('Турнир уже существует в системе');
-
-    try {
-      const tournamentHTML = await getHTML(link);
-      const parsedTournament = await parseTournamentHTML(tournamentHTML);
-      return { ...parsedTournament, link };
-    } catch (error) {
-      throw new BadRequestException(
-        'Не удаётся распарсить турнир, проверьте ссылку',
-      );
-    }
   }
 
   async parseTournamentByLinkGotquestions(link: string) {

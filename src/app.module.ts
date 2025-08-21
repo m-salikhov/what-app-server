@@ -22,6 +22,8 @@ import { MailModule } from './modules/mail/mail.module';
     TypeOrmModule.forRoot({
       ...dataSourceOptions,
       autoLoadEntities: true,
+      retryAttempts: 10,
+      retryDelay: 3000,
     }),
 
     ServeStaticModule.forRoot({

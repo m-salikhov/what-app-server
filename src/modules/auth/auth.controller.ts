@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { Response, Request } from 'express';
+import { Response, Request, CookieOptions } from 'express';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { User } from '../users/entity/user.entity';
 import { StatsInterceptor } from '../stats/stats.interceptor';
@@ -18,6 +18,10 @@ import { ConfigService } from '@nestjs/config';
 
 export interface RequestAuth extends Request {
   user: User;
+}
+
+interface ExtendedCookieOptions extends CookieOptions {
+  partitioned?: boolean;
 }
 
 @UseInterceptors(StatsInterceptor)
@@ -36,12 +40,15 @@ export class AuthController {
   ) {
     const { access_token } = await this.authService.login(req.user);
 
-    response.cookie('access_token', access_token, {
+    const cookieOptions: ExtendedCookieOptions = {
       httpOnly: true,
       maxAge: this.configService.get('COOKIES_MAX_AGE'),
       sameSite: 'none',
       secure: true,
-    });
+      partitioned: true,
+    };
+
+    response.cookie('access_token', access_token, cookieOptions);
 
     return req.user;
   }

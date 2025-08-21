@@ -9,7 +9,6 @@ export const dataSourceOptions: DataSourceOptions = {
   database: process.env.DB_NAME,
   entities: ['dist/../**/*.entity.js'],
   connectTimeout: 60000,
-  acquireTimeout: 60000,
 
   // migrations: ['dist/src/migration/*.js'],
 };

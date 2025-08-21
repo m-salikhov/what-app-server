@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { Editor } from './editors.entity';
 import { Question } from './question.entity';
-import { Transform } from 'class-transformer';
+import { Exclude, Transform } from 'class-transformer';
 
 @Entity()
 export class Tournament {
@@ -32,6 +32,7 @@ export class Tournament {
   @Transform(({ value }) => Number(value), { toPlainOnly: true })
   dateUpload: number;
 
+  @Exclude()
   @Column()
   uploaderUuid: string;
 

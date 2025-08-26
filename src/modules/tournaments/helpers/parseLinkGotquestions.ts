@@ -213,6 +213,7 @@ export const parseTournamentGotquestions = async (link: string) => {
     uploaderUuid: '',
     dateUpload: 0,
     difficulty,
+    status: 'draft',
     editors,
     questions,
   };

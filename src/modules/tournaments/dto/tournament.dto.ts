@@ -45,6 +45,9 @@ export class TournamentDto {
   @IsString()
   uploader: string;
 
+  @IsString()
+  status: 'published' | 'draft' | 'moderation';
+
   @IsUrl()
   link: string;
 

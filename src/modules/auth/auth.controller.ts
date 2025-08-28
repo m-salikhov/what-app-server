@@ -20,10 +20,6 @@ export interface RequestAuth extends Request {
   user: User;
 }
 
-interface ExtendedCookieOptions extends CookieOptions {
-  partitioned?: boolean;
-}
-
 @UseInterceptors(StatsInterceptor)
 @Controller('auth')
 export class AuthController {
@@ -40,7 +36,7 @@ export class AuthController {
   ) {
     const { access_token } = await this.authService.login(req.user);
 
-    const cookieOptions: ExtendedCookieOptions = {
+    const cookieOptions: CookieOptions = {
       httpOnly: true,
       maxAge: this.configService.get('COOKIES_MAX_AGE'),
       sameSite: 'none',
@@ -68,6 +64,7 @@ export class AuthController {
       maxAge: this.configService.get('COOKIES_MAX_AGE'),
       sameSite: 'none',
       secure: true,
+      partitioned: true,
     });
 
     return user;

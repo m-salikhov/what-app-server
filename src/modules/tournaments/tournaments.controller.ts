@@ -47,7 +47,7 @@ export class TournamentsController {
     return this.tournamentsService.getTournamentsByUploader(uuid);
   }
 
-  @Get('/last/last?')
+  @Get('/last')
   async getLastTen(
     @Query('amount', ParseIntPipe) amount: number,
     @Query('page', ParseIntPipe) page: number,
@@ -65,7 +65,7 @@ export class TournamentsController {
     return this.tournamentsService.getRandomQuestions(n);
   }
 
-  @Get('/random-tournament?')
+  @Get('/random-tournament')
   async getRandomTournament(@Query('userId') userId: string) {
     return this.tournamentsService.getRandomTournament(userId);
   }

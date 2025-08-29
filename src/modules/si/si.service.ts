@@ -21,7 +21,7 @@ export class SiService {
     const roomId = this.generateRoomId();
 
     if (userId) {
-      this.handleActiveRoom(userId);
+      this.handleActiveRoom(userId, roomId);
     }
 
     // генерируем уникальный идентификатор, который клиент сохранит в LS
@@ -51,9 +51,8 @@ export class SiService {
     if (!this.rooms.has(roomId)) {
       return { success: false, message: 'Комната не существует' };
     }
-    if (userId) {
-      this.handleActiveRoom(userId);
-    }
+
+    const check = this.handleActiveRoom(userId, roomId);
 
     // генерируем уникальный идентификатор, который клиент сохранит в LS
     if (!userId) {
@@ -134,24 +133,44 @@ export class SiService {
     return roomId;
   }
 
-  handleActiveRoom(userId: UserId) {
+  handleActiveRoom(userId: UserId, roomId: RoomId) {
     const check = this.clientActiveRoom.has(userId);
 
-    // если у пользователь уже есть активная комната
-    // помечаем его как неактивного
-    if (check) {
-      const roomId = this.clientActiveRoom.get(userId);
+    // если у пользователя нет активной комнаты
+    if (!check) {
+      return 'new';
+    }
 
+    const activeRoomId = this.clientActiveRoom.get(userId);
+    const room = this.rooms.get(activeRoomId);
+    const player = room.players.get(userId);
+
+    // если пользователь в активной комнате
+    if (activeRoomId === roomId && player.isConnected) {
+      return 'same';
+    }
+
+    // если пользователя выкинуло из активной комнаты
+    if (activeRoomId === roomId && !player.isConnected) {
+      player.isConnected = true;
+      return 'reconnect';
+    }
+
+    // если пользователь в другой активной комнате
+    if (activeRoomId !== roomId && !player.isConnected) {
       this.clientActiveRoom.delete(userId);
+      player.isConnected = true;
+      return 'rejoin';
+    }
 
-      const room = this.rooms.get(roomId);
+    // если у пользователь уже есть активная комната
+    // помечаем его как неактивного, удаляем его из активных
+    this.clientActiveRoom.delete(userId);
 
-      if (room.owner.userId === userId) {
-        room.owner.isConnected = false;
-      } else {
-        const player = room.players.get(userId);
-        player.isConnected = false;
-      }
+    if (room.owner.userId === userId) {
+      room.owner.isConnected = false;
+    } else {
+      player.isConnected = false;
     }
   }
 

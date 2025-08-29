@@ -11,6 +11,7 @@ import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { WordleModule } from './modules/wordle/wordle.module';
 import { MailModule } from './modules/mail/mail.module';
+import { SiModule } from './modules/si/si.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { MailModule } from './modules/mail/mail.module';
     AuthModule,
     WordleModule,
     MailModule,
+    SiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

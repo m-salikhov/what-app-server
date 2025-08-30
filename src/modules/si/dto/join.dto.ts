@@ -6,8 +6,5 @@ export class JoinDto {
   username: string;
 
   @IsString()
-  userId: string;
-
-  @IsString()
   roomId: string;
 }

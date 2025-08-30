@@ -11,6 +11,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { SiService } from './si.service';
 import { JoinDto } from './dto/join.dto';
+import { nanoid } from 'nanoid';
 
 @WebSocketGateway()
 export class SiGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -20,19 +21,25 @@ export class SiGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Server;
 
   handleConnection(client: Socket) {
-    console.log('Client connected:', client.id);
+    // клиент посылает свой userid из localstorage
+    // headers только для разработки
+    let userId =
+      client.handshake.auth.userid || client.handshake.headers.userid;
+
+    if (!userId || userId.length !== 12) userId = nanoid(12);
+
+    client.data.userId = userId;
+
+    client.emit('on-auth', { userId });
   }
 
   handleDisconnect(client: Socket) {
-    console.log('Client disconnected:', client.id);
+    console.log('Client disconnected:', client.data);
   }
 
   @SubscribeMessage('create-room')
-  handleCreateRoom(
-    @MessageBody('userId') userId: string,
-    @ConnectedSocket() client: Socket,
-  ): void {
-    const result = this.siService.createRoom(client, userId);
+  handleCreateRoom(@ConnectedSocket() client: Socket): void {
+    const result = this.siService.createRoom(client);
 
     // Отправляем клиенту событие с созданным ID комнаты
     client.emit('on-room-created', result);

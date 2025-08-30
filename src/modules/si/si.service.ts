@@ -17,17 +17,15 @@ export class SiService {
   private rooms = new Map<RoomId, Room>();
   private clientActiveRoom = new Map<UserId, RoomId>();
 
-  createRoom(owner: Socket, userId: UserId) {
+  createRoom(owner: Socket) {
+    // может быть только одна активная комната
+    if (owner.rooms.size > 1) {
+      return { success: false, message: 'Вы уже находитесь в другой комнате' };
+    }
+
+    const userId = owner.data.userId;
+
     const roomId = this.generateRoomId();
-
-    if (userId) {
-      this.handleActiveRoom(userId, roomId);
-    }
-
-    // генерируем уникальный идентификатор, который клиент сохранит в LS
-    if (!userId) {
-      userId = nanoid(12);
-    }
 
     const newRoom: Room = {
       owner: { userId, socket: owner, isConnected: true },
@@ -47,23 +45,28 @@ export class SiService {
     return { roomId, userId, success: true, message: 'Комната создана' };
   }
 
-  join(client: Socket, { userId, roomId, username }: JoinDto) {
+  join(client: Socket, { roomId, username }: JoinDto) {
+    const userId = client.data.userId;
+
     if (!this.rooms.has(roomId)) {
       return { success: false, message: 'Комната не существует' };
     }
 
-    const check = this.handleActiveRoom(userId, roomId);
-
-    // генерируем уникальный идентификатор, который клиент сохранит в LS
-    if (!userId) {
-      userId = nanoid(12);
+    if (client.rooms.has(roomId)) {
+      return {
+        success: false,
+        message: 'Вы уже находитесь в этой комнате',
+      };
     }
 
-    const players = this.rooms.get(roomId).players;
-
-    if (players.has(userId)) {
-      return { success: false, message: 'Вы уже находитесь в этой комнате' };
+    if (client.rooms.size > 1) {
+      return {
+        success: false,
+        message: 'Вы уже находитесь в другой комнате',
+      };
     }
+
+    // const check = this.handleActiveRoom(userId, roomId);
 
     const player = {
       username,
@@ -74,17 +77,14 @@ export class SiService {
     };
 
     // добавляем клиента в комнату
+    const players = this.rooms.get(roomId).players;
     players.set(userId, player);
     // запоминаем активную комнату клиента
     this.clientActiveRoom.set(userId, roomId);
     // подписываем клиента на события комнаты
     client.join(roomId);
 
-    console.log(
-      this.rooms,
-      this.rooms.get(roomId).players,
-      this.clientActiveRoom,
-    );
+    console.log(this.rooms, this.rooms.get(roomId).players);
 
     return {
       roomId,

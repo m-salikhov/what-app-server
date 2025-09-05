@@ -11,7 +11,7 @@ import { User } from './entity/user.entity';
 import { UserResultDto } from './dto/userResult.dto';
 import { UserResult, ResultElem } from './entity/userResult.entity';
 import { JwtService } from '@nestjs/jwt';
-import { UpdatePassDto } from './dto/get-user.dto';
+import { UpdatePassDto } from './dto/update-password.dto';
 import { MailService } from '../mail/mail.service';
 
 @Injectable()
@@ -46,6 +46,7 @@ export class UsersService {
       ...createUserDto,
       date: Date.now(),
       password: hash,
+      role: 'user',
     });
 
     const payload = { username: savedUser.username, id: savedUser.id };

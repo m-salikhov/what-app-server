@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdatePassDto } from './dto/get-user.dto';
+import { UpdatePassDto } from './dto/update-password.dto';
 import { UserResultDto } from './dto/userResult.dto';
 import { UsersService } from './users.service';
 import { Response } from 'express';
@@ -31,9 +31,8 @@ export class UsersController {
     @Body() createUserDto: CreateUserDto,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const { savedUser, access_token } = await this.usersService.createUser(
-      createUserDto,
-    );
+    const { savedUser, access_token } =
+      await this.usersService.createUser(createUserDto);
 
     response.cookie('access_token', access_token, {
       httpOnly: true,

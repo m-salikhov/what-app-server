@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
-import { Room } from './Types/room.type';
+import { Room, User } from './Types/room.type';
 import { nanoid } from 'nanoid';
 import { JoinDto } from './dto/join.dto';
 
@@ -13,23 +13,40 @@ type RoomId = string;
 
 @Injectable()
 export class SiService {
+  //только для генерации уникального идентификатора комнаты
   private usedRoomIds = new Set<RoomId>();
+  //список комнат
   private rooms = new Map<RoomId, Room>();
+  //для хранения активной комнаты
   private clientActiveRoom = new Map<UserId, RoomId>();
 
-  createRoom(owner: Socket) {
+  createRoom(owner: Socket, username: string) {
     // может быть только одна активная комната
     if (owner.rooms.size > 1) {
       return { success: false, message: 'Вы уже находитесь в другой комнате' };
     }
 
-    const userId = owner.data.userId;
+    const userId: UserId = owner.data.userId;
 
-    const roomId = this.generateRoomId();
+    // const roomId = this.generateRoomId();
+    //для отладки
+    const roomId = '3333';
+
+    owner.data.roomId = roomId;
+
+    const user: User = {
+      username,
+      socket: owner,
+      score: 0,
+      scoreHistory: [],
+      isConnected: true,
+      isOwner: true,
+    };
+
+    const users = new Map<UserId, User>([[userId, user]]);
 
     const newRoom: Room = {
-      owner: { userId, socket: owner, isConnected: true },
-      players: new Map(),
+      users,
       gameState: { subjectNumber: 1, timerSeconds: 6 },
     };
 
@@ -45,18 +62,9 @@ export class SiService {
     return { roomId, userId, success: true, message: 'Комната создана' };
   }
 
-  join(client: Socket, { roomId, username }: JoinDto) {
-    const userId = client.data.userId;
-
+  join(client: Socket, { userId, roomId, username }: JoinDto) {
     if (!this.rooms.has(roomId)) {
       return { success: false, message: 'Комната не существует' };
-    }
-
-    if (client.rooms.has(roomId)) {
-      return {
-        success: false,
-        message: 'Вы уже находитесь в этой комнате',
-      };
     }
 
     if (client.rooms.size > 1) {
@@ -66,25 +74,43 @@ export class SiService {
       };
     }
 
+    if (this.rooms.get(roomId).users.has(userId)) {
+      const isConnected = this.rooms.get(roomId).users.get(userId).isConnected;
+
+      if (isConnected) {
+        return {
+          success: false,
+          message: 'Игрок уже в комнате',
+        };
+      } else {
+        this.rooms.get(roomId).users.get(userId).isConnected = true;
+        client.data.roomId = roomId;
+        return {
+          success: true,
+          message: 'Игрок переподключился',
+        };
+      }
+    }
+
     // const check = this.handleActiveRoom(userId, roomId);
 
-    const player = {
+    const user: User = {
       username,
       socket: client,
       score: 0,
       scoreHistory: [],
       isConnected: true,
+      isOwner: false,
     };
 
     // добавляем клиента в комнату
-    const players = this.rooms.get(roomId).players;
-    players.set(userId, player);
+    this.rooms.get(roomId).users.set(userId, user);
+
     // запоминаем активную комнату клиента
     this.clientActiveRoom.set(userId, roomId);
     // подписываем клиента на события комнаты
     client.join(roomId);
-
-    console.log(this.rooms, this.rooms.get(roomId).players);
+    client.data.roomId = roomId;
 
     return {
       roomId,
@@ -94,34 +120,23 @@ export class SiService {
     };
   }
 
-  // leave(client: Socket, roomId: string) {
-  //   // Проверяем, существует ли комната
-  //   if (!this.rooms.has(roomId)) {
-  //     return { success: false, message: 'Комната не существует' };
-  //   }
+  leave(client: Socket) {
+    const userId = client.data.userId;
+    const roomId = client.data.roomId;
 
-  //   const room = this.rooms.get(roomId);
+    // удаляем клиента из комнаты
+    client.leave(roomId);
+    // удаляем активную комнату
+    this.clientActiveRoom.delete(userId);
 
-  //   // Проверяем, находится ли клиент в комнате
-  //   if (!room.has(client)) {
-  //     return {
-  //       success: false,
-  //       message: 'Пользователь не находится в этой комнате',
-  //     };
-  //   }
+    // переводим игрока в неактивное состояние, но сохраняем на случай повторного входа
+    const player = this.rooms.get(roomId).users.get(userId);
+    player.isConnected = false;
 
-  //   // Удаляем клиента из комнаты
-  //   room.delete(client);
-  //   client.leave(roomId);
+    // console.log(this.rooms.size, this.rooms.get(roomId).users);
 
-  //   // Если в комнате не осталось пользователей, удаляем комнату
-  //   if (room.size === 0) {
-  //     this.rooms.delete(roomId);
-  //     this.usedRoomIds.delete(roomId);
-  //   }
-
-  //   return { success: true, message: `Вы покинули комнату ${roomId}` };
-  // }
+    return { userId, roomId, message: `Участник вышел из комнаты` };
+  }
 
   generateRoomId(): string {
     let roomId: string;
@@ -133,46 +148,46 @@ export class SiService {
     return roomId;
   }
 
-  handleActiveRoom(userId: UserId, roomId: RoomId) {
-    const check = this.clientActiveRoom.has(userId);
+  // handleActiveRoom(userId: UserId, roomId: RoomId) {
+  //   const check = this.clientActiveRoom.has(userId);
 
-    // если у пользователя нет активной комнаты
-    if (!check) {
-      return 'new';
-    }
+  //   // если у пользователя нет активной комнаты
+  //   if (!check) {
+  //     return 'new';
+  //   }
 
-    const activeRoomId = this.clientActiveRoom.get(userId);
-    const room = this.rooms.get(activeRoomId);
-    const player = room.players.get(userId);
+  //   const activeRoomId = this.clientActiveRoom.get(userId);
+  //   const room = this.rooms.get(activeRoomId);
+  //   const player = room.players.get(userId);
 
-    // если пользователь в активной комнате
-    if (activeRoomId === roomId && player.isConnected) {
-      return 'same';
-    }
+  //   // если пользователь в активной комнате
+  //   if (activeRoomId === roomId && player.isConnected) {
+  //     return 'same';
+  //   }
 
-    // если пользователя выкинуло из активной комнаты
-    if (activeRoomId === roomId && !player.isConnected) {
-      player.isConnected = true;
-      return 'reconnect';
-    }
+  //   // если пользователя выкинуло из активной комнаты
+  //   if (activeRoomId === roomId && !player.isConnected) {
+  //     player.isConnected = true;
+  //     return 'reconnect';
+  //   }
 
-    // если пользователь в другой активной комнате
-    if (activeRoomId !== roomId && !player.isConnected) {
-      this.clientActiveRoom.delete(userId);
-      player.isConnected = true;
-      return 'rejoin';
-    }
+  //   // если пользователь в другой активной комнате
+  //   if (activeRoomId !== roomId && !player.isConnected) {
+  //     this.clientActiveRoom.delete(userId);
+  //     player.isConnected = true;
+  //     return 'rejoin';
+  //   }
 
-    // если у пользователь уже есть активная комната
-    // помечаем его как неактивного, удаляем его из активных
-    this.clientActiveRoom.delete(userId);
+  //   // если у пользователь уже есть активная комната
+  //   // помечаем его как неактивного, удаляем его из активных
+  //   this.clientActiveRoom.delete(userId);
 
-    if (room.owner.userId === userId) {
-      room.owner.isConnected = false;
-    } else {
-      player.isConnected = false;
-    }
-  }
+  //   if (room.owner.userId === userId) {
+  //     room.owner.isConnected = false;
+  //   } else {
+  //     player.isConnected = false;
+  //   }
+  // }
 
   removeRoomId(roomId: string) {
     this.usedRoomIds.delete(roomId);

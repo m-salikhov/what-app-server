@@ -30,16 +30,28 @@ export class SiGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     client.data.userId = userId;
 
+    console.log('Client connected:', client.data);
     client.emit('on-auth', { userId });
   }
 
   handleDisconnect(client: Socket) {
     console.log('Client disconnected:', client.data);
+
+    const result = this.siService.leave(client);
+
+    client.broadcast.to(result.roomId).emit('on-user-leaved', {
+      userId: result.userId,
+      roomId: result.roomId,
+      message: 'Участник вышел из комнаты',
+    });
   }
 
   @SubscribeMessage('create-room')
-  handleCreateRoom(@ConnectedSocket() client: Socket): void {
-    const result = this.siService.createRoom(client);
+  handleCreateRoom(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('username') username: string,
+  ): void {
+    const result = this.siService.createRoom(client, username);
 
     // Отправляем клиенту событие с созданным ID комнаты
     client.emit('on-room-created', result);

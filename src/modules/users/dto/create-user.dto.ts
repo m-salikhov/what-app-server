@@ -11,7 +11,4 @@ export class CreateUserDto {
   @IsNotEmpty()
   @Length(4, 20)
   password: string;
-
-  @IsNotEmpty()
-  role: 'user' | 'superuser' | 'admin';
 }

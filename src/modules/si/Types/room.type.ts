@@ -4,18 +4,18 @@ import { Socket } from 'socket.io';
 // хранится на клиенте в LS.
 type UserId = string;
 
-interface Player {
+export interface User {
   socket: Socket;
   username: string;
   score: number;
   // Score history - [номер темы, очки].
   scoreHistory: [number, number][];
+  isOwner: boolean;
   isConnected: boolean;
 }
 
 export type Room = {
-  owner: { userId: UserId; socket: Socket; isConnected: boolean };
-  players: Map<UserId, Player>;
+  users: Map<UserId, User>;
   gameState: {
     subjectNumber: number;
     timerSeconds: number;

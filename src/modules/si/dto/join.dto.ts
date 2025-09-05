@@ -7,4 +7,7 @@ export class JoinDto {
 
   @IsString()
   roomId: string;
+
+  @IsString()
+  userId: string;
 }

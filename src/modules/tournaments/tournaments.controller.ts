@@ -45,9 +45,9 @@ export class TournamentsController {
   }
 
   @UseGuards(JwtAuthGuard, SelfGuard)
-  @Get('/all-by-uploader/:uuid')
-  async getTournamentsByUploader(@Param('uuid') uuid: string) {
-    return this.tournamentsService.getTournamentsByUploader(uuid);
+  @Get('/all-by-uploader/:id')
+  async getTournamentsByUploader(@Param('id') id: string) {
+    return this.tournamentsService.getTournamentsByUploader(id);
   }
 
   @Get('/last')

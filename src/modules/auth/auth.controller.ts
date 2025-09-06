@@ -15,6 +15,7 @@ import { JwtAuthGuard } from './guards/jwt.guard';
 import { User } from '../users/entity/user.entity';
 import { StatsInterceptor } from '../stats/stats.interceptor';
 import { ConfigService } from '@nestjs/config';
+import { SelfGuard } from './guards/role.guard';
 
 export interface RequestAuth extends Request {
   user: User;

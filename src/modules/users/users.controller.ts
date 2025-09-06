@@ -18,6 +18,7 @@ import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { publicAccount } from 'src/Shared/constants/user.constants';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { AdminGuard, SelfGuard } from '../auth/guards/role.guard';
 
 @Controller('users')
 export class UsersController {
@@ -44,14 +45,17 @@ export class UsersController {
     return savedUser;
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Put('/change-password')
-  async updateUser(@Body() updatePassDto: UpdatePassDto) {
-    if (updatePassDto.id === publicAccount.id) {
+  @UseGuards(JwtAuthGuard, SelfGuard)
+  @Put('/:id/change-password')
+  async updateUser(
+    @Body() updatePassDto: UpdatePassDto,
+    @Param('id') id: string,
+  ) {
+    if (id === publicAccount.id) {
       throw new ForbiddenException('Нельзя изменить пароль этого пользователя');
     }
 
-    return await this.usersService.updatePassword(updatePassDto);
+    return await this.usersService.updatePassword(id, updatePassDto.newPass);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -60,7 +64,7 @@ export class UsersController {
     return await this.usersService.createUserResult(userResultDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @Get('/:email')
   async getUser(@Param('email') email: string) {
     if (this.configService.get('NODE_ENV') !== 'development') {
@@ -71,19 +75,19 @@ export class UsersController {
     return await this.usersService.getUserByEmail(email);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, SelfGuard)
   @Get('/user-result-full/:id')
   async getUserResultFull(@Param('id') id: string) {
     return await this.usersService.getUserResultFull(id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, SelfGuard)
   @Get('/user-result-short/:id')
   async getUserResultShort(@Param('id') id: string) {
     return await this.usersService.getUserResultShort(id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @Delete(':id')
   async delOneCar(@Param('id') id: string) {
     return await this.usersService.deleteUser(id);

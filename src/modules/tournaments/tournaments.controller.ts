@@ -14,6 +14,8 @@ import {
 import { TournamentDto } from './dto/tournament.dto';
 import { TournamentsService } from './tournaments.service';
 import { ConfigService } from '@nestjs/config';
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { SelfGuard } from '../auth/guards/role.guard';
 
 @Controller('tournaments')
 export class TournamentsController {
@@ -42,6 +44,7 @@ export class TournamentsController {
     return this.tournamentsService.getAllTournamentsShort();
   }
 
+  @UseGuards(JwtAuthGuard, SelfGuard)
   @Get('/all-by-uploader/:uuid')
   async getTournamentsByUploader(@Param('uuid') uuid: string) {
     return this.tournamentsService.getTournamentsByUploader(uuid);

@@ -33,6 +33,8 @@ export class AuthController {
   ): Promise<UserWithoutPassword> {
     const { access_token } = await this.authService.login(req.user);
 
+    const user = await this.authService.getUserById(req.user.id);
+
     const cookieOptions: CookieOptions = {
       httpOnly: true,
       maxAge: this.configService.get('COOKIES_MAX_AGE'),
@@ -43,7 +45,7 @@ export class AuthController {
 
     response.cookie('access_token', access_token, cookieOptions);
 
-    return req.user;
+    return user;
   }
 
   @UseGuards(JwtAuthGuard)

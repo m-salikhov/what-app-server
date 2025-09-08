@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { Injectable } from '@nestjs/common';
 import { AuthService } from '../auth.service';
+import { UserWithoutPassword } from 'src/Shared/Types/UserWithoutPassword.type';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -23,9 +24,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(req: Request, payload: { id: string; username: string }) {
-    const { role } = await this.authService.getUserById(payload.id);
+  async validate(
+    req: Request,
+    payload: { id: string; username: string },
+  ): Promise<UserWithoutPassword> {
+    const { id, username, role, date, email } =
+      await this.authService.getUserById(payload.id);
 
-    return { id: payload.id, username: payload.username, role };
+    return { id, username, role, date, email };
   }
 }

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { LoginStat } from './entities/loginstat.entity';
-import { RequestAuth } from '../auth/auth.controller';
+import { AuthenticatedRequest } from 'src/Shared/Types/AuthRequest.type';
 
 @Injectable()
 export class StatsService {
@@ -12,7 +12,7 @@ export class StatsService {
     private loginStatsRepo: Repository<LoginStat>,
   ) {}
 
-  async saveLoginStat(req: RequestAuth) {
+  async saveLoginStat(req: AuthenticatedRequest) {
     const { timestamp, ip } = this.getCommonStatsFromRequest(req);
     const username = req.user.username;
     const userID = req.user.id;
@@ -29,7 +29,7 @@ export class StatsService {
     });
   }
 
-  private getCommonStatsFromRequest(req: RequestAuth | Request) {
+  private getCommonStatsFromRequest(req: Request) {
     const ip = req.ip;
 
     const dateNow = new Date();

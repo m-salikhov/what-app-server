@@ -2,20 +2,20 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
-  UnauthorizedException,
   ForbiddenException,
   BadRequestException,
 } from '@nestjs/common';
+import { AuthenticatedRequest } from 'src/Shared/Types/AuthRequest.type';
 
 @Injectable()
 export class AdminGuard implements CanActivate {
   constructor() {}
 
   canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest();
-    const user = request?.user;
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const user = request.user;
 
-    if (user?.role !== 'admin') {
+    if (user.role !== 'admin') {
       throw new ForbiddenException('Требуется права администратора');
     }
 
@@ -28,25 +28,24 @@ export class SelfGuard implements CanActivate {
   constructor() {}
 
   canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
     const user = request.user;
 
+    // Администратор всегда имеет доступ
     if (user.role === 'admin') return true;
 
     if (user.role === 'user') {
-      if (user.role === 'user') {
-        // Проверим, что id в параметрах совпадает с id пользователя из JWT
-        const paramUserId = request.params.id;
+      // Проверяем, что id в параметрах совпадает с id пользователя из JWT
+      const paramUserId = request.params.id;
 
-        if (!paramUserId) {
-          throw new BadRequestException('User id param not found');
-        }
-
-        if (paramUserId !== user.id) {
-          throw new ForbiddenException('Users can access only their own data');
-        }
-        return true;
+      if (!paramUserId) {
+        throw new BadRequestException('User id param not found');
       }
+
+      if (paramUserId !== user.id) {
+        throw new ForbiddenException('Users can access only their own data');
+      }
+      return true;
     }
 
     throw new ForbiddenException('Role not allowed');

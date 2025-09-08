@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   Post,
@@ -10,16 +9,13 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { Response, Request, CookieOptions } from 'express';
+import { Response, CookieOptions } from 'express';
 import { JwtAuthGuard } from './guards/jwt.guard';
-import { User } from '../users/entity/user.entity';
 import { StatsInterceptor } from '../stats/stats.interceptor';
 import { ConfigService } from '@nestjs/config';
 import { SelfGuard } from './guards/role.guard';
-
-export interface RequestAuth extends Request {
-  user: User;
-}
+import { AuthenticatedRequest } from 'src/Shared/Types/AuthRequest.type';
+import { UserWithoutPassword } from 'src/Shared/Types/UserWithoutPassword.type';
 
 @UseInterceptors(StatsInterceptor)
 @Controller('auth')
@@ -32,9 +28,9 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
-    @Req() req: RequestAuth,
+    @Req() req: AuthenticatedRequest,
     @Res({ passthrough: true }) response: Response,
-  ) {
+  ): Promise<UserWithoutPassword> {
     const { access_token } = await this.authService.login(req.user);
 
     const cookieOptions: CookieOptions = {
@@ -51,9 +47,9 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('logfirst')
+  @Get('login-first')
   async loginFirst(
-    @Req() req: RequestAuth,
+    @Req() req: AuthenticatedRequest,
     @Res({ passthrough: true }) response: Response,
   ) {
     const { access_token } = await this.authService.login(req.user);
@@ -71,7 +67,7 @@ export class AuthController {
     return user;
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, SelfGuard)
   @Post('logout')
   logout(@Res({ passthrough: true }) response: Response) {
     response.clearCookie('access_token', {

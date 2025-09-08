@@ -67,22 +67,17 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Get('/:email')
   async getUser(@Param('email') email: string) {
-    if (this.configService.get('NODE_ENV') !== 'development') {
-      throw new ForbiddenException(
-        'This route is only available in development mode',
-      );
-    }
     return await this.usersService.getUserByEmail(email);
   }
 
   @UseGuards(JwtAuthGuard, SelfGuard)
-  @Get('/user-result-full/:id')
+  @Get('/:id/user-result-full')
   async getUserResultFull(@Param('id') id: string) {
     return await this.usersService.getUserResultFull(id);
   }
 
   @UseGuards(JwtAuthGuard, SelfGuard)
-  @Get('/user-result-short/:id')
+  @Get('/:id/user-result-short')
   async getUserResultShort(@Param('id') id: string) {
     return await this.usersService.getUserResultShort(id);
   }

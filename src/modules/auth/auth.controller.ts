@@ -69,7 +69,7 @@ export class AuthController {
     return user;
   }
 
-  @UseGuards(JwtAuthGuard, SelfGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('logout')
   logout(@Res({ passthrough: true }) response: Response) {
     response.clearCookie('access_token', {

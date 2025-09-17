@@ -12,6 +12,7 @@ import { ResultElem, UserResult } from '../users/entity/userResult.entity';
 import { LoginStat } from '../stats/entities/loginstat.entity';
 import { StatsService } from '../stats/stats.service';
 import { StatsModule } from '../stats/stats.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -22,6 +23,9 @@ import { StatsModule } from '../stats/stats.module';
       LoginStat,
       StatsModule,
     ]),
+
+    CacheModule.register({ ttl: 10 * 60 * 1000 }),
+
     UsersModule,
     PassportModule,
     JwtModule.register({

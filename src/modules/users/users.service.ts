@@ -53,7 +53,7 @@ export class UsersService {
 
     const access_token = this.jwtService.sign(payload);
 
-    await this.mailService.sendAdminEmail(
+    this.mailService.sendAdminEmail(
       'Регистрация',
       `Пользователь ${savedUser.username} зарегистрировался`,
     );

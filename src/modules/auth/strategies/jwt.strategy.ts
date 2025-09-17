@@ -1,13 +1,17 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { AuthService } from '../auth.service';
 import { UserWithoutPassword } from 'src/Shared/Types/UserWithoutPassword.type';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
@@ -28,9 +32,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     req: Request,
     payload: { id: string; username: string },
   ): Promise<UserWithoutPassword> {
-    const { id, username, role, date, email } =
-      await this.authService.getUserById(payload.id);
+    const id = payload.id;
 
-    return { id, username, role, date, email };
+    const cachedUser = await this.cacheManager.get<UserWithoutPassword>(id);
+    if (cachedUser) {
+      return cachedUser;
+    }
+
+    const { password, ...user } = await this.authService.getUserById(id);
+
+    await this.cacheManager.set(id, user);
+
+    return { ...user };
   }
 }

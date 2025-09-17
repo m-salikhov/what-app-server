@@ -77,7 +77,7 @@ export class TournamentsService {
 
     const savedTournament = await this.tournamentRepo.save(newTournament);
 
-    await this.mailService.sendAdminEmail(
+    this.mailService.sendAdminEmail(
       'Новый турнир',
       `Название: ${savedTournament.title},
       пользователь: ${savedTournament.uploader} 
@@ -113,7 +113,7 @@ export class TournamentsService {
     });
 
     if (!tournament) {
-      throw new BadRequestException('Турнир не найден');
+      throw new NotFoundException('Турнир не найден');
     }
 
     return tournament;

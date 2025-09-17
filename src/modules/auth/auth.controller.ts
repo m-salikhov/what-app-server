@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Inject,
   Post,
   Req,
   Res,
@@ -13,9 +14,9 @@ import { Response, CookieOptions } from 'express';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { StatsInterceptor } from '../stats/stats.interceptor';
 import { ConfigService } from '@nestjs/config';
-import { SelfGuard } from './guards/role.guard';
 import { AuthenticatedRequest } from 'src/Shared/Types/AuthRequest.type';
 import { UserWithoutPassword } from 'src/Shared/Types/UserWithoutPassword.type';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 
 @UseInterceptors(StatsInterceptor)
 @Controller('auth')
@@ -23,6 +24,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private configService: ConfigService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   @UseGuards(LocalAuthGuard)
@@ -71,7 +73,12 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  logout(@Res({ passthrough: true }) response: Response) {
+  logout(
+    @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    this.cacheManager.del(req.user.id);
+
     response.clearCookie('access_token', {
       httpOnly: true,
       sameSite: 'none',

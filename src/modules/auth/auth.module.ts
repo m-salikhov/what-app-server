@@ -13,6 +13,7 @@ import { LoginStat } from '../stats/entities/loginstat.entity';
 import { StatsService } from '../stats/stats.service';
 import { StatsModule } from '../stats/stats.module';
 import { CacheModule } from '@nestjs/cache-manager';
+import { CacheableMemory } from 'cacheable';
 
 @Module({
   imports: [
@@ -24,7 +25,14 @@ import { CacheModule } from '@nestjs/cache-manager';
       StatsModule,
     ]),
 
-    CacheModule.register({ ttl: 10 * 60 * 1000 }),
+    CacheModule.registerAsync({
+      useFactory: () => ({
+        store: new CacheableMemory({
+          ttl: 10 * 60 * 1000, // 10 минут
+          lruSize: 500, // максимум 500 записей
+        }),
+      }),
+    }),
 
     UsersModule,
     PassportModule,

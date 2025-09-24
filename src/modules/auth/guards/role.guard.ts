@@ -1,53 +1,49 @@
 import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  ForbiddenException,
-  BadRequestException,
-} from '@nestjs/common';
-import { AuthenticatedRequest } from 'src/Shared/Types/AuthRequest.type';
+	BadRequestException,
+	type CanActivate,
+	type ExecutionContext,
+	ForbiddenException,
+	Injectable,
+} from "@nestjs/common";
+import type { AuthenticatedRequest } from "src/Shared/Types/AuthRequest.type";
 
 @Injectable()
 export class AdminGuard implements CanActivate {
-  constructor() {}
+	canActivate(context: ExecutionContext): boolean {
+		const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+		const user = request.user;
 
-  canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
-    const user = request.user;
+		if (user.role !== "admin") {
+			throw new ForbiddenException("Требуется права администратора");
+		}
 
-    if (user.role !== 'admin') {
-      throw new ForbiddenException('Требуется права администратора');
-    }
-
-    return true;
-  }
+		return true;
+	}
 }
 
 @Injectable()
 export class SelfGuard implements CanActivate {
-  constructor() {}
+	canActivate(context: ExecutionContext): boolean {
+		const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+		const user = request.user;
 
-  canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
-    const user = request.user;
+		// Администратор всегда имеет доступ
+		if (user.role === "admin") return true;
 
-    // Администратор всегда имеет доступ
-    if (user.role === 'admin') return true;
+		if (user.role === "user") {
+			// Проверяем, что id в параметрах совпадает с id пользователя из JWT
+			const paramUserId = request.params.id;
 
-    if (user.role === 'user') {
-      // Проверяем, что id в параметрах совпадает с id пользователя из JWT
-      const paramUserId = request.params.id;
+			if (!paramUserId) {
+				throw new BadRequestException("User id param not found");
+			}
 
-      if (!paramUserId) {
-        throw new BadRequestException('User id param not found');
-      }
+			if (paramUserId !== user.id) {
+				throw new ForbiddenException("Users can access only their own data");
+			}
+			return true;
+		}
 
-      if (paramUserId !== user.id) {
-        throw new ForbiddenException('Users can access only their own data');
-      }
-      return true;
-    }
-
-    throw new ForbiddenException('Role not allowed');
-  }
+		throw new ForbiddenException("Role not allowed");
+	}
 }

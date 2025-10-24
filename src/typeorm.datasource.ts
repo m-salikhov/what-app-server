@@ -9,7 +9,10 @@ export const dataSourceOptions: DataSourceOptions = {
 	database: process.env.DB_NAME,
 	entities: ["dist/../**/*.entity.js"],
 	extra: {
-		connectionLimit: 100,
+		connectionLimit: 20,
+		waitForConnections: true,
+		acquireTimeout: 60000,
+		queueLimit: 500,
 	},
 	connectTimeout: 60000,
 

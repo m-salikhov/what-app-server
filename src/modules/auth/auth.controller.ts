@@ -10,9 +10,9 @@ import {
 	UseInterceptors,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import type { CookieOptions, Response } from "express";
-import type { AuthenticatedRequest } from "src/Shared/Types/AuthRequest.type";
-import type { UserWithoutPassword } from "src/Shared/Types/UserWithoutPassword.type";
+import { CookieOptions, Response } from "express";
+import { AuthenticatedRequest } from "src/Shared/Types/AuthRequest.type";
+import { UserWithoutPassword } from "src/Shared/Types/UserWithoutPassword.type";
 import { StatsInterceptor } from "../stats/stats.interceptor";
 import { AuthService } from "./auth.service";
 import { JwtAuthGuard } from "./guards/jwt.guard";

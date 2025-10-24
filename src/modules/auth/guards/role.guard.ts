@@ -1,11 +1,11 @@
 import {
 	BadRequestException,
-	type CanActivate,
-	type ExecutionContext,
+	CanActivate,
+	ExecutionContext,
 	ForbiddenException,
 	Injectable,
 } from "@nestjs/common";
-import type { AuthenticatedRequest } from "src/Shared/Types/AuthRequest.type";
+import { AuthenticatedRequest } from "src/Shared/Types/AuthRequest.type";
 
 @Injectable()
 export class AdminGuard implements CanActivate {

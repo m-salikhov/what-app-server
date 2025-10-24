@@ -9,7 +9,7 @@ import { guestAccount } from "src/Shared/constants/user.constants";
 import { FindOptionsWhere, In, Not, Repository } from "typeorm";
 import { MailService } from "../mail/mail.service";
 import { UsersService } from "../users/users.service";
-import type { TournamentDto } from "./dto/tournament.dto";
+import { TournamentDto } from "./dto/tournament.dto";
 import { Editor } from "./entities/editors.entity";
 import { Question } from "./entities/question.entity";
 import { Source } from "./entities/source.entity";

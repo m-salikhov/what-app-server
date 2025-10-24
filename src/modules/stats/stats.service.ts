@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import type { Request } from "express";
-import type { AuthenticatedRequest } from "src/Shared/Types/AuthRequest.type";
-import type { Repository } from "typeorm";
+import { Request } from "express";
+import { AuthenticatedRequest } from "src/Shared/Types/AuthRequest.type";
+import { Repository } from "typeorm";
 import { LoginStat } from "./entities/loginstat.entity";
 
 @Injectable()

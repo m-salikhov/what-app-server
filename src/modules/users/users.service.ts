@@ -4,8 +4,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import { Repository } from "typeorm";
 import { MailService } from "../mail/mail.service";
-import type { CreateUserDto } from "./dto/create-user.dto";
-import type { UserResultDto } from "./dto/userResult.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UserResultDto } from "./dto/userResult.dto";
 import { User } from "./entity/user.entity";
 import { ResultElem, UserResult } from "./entity/userResult.entity";
 

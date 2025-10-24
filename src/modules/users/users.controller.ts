@@ -11,13 +11,13 @@ import {
 	UseGuards,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import type { Response } from "express";
+import { Response } from "express";
 import { publicAccount } from "src/Shared/constants/user.constants";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { AdminGuard, SelfGuard } from "../auth/guards/role.guard";
-import type { CreateUserDto } from "./dto/create-user.dto";
-import type { UpdatePassDto } from "./dto/update-password.dto";
-import type { UserResultDto } from "./dto/userResult.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdatePassDto } from "./dto/update-password.dto";
+import { UserResultDto } from "./dto/userResult.dto";
 import { UsersService } from "./users.service";
 
 @Controller("users")

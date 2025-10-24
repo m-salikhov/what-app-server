@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
-import type { UserWithoutPassword } from "src/Shared/Types/UserWithoutPassword.type";
+import { UserWithoutPassword } from "src/Shared/Types/UserWithoutPassword.type";
 import { UsersService } from "../users/users.service";
 
 @Injectable()

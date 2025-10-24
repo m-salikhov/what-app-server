@@ -1,10 +1,5 @@
-import {
-	type CallHandler,
-	type ExecutionContext,
-	Injectable,
-	type NestInterceptor,
-} from "@nestjs/common";
-import type { Observable } from "rxjs";
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
+import { Observable } from "rxjs";
 import { StatsService } from "./stats.service";
 
 @Injectable()

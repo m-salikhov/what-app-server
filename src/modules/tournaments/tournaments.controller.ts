@@ -12,7 +12,7 @@ import {
 } from "@nestjs/common";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { SelfGuard } from "../auth/guards/role.guard";
-import type { TournamentDto } from "./dto/tournament.dto";
+import { TournamentDto } from "./dto/tournament.dto";
 import { TournamentsService } from "./tournaments.service";
 
 @Controller("tournaments")

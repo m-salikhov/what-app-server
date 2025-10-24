@@ -8,6 +8,9 @@ export const dataSourceOptions: DataSourceOptions = {
 	password: process.env.DB_PASSWORD,
 	database: process.env.DB_NAME,
 	entities: ["dist/../**/*.entity.js"],
+	extra: {
+		connectionLimit: 100,
+	},
 	connectTimeout: 60000,
 
 	// migrations: ['dist/src/migration/*.js'],

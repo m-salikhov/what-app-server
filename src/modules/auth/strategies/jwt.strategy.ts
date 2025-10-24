@@ -1,9 +1,9 @@
 import { CACHE_MANAGER, type Cache } from "@nestjs/cache-manager";
 import { Inject, Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import type { Request } from "express";
+import { Request } from "express";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import type { UserWithoutPassword } from "src/Shared/Types/UserWithoutPassword.type";
+import { UserWithoutPassword } from "src/Shared/Types/UserWithoutPassword.type";
 import { AuthService } from "../auth.service";
 
 @Injectable()

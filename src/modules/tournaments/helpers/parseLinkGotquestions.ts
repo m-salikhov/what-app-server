@@ -163,12 +163,14 @@ export const parseTournamentGotquestions = async (link: string) => {
 		return questions;
 	});
 
+	// Подсчёт количества туров
 	const tours = await page.evaluate(() => {
 		let tours = 0;
 		const elements = document.querySelectorAll("h3");
 
 		elements.forEach((element) => {
-			if (element.textContent.startsWith("Тур")) {
+			const text = element.textContent.toLowerCase();
+			if (text.startsWith("тур") || text.startsWith("блок")) {
 				tours++;
 			}
 		});

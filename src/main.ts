@@ -1,3 +1,4 @@
+import { Logger } from "@nestjs/common";
 import * as dotenv from "dotenv";
 
 dotenv.config();
@@ -24,7 +25,7 @@ async function bootstrap() {
 	app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
 	await app.listen(process.env.PORT);
-	console.log(`Server started on port ${process.env.PORT}`);
+	Logger.log(`Server started on port ${process.env.PORT}`, "Main");
 }
 
 bootstrap();

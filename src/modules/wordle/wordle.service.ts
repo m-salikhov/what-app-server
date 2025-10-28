@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { checkExist, getRandom } from "./words/wordle-utils";
+import { checkExist, getRandom } from "./Utils/wordle-utils";
 
 @Injectable()
 export class WordleService {

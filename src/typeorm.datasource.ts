@@ -11,7 +11,6 @@ export const dataSourceOptions: DataSourceOptions = {
 	extra: {
 		connectionLimit: 20,
 		waitForConnections: true,
-		acquireTimeout: 60000,
 		queueLimit: 500,
 	},
 	connectTimeout: 60000,

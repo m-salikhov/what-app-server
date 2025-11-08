@@ -43,6 +43,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
 		await this.cacheManager.set(id, user);
 
-		return { ...user };
+		return user;
 	}
 }

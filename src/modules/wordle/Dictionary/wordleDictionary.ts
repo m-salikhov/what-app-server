@@ -23,7 +23,7 @@ try {
 		);
 	}
 
-	throw new Error("Не удалось инициализировать словарь слов для Wordle");
+	throw new Error("Wordle dictionary initialization failed");
 }
 
 export { words };

@@ -8,4 +8,5 @@ const getTourNumber = (questionsQuantity: number, tours: number, qNumber: number
 		return tours;
 	}
 };
+
 export default getTourNumber;

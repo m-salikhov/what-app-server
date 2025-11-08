@@ -163,26 +163,32 @@ export const parseTournamentGotquestions = async (link: string) => {
 		return questions;
 	});
 
+	// Подсчёт количества вопросов. Только входящие в основную дисциплину
+	let questionsQuantity = 0;
+	questions.forEach((v) => {
+		if (v.type !== "outside") questionsQuantity++;
+	});
+
 	// Подсчёт количества туров
-	const tours = await page.evaluate(() => {
+	let tours = await page.evaluate(() => {
 		let tours = 0;
 		const elements = document.querySelectorAll("h3");
 
 		elements.forEach((element) => {
 			const text = element.textContent.toLowerCase();
-			if (text.startsWith("тур") || text.startsWith("блок")) {
+			if (text.includes("тур") || text.includes("блок")) {
 				tours++;
 			}
 		});
 
 		return tours;
 	});
+	// Если разбивка на туры не определена, то считаем по ~12 вопросов
+	if (tours === 0) {
+		tours = Math.ceil(questionsQuantity / 12);
+	}
 
-	let questionsQuantity = 0;
-	questions.forEach((v) => {
-		if (v.type !== "outside") questionsQuantity++;
-	});
-
+	// Подсчёт номера тура для каждого вопроса
 	questions.forEach((v) => {
 		v.tourNumber = getTourNumber(questionsQuantity, tours, v.qNumber);
 	});

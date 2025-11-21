@@ -11,7 +11,7 @@ import {
 	UseGuards,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
-import { SelfGuard } from "../auth/guards/role.guard";
+import { AdminGuard, SelfGuard } from "../auth/guards/role.guard";
 import { TournamentDto } from "./dto/tournament.dto";
 import { TournamentsService } from "./tournaments.service";
 
@@ -65,6 +65,12 @@ export class TournamentsController {
 	@Get("/statistics")
 	async getStatistics() {
 		return this.tournamentsService.getStatistics();
+	}
+
+	@UseGuards(JwtAuthGuard, AdminGuard)
+	@Get("/drafts")
+	async getDrafts() {
+		return this.tournamentsService.getDrafts();
 	}
 
 	@Get(":id")

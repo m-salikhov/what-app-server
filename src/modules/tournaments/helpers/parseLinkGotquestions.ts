@@ -183,7 +183,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 
 		return tours;
 	});
-	// Если разбивка на туры не определена, то считаем по ~12 вопросов
+	// Если разбивка на туры не определена, то считаем по 12 вопросов
 	if (tours === 0) {
 		tours = Math.ceil(questionsQuantity / 12);
 	}

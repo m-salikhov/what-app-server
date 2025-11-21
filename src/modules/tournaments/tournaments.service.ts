@@ -97,8 +97,7 @@ export class TournamentsService {
 		try {
 			const tournament = await parseTournamentGotquestions(link);
 			return tournament;
-		} catch (error) {
-			console.log(error);
+		} catch (_error) {
 			throw new BadRequestException("Не удаётся распарсить турнир, проверьте ссылку");
 		}
 	}
@@ -204,5 +203,12 @@ export class TournamentsService {
 		const qc = await this.questionRepo.count();
 
 		return { tc, qc };
+	}
+
+	async getDrafts() {
+		return await this.tournamentRepo.find({
+			where: { status: "draft" },
+			relations: ["editors", "questions"],
+		});
 	}
 }

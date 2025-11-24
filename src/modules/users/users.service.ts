@@ -5,9 +5,9 @@ import * as bcrypt from "bcrypt";
 import { Repository } from "typeorm";
 import { MailService } from "../mail/mail.service";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { UserResultDto } from "./dto/userResult.dto";
+import { UserResultDto } from "./dto/user-result.dto";
 import { User } from "./entity/user.entity";
-import { ResultElem, UserResult } from "./entity/userResult.entity";
+import { ResultElem, UserResult } from "./entity/user-result.entity";
 
 @Injectable()
 export class UsersService {
@@ -23,10 +23,10 @@ export class UsersService {
 	) {}
 
 	async createUser(createUserDto: CreateUserDto) {
-		const emailCheck = await this.userRepo.findOne({
+		const isExists = await this.userRepo.exists({
 			where: { email: createUserDto.email },
 		});
-		if (emailCheck) throw new ConflictException("Почта уже существует в системе");
+		if (isExists) throw new ConflictException("Почта уже существует в системе");
 
 		const usernameCheck = await this.userRepo.findOne({
 			where: { username: createUserDto.username },

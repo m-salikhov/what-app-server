@@ -4,7 +4,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { MailModule } from "../mail/mail.module";
 import { User } from "./entity/user.entity";
-import { ResultElem, UserResult } from "./entity/userResult.entity";
+import { ResultElem, UserResult } from "./entity/user-result.entity";
 import { UsersController } from "./users.controller";
 import { UsersService } from "./users.service";
 

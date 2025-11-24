@@ -14,7 +14,8 @@ import { Editor } from "./entities/editors.entity";
 import { Question } from "./entities/question.entity";
 import { Source } from "./entities/source.entity";
 import { Tournament } from "./entities/tournament.entity";
-import { parseTournamentGotquestions } from "./helpers/parseLinkGotquestions";
+import { parseTournamentGotquestions } from "./helpers/parse-link.helper";
+import { ChangeStatusDto } from "./dto/change-status.dto";
 
 @Injectable()
 export class TournamentsService {
@@ -210,5 +211,25 @@ export class TournamentsService {
 			where: { status: "draft" },
 			relations: ["editors", "questions"],
 		});
+	}
+
+	async deleteTournament(id: number) {
+		const tournament = await this.tournamentRepo.findOne({ where: { id } });
+		if (!tournament) {
+			throw new NotFoundException(`Турнир с id ${id} не найден`);
+		}
+
+		await this.tournamentRepo.remove(tournament);
+	}
+
+	async changeTournamentStatus({ id, status }: ChangeStatusDto) {
+		const isExists = await this.tournamentRepo.exists({ where: { id } });
+		if (!isExists) {
+			throw new NotFoundException(`Турнир с id ${id} не найден`);
+		}
+
+		await this.tournamentRepo.update({ id }, { status });
+
+		return { id, status };
 	}
 }

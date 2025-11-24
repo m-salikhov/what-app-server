@@ -33,7 +33,7 @@ export class Tournament {
 	uploader: string;
 
 	@Column()
-	status: "published" | "draft" | "moderation";
+	status: "published" | "draft";
 
 	@Column({ default: "" })
 	link: string;

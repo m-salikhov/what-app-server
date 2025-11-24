@@ -8,7 +8,7 @@ import { LoginStat } from "../stats/entities/loginstat.entity";
 import { StatsModule } from "../stats/stats.module";
 import { StatsService } from "../stats/stats.service";
 import { User } from "../users/entity/user.entity";
-import { ResultElem, UserResult } from "../users/entity/userResult.entity";
+import { ResultElem, UserResult } from "../users/entity/user-result.entity";
 import { UsersModule } from "../users/users.module";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";

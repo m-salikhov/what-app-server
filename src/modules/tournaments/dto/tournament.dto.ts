@@ -1,6 +1,7 @@
 import { Type } from "class-transformer";
 import {
 	IsArray,
+	IsIn,
 	IsInt,
 	IsNotEmpty,
 	IsNumber,
@@ -22,7 +23,7 @@ export class TournamentDto {
 	@IsNotEmpty()
 	title: string;
 
-	@IsNotEmpty()
+	@IsNumber()
 	date: number;
 
 	@IsInt()
@@ -45,8 +46,8 @@ export class TournamentDto {
 	@IsString()
 	uploader: string;
 
-	@IsString()
-	status: "published" | "draft" | "moderation";
+	@IsIn(["published", "draft"])
+	status: "published" | "draft";
 
 	@IsUrl()
 	link: string;

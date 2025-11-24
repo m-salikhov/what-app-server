@@ -2,10 +2,14 @@ import {
 	BadRequestException,
 	Body,
 	Controller,
+	Delete,
 	Get,
+	HttpCode,
+	HttpStatus,
 	Param,
 	ParseBoolPipe,
 	ParseIntPipe,
+	Patch,
 	Post,
 	Query,
 	UseGuards,
@@ -14,6 +18,7 @@ import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { AdminGuard, SelfGuard } from "../auth/guards/role.guard";
 import { TournamentDto } from "./dto/tournament.dto";
 import { TournamentsService } from "./tournaments.service";
+import { ChangeStatusDto } from "./dto/change-status.dto";
 
 @Controller("tournaments")
 export class TournamentsController {
@@ -76,5 +81,18 @@ export class TournamentsController {
 	@Get(":id")
 	async getTournamentById(@Param("id", ParseIntPipe) id: number) {
 		return this.tournamentsService.getTournamentById(id);
+	}
+
+	@UseGuards(JwtAuthGuard, AdminGuard)
+	@Patch("/change-status")
+	async changeTournamentStatus(@Body() dto: ChangeStatusDto) {
+		return this.tournamentsService.changeTournamentStatus(dto);
+	}
+
+	@UseGuards(JwtAuthGuard, AdminGuard)
+	@HttpCode(HttpStatus.NO_CONTENT)
+	@Delete(":id")
+	async deleteTournament(@Param("id", ParseIntPipe) id: number) {
+		return this.tournamentsService.deleteTournament(id);
 	}
 }

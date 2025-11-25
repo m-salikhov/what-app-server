@@ -80,7 +80,7 @@ export class UsersController {
 
 	@UseGuards(JwtAuthGuard, AdminGuard)
 	@Delete(":id")
-	async delOneCar(@Param("id") id: string) {
+	async deleteUser(@Param("id") id: string) {
 		return await this.usersService.deleteUser(id);
 	}
 }

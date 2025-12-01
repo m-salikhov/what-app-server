@@ -80,6 +80,7 @@ export class AuthController {
 			httpOnly: true,
 			sameSite: "none",
 			secure: true,
+			partitioned: true,
 		});
 
 		return { message: "logout" };

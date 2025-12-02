@@ -147,18 +147,22 @@ export class TournamentsService {
 	}
 
 	async getRandomQuestions(n: number) {
-		const qb = this.questionRepo.createQueryBuilder("question");
+		const questionIdsResult: { id: number }[] = await this.questionRepo
+			.createQueryBuilder("question")
+			.select("question.id", "id")
+			.orderBy("RAND()")
+			.limit(n)
+			.getRawMany();
 
-		const randomIds = await qb.select("question.id").orderBy("RAND()").limit(n).getMany();
+		const questionIds = questionIdsResult.map((item) => item.id);
 
-		const randomQuestions = await Promise.all(
-			randomIds.map((v) => {
-				return this.questionRepo.findOne({
-					where: { id: v.id },
-					relations: ["tournament"],
-				});
-			}),
-		);
+		if (questionIds.length === 0) {
+			return [];
+		}
+		const randomQuestions = await this.questionRepo.find({
+			where: { id: In(questionIds) },
+			relations: ["tournament", "source"],
+		});
 
 		return randomQuestions;
 	}

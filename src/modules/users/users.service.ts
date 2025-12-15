@@ -35,12 +35,14 @@ export class UsersService {
 
 		const hash = await bcrypt.hash(createUserDto.password, 8);
 
-		const { password: _, ...savedUser } = await this.userRepo.save({
+		const user = this.userRepo.create({
 			...createUserDto,
-			date: Date.now(),
 			password: hash,
 			role: "user",
+			date: new Date(),
 		});
+
+		const { password: _, ...savedUser } = await this.userRepo.save(user);
 
 		const payload = { username: savedUser.username, id: savedUser.id };
 

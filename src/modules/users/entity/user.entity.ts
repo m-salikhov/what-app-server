@@ -1,4 +1,4 @@
-import { Exclude, Transform } from "class-transformer";
+import { Exclude } from "class-transformer";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
@@ -19,7 +19,6 @@ export class User {
 	@Column()
 	password: string;
 
-	@Column({ type: "varchar" })
-	@Transform(({ value }) => Number(value), { toPlainOnly: true })
-	date: number;
+	@Column({ type: "date" })
+	date: Date;
 }

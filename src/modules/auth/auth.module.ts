@@ -15,6 +15,8 @@ import { AuthService } from "./auth.service";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 import { LocalStrategy } from "./strategies/local.strategy";
 
+type expiresInValue = `${number}s` | `${number}m` | `${number}h` | `${number}d` | number;
+
 @Module({
 	imports: [
 		TypeOrmModule.forFeature([User, UserResult, ResultElem, LoginStat, StatsModule]),
@@ -32,7 +34,7 @@ import { LocalStrategy } from "./strategies/local.strategy";
 		PassportModule,
 		JwtModule.register({
 			secret: process.env.SECRET,
-			signOptions: { expiresIn: process.env.JWT_EXPIRED },
+			signOptions: { expiresIn: process.env.JWT_EXPIRED as expiresInValue },
 		}),
 	],
 	controllers: [AuthController],

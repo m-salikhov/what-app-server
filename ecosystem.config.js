@@ -1,6 +1,6 @@
 module.exports = {
   apps : [{
-    name: 'what-app-server-test',
+    name: 'what-app-server',
     script: 'dist/main.js',
     autorestart: true,
     restartDelay: 5000,

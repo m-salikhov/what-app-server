@@ -39,6 +39,7 @@ export class UsersController {
 			maxAge: this.configService.get("COOKIES_MAX_AGE"),
 			sameSite: "none",
 			secure: true,
+			partitioned: true,
 		});
 
 		return savedUser;

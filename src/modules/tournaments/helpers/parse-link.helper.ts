@@ -234,15 +234,11 @@ export const parseTournamentGotquestions = async (link: string) => {
 			editors,
 			questions,
 		};
-
 		return t;
-	} catch (error) {
-		console.error(error);
 	} finally {
 		if (browser) {
 			try {
 				await browser.close();
-				console.log("Браузер успешно закрыт.");
 			} catch (err) {
 				console.error("Ошибка при закрытии браузера:", err);
 			}

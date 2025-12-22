@@ -1,4 +1,4 @@
-import { Exclude, Transform } from "class-transformer";
+import { Exclude } from "class-transformer";
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Editor } from "./editors.entity";
 import { Question } from "./question.entity";
@@ -11,9 +11,8 @@ export class Tournament {
 	@Column()
 	title: string;
 
-	@Column({ type: "bigint" })
-	@Transform(({ value }) => Number(value), { toPlainOnly: true })
-	date: number;
+	@Column({ type: "date" })
+	date: Date;
 
 	@Column()
 	tours: number;
@@ -21,9 +20,8 @@ export class Tournament {
 	@Column()
 	questionsQuantity: number;
 
-	@Column({ type: "bigint" })
-	@Transform(({ value }) => Number(value), { toPlainOnly: true })
-	dateUpload: number;
+	@Column({ type: "date" })
+	dateUpload: Date;
 
 	@Exclude()
 	@Column()

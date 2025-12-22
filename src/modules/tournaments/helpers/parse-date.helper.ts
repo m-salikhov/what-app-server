@@ -1,30 +1,31 @@
 // dateStr - строка вида "12 ноября 2025 г."
-export function convertGQdateToMs(dateStr: string) {
-	const months = [
-		"января",
-		"февраля",
-		"марта",
-		"апреля",
-		"мая",
-		"июня",
-		"июля",
-		"августа",
-		"сентября",
-		"октября",
-		"ноября",
-		"декабря",
-	];
+export function parseDate(dateStr: string): Date {
+	const monthIndex = {
+		января: "01",
+		февраля: "02",
+		марта: "03",
+		апреля: "04",
+		мая: "05",
+		июня: "06",
+		июля: "07",
+		августа: "08",
+		сентября: "09",
+		октября: "10",
+		ноября: "11",
+		декабря: "12",
+	} as const;
 
 	const [day, month, year] = dateStr.split(" ");
 
-	// Если дата не соответствует формату, возвращаем текущую дату
-	if (!+day || !months.includes(month.toLowerCase()) || !+year) {
-		return Date.now();
+	const isValidDay = day && +day >= 1 && +day <= 31;
+	const isValidMonth = month && Object.hasOwn(monthIndex, month.toLowerCase());
+	const isValidYear = year && +year >= 1990 && +year <= new Date().getFullYear();
+
+	if (!isValidDay || !isValidMonth || !isValidYear) {
+		return new Date();
 	}
 
-	const monthIndex = months.indexOf(month.toLowerCase()) + 1;
+	const dateString = `${year}-${monthIndex[month.toLowerCase()]}-${day}`;
 
-	const date = new Date(`${year}-${monthIndex}-${day}`);
-
-	return date.getTime();
+	return new Date(dateString);
 }

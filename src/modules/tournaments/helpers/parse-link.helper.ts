@@ -1,7 +1,7 @@
 import puppeteer, { Browser, Page } from "puppeteer";
 import type { Question } from "../entities/question.entity";
 import type { Tournament } from "../entities/tournament.entity";
-import { convertGQdateToMs } from "./parse-date.helper";
+import { parseDate } from "./parse-date.helper";
 
 function removeTrailingDot(str: string): string {
 	if (str.endsWith(".")) {
@@ -224,11 +224,11 @@ export const parseTournamentGotquestions = async (link: string) => {
 			title: removeTrailingDot(title),
 			tours,
 			questionsQuantity,
-			date: convertGQdateToMs(date),
+			date: parseDate(date),
 			link,
 			uploader: "",
 			uploaderUuid: "",
-			dateUpload: 0,
+			dateUpload: new Date(),
 			difficulty,
 			status: "draft",
 			editors,

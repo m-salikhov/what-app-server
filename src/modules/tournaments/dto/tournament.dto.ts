@@ -1,6 +1,8 @@
 import { Type } from "class-transformer";
 import {
 	IsArray,
+	IsDate,
+	IsDateString,
 	IsIn,
 	IsInt,
 	IsNotEmpty,
@@ -23,8 +25,8 @@ export class TournamentDto {
 	@IsNotEmpty()
 	title: string;
 
-	@IsNumber()
-	date: number;
+	@IsDateString()
+	date: string;
 
 	@IsInt()
 	questionsQuantity: number;
@@ -35,8 +37,8 @@ export class TournamentDto {
 	@IsNumber()
 	difficulty: number;
 
-	@IsNotEmpty()
-	dateUpload: number;
+	@IsDateString()
+	dateUpload: string;
 
 	@IsString()
 	@ValidateIf((tournament: TournamentDto) => tournament.uploaderUuid !== "")

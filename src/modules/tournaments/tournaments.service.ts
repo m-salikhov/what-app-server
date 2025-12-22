@@ -37,7 +37,6 @@ export class TournamentsService {
 			where: { link: tournament.link },
 		});
 		if (tournamentCheck) throw new ConflictException("Турнир уже существует в системе");
-
 		const savedEditors = await Promise.all(
 			tournament.editors.map(async (editor) => {
 				const existingEditor = await this.editorRepo.findOne({
@@ -49,7 +48,6 @@ export class TournamentsService {
 				return this.editorRepo.save(editor);
 			}),
 		);
-
 		const savedQuestions = [];
 		for (const question of tournament.questions) {
 			const savedSources = [];
@@ -68,7 +66,7 @@ export class TournamentsService {
 
 		const newTournament = this.tournamentRepo.create({
 			...tournament,
-			dateUpload: Date.now(),
+			dateUpload: new Date(),
 			editors: savedEditors,
 			questions: savedQuestions,
 			uploader: tournament.uploader || guestAccount.username,
@@ -84,7 +82,6 @@ export class TournamentsService {
       источник: ${savedTournament.link}
       ссылка: https://4gk-base.andvarif.ru/tournament/${savedTournament.id}`,
 		);
-
 		return savedTournament.id;
 	}
 

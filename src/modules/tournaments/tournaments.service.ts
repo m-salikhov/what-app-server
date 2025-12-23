@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { guestAccount } from "src/Shared/constants/user.constants";
-import { FindOptionsWhere, In, Not, Repository } from "typeorm";
+import { DataSource, FindOptionsWhere, In, Not, Repository } from "typeorm";
 import { MailService } from "../mail/mail.service";
 import { UsersService } from "../users/users.service";
 import { TournamentDto } from "./dto/tournament.dto";
@@ -22,67 +22,97 @@ export class TournamentsService {
 	constructor(
 		@InjectRepository(Tournament)
 		private tournamentRepo: Repository<Tournament>,
-		@InjectRepository(Editor)
-		private editorRepo: Repository<Editor>,
 		@InjectRepository(Question)
 		private questionRepo: Repository<Question>,
-		@InjectRepository(Source)
-		private sourceRepo: Repository<Source>,
+
 		private usersService: UsersService,
-		private readonly mailService: MailService,
+		private mailService: MailService,
+		private dataSource: DataSource,
 	) {}
 
 	async createTournament(tournament: TournamentDto) {
-		const tournamentCheck = await this.tournamentRepo.findOne({
-			where: { link: tournament.link },
-		});
-		if (tournamentCheck) throw new ConflictException("Турнир уже существует в системе");
-		const savedEditors = await Promise.all(
-			tournament.editors.map(async (editor) => {
-				const existingEditor = await this.editorRepo.findOne({
-					where: { name: editor.name },
-				});
+		const queryRunner = this.dataSource.createQueryRunner();
 
-				if (existingEditor) return existingEditor;
+		await queryRunner.connect();
 
-				return this.editorRepo.save(editor);
-			}),
-		);
-		const savedQuestions = [];
-		for (const question of tournament.questions) {
-			const savedSources = [];
-			for (const source of question.source) {
-				const savedSource = await this.sourceRepo.save(source);
-				savedSources.push(savedSource);
+		await queryRunner.startTransaction();
+
+		try {
+			// для транзакции нужно получить репозитории через QueryRunner
+			const tournamentRepo = queryRunner.manager.getRepository(Tournament);
+			const editorRepo = queryRunner.manager.getRepository(Editor);
+			const questionRepo = queryRunner.manager.getRepository(Question);
+			const sourceRepo = queryRunner.manager.getRepository(Source);
+
+			const tournamentCheck = await tournamentRepo.findOne({
+				where: { link: tournament.link },
+			});
+			if (tournamentCheck) {
+				throw new ConflictException("Турнир уже существует в системе");
 			}
 
-			const savedQuestion = await this.questionRepo.save({
-				...question,
-				source: savedSources,
+			const savedEditors = await Promise.all(
+				tournament.editors.map(async (editor) => {
+					const existingEditor = await editorRepo.findOne({
+						where: { name: editor.name },
+					});
+
+					if (existingEditor) {
+						return existingEditor;
+					}
+
+					return await editorRepo.save(editor);
+				}),
+			);
+
+			const savedQuestions = [];
+			for (const question of tournament.questions) {
+				const savedSources = [];
+				for (const source of question.source) {
+					const savedSource = await sourceRepo.save(source);
+					savedSources.push(savedSource);
+				}
+
+				const savedQuestion = await questionRepo.save({
+					...question,
+					source: savedSources,
+				});
+
+				savedQuestions.push(savedQuestion);
+			}
+
+			const newTournament = tournamentRepo.create({
+				...tournament,
+				dateUpload: new Date(),
+				editors: savedEditors,
+				questions: savedQuestions,
+				uploader: tournament.uploader || guestAccount.username,
+				uploaderUuid: tournament.uploaderUuid || guestAccount.id,
 			});
 
-			savedQuestions.push(savedQuestion);
+			const savedTournament = await tournamentRepo.save(newTournament);
+
+			// Если всё успешно, фиксируем транзакцию
+			await queryRunner.commitTransaction();
+
+			this.mailService.sendAdminEmail(
+				"Новый турнир",
+				`Название: ${savedTournament.title},
+        пользователь: ${savedTournament.uploader}
+        источник: ${savedTournament.link}
+        ссылка: https://4gk-base.andvarif.ru/tournament/${savedTournament.id}`,
+			);
+
+			return savedTournament.id;
+		} catch (error) {
+			// Если произошла ошибка, откатываем транзакцию
+			await queryRunner.rollbackTransaction();
+
+			throw error;
+		} finally {
+			// Всегда освобождаем QueryRunner
+			await queryRunner.release();
 		}
-
-		const newTournament = this.tournamentRepo.create({
-			...tournament,
-			dateUpload: new Date(),
-			editors: savedEditors,
-			questions: savedQuestions,
-			uploader: tournament.uploader || guestAccount.username,
-			uploaderUuid: tournament.uploaderUuid || guestAccount.id,
-		});
-
-		const savedTournament = await this.tournamentRepo.save(newTournament);
-
-		this.mailService.sendAdminEmail(
-			"Новый турнир",
-			`Название: ${savedTournament.title},
-      пользователь: ${savedTournament.uploader} 
-      источник: ${savedTournament.link}
-      ссылка: https://4gk-base.andvarif.ru/tournament/${savedTournament.id}`,
-		);
-		return savedTournament.id;
 	}
 
 	async parseTournamentByLinkGotquestions(link: string) {
@@ -169,7 +199,7 @@ export class TournamentsService {
 		const skip = (page - 1) * amount;
 
 		const tournaments = await repo.find({
-			order: { dateUpload: "DESC" },
+			order: { id: "DESC" },
 			skip: withSkip ? skip : 0,
 			take: withSkip ? amount : amount * page,
 		});
@@ -185,7 +215,7 @@ export class TournamentsService {
 
 	async getAllTournamentsShort() {
 		const tournaments = await this.tournamentRepo.find({
-			order: { dateUpload: "DESC" },
+			order: { id: "DESC" },
 		});
 
 		return tournaments;
@@ -194,7 +224,7 @@ export class TournamentsService {
 	async getTournamentsByUploader(uploaderId: string) {
 		const tournaments = await this.tournamentRepo.find({
 			where: { uploaderUuid: uploaderId },
-			order: { dateUpload: "DESC" },
+			order: { id: "DESC" },
 		});
 
 		return tournaments;

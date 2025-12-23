@@ -14,8 +14,7 @@ export const dataSourceOptions: DataSourceOptions = {
 		queueLimit: 500,
 	},
 	connectTimeout: 60000,
-
-	// migrations: ['dist/src/migration/*.js'],
+	synchronize: false,
 };
 
 const dataSource = new DataSource(dataSourceOptions);

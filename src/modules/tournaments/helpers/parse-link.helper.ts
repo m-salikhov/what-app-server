@@ -108,20 +108,25 @@ export const parseTournamentGotquestions = async (link: string) => {
 					q.type = "outside";
 				}
 
-				// раздатка
-				const addBlockFull = element.querySelector(
-					".flex.items-end.justify-between.pt-1.pb-2 + div",
-				);
-				const addElement = addBlockFull.querySelector(
-					".relative.border.border-dotted.border-ntr.p-2.my-1",
-				);
-				if (addElement) {
-					const textAdd = addElement.querySelector("span");
-					const imgAdd = addElement.querySelector("img");
-					if (imgAdd) {
-						q.add = imgAdd.src;
-					} else if (textAdd) {
-						q.add = textAdd.textContent;
+				// Раздатка. Если есть раздатка, то в первом спане будет текст "раздаточный"
+				const isAddExist = element
+					.querySelector("span")
+					.textContent.toLowerCase()
+					.includes("раздаточный");
+
+				if (isAddExist) {
+					const span = element.querySelector("span");
+					// тело раздатки лежит в следующем диве
+					const addContainer = span.nextElementSibling;
+
+					// раздатка может быть либо картинкой, либо текстом
+					// пробуем вытянуть картинку
+					const image = addContainer.querySelector("img");
+
+					if (image) {
+						q.add = image.src;
+					} else {
+						q.add = addContainer.querySelector("span").textContent;
 					}
 				}
 

@@ -9,6 +9,7 @@ import { Source } from "./entities/source.entity";
 import { Tournament } from "./entities/tournament.entity";
 import { TournamentsController } from "./tournaments.controller";
 import { TournamentsService } from "./tournaments.service";
+import { TournamentScheduleService } from "./tournament.schedule.service";
 
 @Module({
 	imports: [
@@ -18,6 +19,6 @@ import { TournamentsService } from "./tournaments.service";
 		UsersModule,
 	],
 	controllers: [TournamentsController],
-	providers: [TournamentsService],
+	providers: [TournamentsService, TournamentScheduleService],
 })
 export class TournamentsModule {}

@@ -12,6 +12,7 @@ import { TournamentsModule } from "./modules/tournaments/tournaments.module";
 import { UsersModule } from "./modules/users/users.module";
 import { WordleModule } from "./modules/wordle/wordle.module";
 import { dataSourceOptions } from "./typeorm.datasource";
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
 	imports: [
@@ -31,6 +32,8 @@ import { dataSourceOptions } from "./typeorm.datasource";
 			rootPath: join(__dirname, "../public"),
 			serveRoot: "/public/",
 		}),
+
+		ScheduleModule.forRoot(),
 
 		UsersModule,
 		TournamentsModule,

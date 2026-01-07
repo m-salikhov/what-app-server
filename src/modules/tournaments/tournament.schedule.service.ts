@@ -9,8 +9,7 @@ import target from "./fixtures/tournament-target.json";
 export class TournamentScheduleService {
 	constructor(private readonly mailService: MailService) {}
 
-	// @Cron(CronExpression.EVERY_DAY_AT_3AM)
-	@Cron(CronExpression.EVERY_30_SECONDS)
+	@Cron(CronExpression.EVERY_DAY_AT_3AM)
 	async handleCron() {
 		const targetTournament = {
 			...target,
@@ -24,7 +23,6 @@ export class TournamentScheduleService {
 			);
 
 			const res = diff(targetTournament, parsedTournament);
-			console.log(res);
 
 			if (res.length > 0) {
 				this.mailService.sendAdminEmail("Parse test failed", JSON.stringify(res));

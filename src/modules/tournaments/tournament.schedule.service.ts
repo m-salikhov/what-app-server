@@ -9,7 +9,8 @@ import target from "./fixtures/tournament-target.json";
 export class TournamentScheduleService {
 	constructor(private readonly mailService: MailService) {}
 
-	@Cron(CronExpression.EVERY_DAY_AT_3AM)
+	// @Cron(CronExpression.EVERY_DAY_AT_3AM)
+	@Cron(CronExpression.EVERY_30_SECONDS)
 	async handleCron() {
 		const targetTournament = {
 			...target,

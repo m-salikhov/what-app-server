@@ -72,15 +72,15 @@ export class TournamentsController {
 		return this.tournamentsService.getStatistics();
 	}
 
+	@Get(":id")
+	async getTournamentById(@Param("id", ParseIntPipe) id: number) {
+		return this.tournamentsService.getTournamentById(id);
+	}
+
 	@UseGuards(JwtAuthGuard, AdminGuard)
 	@Get("/drafts")
 	async getDrafts() {
 		return this.tournamentsService.getDrafts();
-	}
-
-	@Get(":id")
-	async getTournamentById(@Param("id", ParseIntPipe) id: number) {
-		return this.tournamentsService.getTournamentById(id);
 	}
 
 	@UseGuards(JwtAuthGuard, AdminGuard)

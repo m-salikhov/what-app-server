@@ -21,11 +21,13 @@ export function parseDate(dateStr: string): Date {
 	const isValidMonth = month && Object.hasOwn(monthIndex, month.toLowerCase());
 	const isValidYear = year && +year >= 1990 && +year <= new Date().getFullYear();
 
+	const dayStr = +day < 10 ? `0${day}` : day;
+
 	if (!isValidDay || !isValidMonth || !isValidYear) {
 		return new Date();
 	}
 
-	const dateString = `${year}-${monthIndex[month.toLowerCase()]}-${day}`;
+	const dateString = `${year}-${monthIndex[month.toLowerCase()]}-${dayStr}T00:00:00.000Z`;
 
 	return new Date(dateString);
 }

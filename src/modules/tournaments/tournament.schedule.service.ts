@@ -12,7 +12,6 @@ export class TournamentScheduleService {
 	// @Cron(CronExpression.EVERY_DAY_AT_3AM)
 	@Cron(CronExpression.EVERY_30_SECONDS)
 	async handleCron() {
-		console.log(target.title);
 		const targetTournament = {
 			...target,
 			date: new Date(target.date),
@@ -25,6 +24,7 @@ export class TournamentScheduleService {
 			);
 
 			const res = diff(targetTournament, parsedTournament);
+			console.log(res);
 
 			if (res.length > 0) {
 				this.mailService.sendAdminEmail("Parse test failed", JSON.stringify(res));
@@ -34,7 +34,5 @@ export class TournamentScheduleService {
 		} catch (error) {
 			this.mailService.sendAdminEmail("Parse test error", error.toString());
 		}
-
-		console.log("end");
 	}
 }

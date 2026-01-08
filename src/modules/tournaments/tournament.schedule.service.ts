@@ -17,7 +17,7 @@ export class TournamentScheduleService {
 		};
 
 		try {
-			// убираем dateUpload так как это всегда new Date()
+			// убираем dateUpload - это всегда new Date()
 			const { dateUpload, ...parsedTournament } = await parseTournamentGotquestions(
 				"https://gotquestions.online/pack/394",
 			);

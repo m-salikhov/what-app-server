@@ -134,13 +134,20 @@ export const parseTournamentGotquestions = async (link: string) => {
 				const textBlocks = element.querySelectorAll("div.whitespace-pre-wrap");
 
 				const text = textBlocks[0].textContent;
+
 				textBlocks.forEach((block) => {
 					if (block.textContent.startsWith("Ответ:")) {
-						q.answer = block.textContent.replace("Ответ:", "").trim();
+						q.answer = block.textContent
+							.replace("Ответ:", "")
+							.trim()
+							.replace(/[.\s]+$/, "");
 					}
 
 					if (block.textContent.startsWith("Зачёт:")) {
-						q.alterAnswer = block.textContent.replace("Зачёт:", "").trim();
+						q.alterAnswer = block.textContent
+							.replace("Зачёт:", "")
+							.trim()
+							.replace(/[.\s]+$/, "");
 					}
 
 					if (block.textContent.startsWith("Комментарий:")) {

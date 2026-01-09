@@ -44,7 +44,7 @@ export class TournamentsService {
 			const questionRepo = queryRunner.manager.getRepository(Question);
 			const sourceRepo = queryRunner.manager.getRepository(Source);
 
-			const tournamentCheck = await tournamentRepo.findOne({
+			const tournamentCheck = await tournamentRepo.exists({
 				where: { link: tournament.link },
 			});
 			if (tournamentCheck) {

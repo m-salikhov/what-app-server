@@ -48,7 +48,7 @@ export class TournamentScheduleService {
 	async checkSample() {
 		const link = "https://gotquestions.online/pack/6001";
 
-		const tournamentCheck = await this.tournamentRepo.findOne({
+		const tournamentCheck = await this.tournamentRepo.exists({
 			where: { link },
 		});
 

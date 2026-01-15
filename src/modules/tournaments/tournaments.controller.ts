@@ -42,19 +42,24 @@ export class TournamentsController {
 		return this.tournamentsService.getAllTournamentsShort();
 	}
 
+	@Get("/search")
+	async searchTournaments(@Query("title") title: string) {
+		return this.tournamentsService.searchTournaments(title);
+	}
+
 	@UseGuards(JwtAuthGuard, SelfGuard)
 	@Get("/all-by-uploader/:id")
 	async getTournamentsByUploader(@Param("id") id: string) {
 		return this.tournamentsService.getTournamentsByUploader(id);
 	}
 
-	@Get("/last")
-	async getLastTen(
+	@Get("/paginate")
+	async paginate(
 		@Query("amount", ParseIntPipe) amount: number,
 		@Query("page", ParseIntPipe) page: number,
 		@Query("withSkip", ParseBoolPipe) withSkip: boolean,
 	) {
-		return this.tournamentsService.getLastAddTournaments(amount, page, withSkip);
+		return this.tournamentsService.paginate(amount, page, withSkip);
 	}
 
 	@Get("/random/:n")

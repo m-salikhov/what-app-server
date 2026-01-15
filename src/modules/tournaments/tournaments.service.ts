@@ -143,6 +143,16 @@ export class TournamentsService {
 		return tournament;
 	}
 
+	async searchTournaments(searchString: string) {
+		const tournaments = await this.tournamentRepo
+			.createQueryBuilder("tournament")
+			.where("tournament.title LIKE :search", { search: `%${searchString}%` })
+			.orderBy("tournament.id", "DESC")
+			.getMany();
+
+		return tournaments;
+	}
+
 	async getRandomTournament(userId: string) {
 		// получаем id турниров, которые пользователь сыграл
 		const results = userId ? await this.usersService.getUserResultShort(userId) : [];
@@ -194,7 +204,7 @@ export class TournamentsService {
 		return randomQuestions;
 	}
 
-	async getLastAddTournaments(amount: number, page: number, withSkip: boolean) {
+	async paginate(amount: number, page: number, withSkip: boolean) {
 		const repo = this.tournamentRepo;
 		const skip = (page - 1) * amount;
 

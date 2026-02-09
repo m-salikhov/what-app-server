@@ -205,16 +205,15 @@ export class TournamentsService {
 	}
 
 	async paginate(amount: number, page: number, withSkip: boolean) {
-		const repo = this.tournamentRepo;
 		const skip = (page - 1) * amount;
 
-		const tournaments = await repo.find({
+		const tournaments = await this.tournamentRepo.find({
 			order: { id: "DESC" },
 			skip: withSkip ? skip : 0,
 			take: withSkip ? amount : amount * page,
 		});
 
-		const count = await repo.count();
+		const count = await this.tournamentRepo.count();
 
 		const pageCount = Math.ceil(count / amount);
 

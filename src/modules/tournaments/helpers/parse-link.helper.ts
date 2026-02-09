@@ -34,13 +34,25 @@ export const parseTournamentGotquestions = async (link: string) => {
 		// Переходим на нужный сайт
 		await page.goto(link, { waitUntil: "networkidle0", timeout: 50000 });
 
-		// Нажимаем на кнопку, чтобы открылись блоки ответов
-		await page.click('button[title="Показать/скрыть все ответы"]');
-
 		// если нужен лог внутри evaluate
 		page.on("console", (msg) => {
 			console.log("Browser console:", msg.text());
 		});
+
+		// нажимаем кнопку, чтобы открыть ответы
+		const button = await page.$('button[title="Показать/скрыть все ответы"]');
+		await page.evaluate((button) => {
+			const rect = button.getBoundingClientRect();
+			const event = new MouseEvent("click", {
+				view: window,
+				bubbles: true,
+				cancelable: true,
+				clientX: rect.left + rect.width / 2,
+				clientY: rect.top + rect.height / 2,
+			});
+
+			button.dispatchEvent(event);
+		}, button);
 
 		// Извлекаем название
 		const title = await page.evaluate(() => {

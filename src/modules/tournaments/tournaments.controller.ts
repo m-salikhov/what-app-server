@@ -83,6 +83,12 @@ export class TournamentsController {
 		return this.tournamentsService.getDrafts();
 	}
 
+	@UseGuards(JwtAuthGuard, AdminGuard)
+	@Get("/check-parsing")
+	async checkParsing() {
+		return this.tournamentsService.checkParsing();
+	}
+
 	@Get(":id")
 	async getTournamentById(@Param("id", ParseIntPipe) id: number) {
 		return this.tournamentsService.getTournamentById(id);

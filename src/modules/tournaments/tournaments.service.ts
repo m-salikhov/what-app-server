@@ -16,6 +16,8 @@ import { Source } from "./entities/source.entity";
 import { Tournament } from "./entities/tournament.entity";
 import { parseTournamentGotquestions } from "./helpers/parse-link.helper";
 import { ChangeStatusDto } from "./dto/change-status.dto";
+import target from "./fixtures/tournament-target.json";
+import { diff } from "just-diff";
 
 @Injectable()
 export class TournamentsService {
@@ -271,5 +273,25 @@ export class TournamentsService {
 		await this.tournamentRepo.update({ id }, { status });
 
 		return { id, status };
+	}
+
+	async checkParsing() {
+		const targetTournament = {
+			...target,
+			date: new Date(target.date),
+		};
+
+		const linkTarget = "https://gotquestions.online/pack/394";
+
+		// убираем dateUpload - это всегда new Date()
+		const { dateUpload, ...parsedTournament } = await parseTournamentGotquestions(linkTarget);
+
+		const res = diff(targetTournament, parsedTournament);
+
+		if (res.length > 0) {
+			return res;
+		} else {
+			return "success";
+		}
 	}
 }

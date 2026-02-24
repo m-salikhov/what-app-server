@@ -103,6 +103,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 					answer: "",
 					comment: "не указан",
 					type: "regular",
+					answerRatio: "",
 					source: [{ id: 1, link: "не указан" }],
 				};
 
@@ -192,11 +193,18 @@ export const parseTournamentGotquestions = async (link: string) => {
 					}
 				});
 
+				// процент правильных ответов
+				const elementAnswerRatio = element.querySelector("div.mb-2");
+				const answerRatio = elementAnswerRatio
+					? elementAnswerRatio.textContent.replace(" ", "")
+					: "";
+
 				questions.push({
 					...q,
 					qNumber,
 					text,
 					author,
+					answerRatio,
 				});
 			});
 

@@ -33,6 +33,9 @@ export class Question {
 	@Column()
 	author: string;
 
+	@Column({ length: 24 })
+	answerRatio: string;
+
 	@OneToMany(
 		() => Source,
 		(source) => source.question,

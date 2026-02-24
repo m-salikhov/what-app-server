@@ -37,6 +37,9 @@ export class QuestionDto {
 	@IsString()
 	author: string;
 
+	@IsString()
+	answerRatio: string;
+
 	@ValidateNested({ each: true })
 	@Type(() => SourceDto)
 	@ArrayMinSize(1)

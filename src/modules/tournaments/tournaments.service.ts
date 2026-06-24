@@ -18,6 +18,7 @@ import { parseTournamentGotquestions } from "./helpers/parse-link.helper";
 import { ChangeStatusDto } from "./dto/change-status.dto";
 import target from "./fixtures/tournament-target.json";
 import { diff } from "just-diff";
+import { UpdateTournamentDto } from "./dto/updateTournament.dto";
 
 @Injectable()
 export class TournamentsService {
@@ -26,6 +27,8 @@ export class TournamentsService {
 		private tournamentRepo: Repository<Tournament>,
 		@InjectRepository(Question)
 		private questionRepo: Repository<Question>,
+		@InjectRepository(Source)
+		private sourceRepo: Repository<Source>,
 
 		private usersService: UsersService,
 		private mailService: MailService,
@@ -273,6 +276,35 @@ export class TournamentsService {
 		await this.tournamentRepo.update({ id }, { status });
 
 		return { id, status };
+	}
+
+	async updateTournament(dto: UpdateTournamentDto) {
+		const { updateTournament, updateQuestions, updateSources, tournamentId } = dto;
+
+		const isExists = await this.tournamentRepo.exists({ where: { id: tournamentId } });
+		if (!isExists) {
+			throw new NotFoundException(`Турнир с id ${tournamentId} не найден`);
+		}
+
+		if (Object.keys(updateTournament).length > 0) {
+			await this.tournamentRepo.update({ id: tournamentId }, updateTournament);
+		}
+
+		if (updateQuestions.length > 0) {
+			for (const question of updateQuestions) {
+				const { id, ...questionData } = question;
+				await this.questionRepo.update({ id }, questionData);
+			}
+		}
+
+		if (updateSources.length > 0) {
+			for (const source of updateSources) {
+				const { id, ...sourceData } = source;
+				await this.sourceRepo.update({ id }, sourceData);
+			}
+		}
+
+		return dto;
 	}
 
 	async checkParsing() {

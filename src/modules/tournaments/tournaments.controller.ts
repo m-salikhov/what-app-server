@@ -19,6 +19,7 @@ import { AdminGuard, SelfGuard } from "../auth/guards/role.guard";
 import { TournamentDto } from "./dto/tournament.dto";
 import { TournamentsService } from "./tournaments.service";
 import { ChangeStatusDto } from "./dto/change-status.dto";
+import { UpdateTournamentDto } from "./dto/updateTournament.dto";
 
 @Controller("tournaments")
 export class TournamentsController {
@@ -98,6 +99,12 @@ export class TournamentsController {
 	@Patch("/change-status")
 	async changeTournamentStatus(@Body() dto: ChangeStatusDto) {
 		return this.tournamentsService.changeTournamentStatus(dto);
+	}
+
+	@UseGuards(JwtAuthGuard, AdminGuard)
+	@Patch("/update-tournament")
+	async updateTournament(@Body() dto: UpdateTournamentDto) {
+		return this.tournamentsService.updateTournament(dto);
 	}
 
 	@UseGuards(JwtAuthGuard, AdminGuard)

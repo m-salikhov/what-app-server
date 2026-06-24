@@ -304,7 +304,11 @@ export class TournamentsService {
 			}
 		}
 
-		return dto;
+		return {
+			isSuccess: true,
+			tournamentId,
+			message: "Турнир успешно обновлен",
+		};
 	}
 
 	async checkParsing() {

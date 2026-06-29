@@ -14,6 +14,7 @@ node_modules
 dist-ssr
 *.local
 .env
+tsconfig.build.tsbuildinfo
 
 # Editor directories and files
 .vscode/*

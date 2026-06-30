@@ -2,6 +2,7 @@ import {
 	BadRequestException,
 	ConflictException,
 	Injectable,
+	InternalServerErrorException,
 	NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -137,7 +138,7 @@ export class TournamentsService {
 
 	async getTournamentById(id: number) {
 		const tournament = await this.tournamentRepo.findOne({
-			where: { id },
+			where: { id, status: "published" },
 			relations: ["editors", "questions"],
 		});
 
@@ -152,6 +153,7 @@ export class TournamentsService {
 		const tournaments = await this.tournamentRepo
 			.createQueryBuilder("tournament")
 			.where("tournament.title LIKE :search", { search: `%${searchString}%` })
+			.andWhere({ status: "published" })
 			.orderBy("tournament.id", "DESC")
 			.getMany();
 
@@ -176,7 +178,7 @@ export class TournamentsService {
 
 		const tournament = await this.tournamentRepo
 			.createQueryBuilder("tournament")
-			.where(whereClause)
+			.where(whereClause, { status: "published" })
 			.orderBy("RAND()")
 			.limit(1)
 			.getOne();
@@ -213,6 +215,7 @@ export class TournamentsService {
 		const skip = (page - 1) * amount;
 
 		const tournaments = await this.tournamentRepo.find({
+			where: { status: "published" },
 			order: { id: "DESC" },
 			skip: withSkip ? skip : 0,
 			take: withSkip ? amount : amount * page,
@@ -229,6 +232,7 @@ export class TournamentsService {
 
 	async getAllTournamentsShort() {
 		const tournaments = await this.tournamentRepo.find({
+			where: { status: "published" },
 			order: { id: "DESC" },
 		});
 
@@ -237,7 +241,7 @@ export class TournamentsService {
 
 	async getTournamentsByUploader(uploaderId: string) {
 		const tournaments = await this.tournamentRepo.find({
-			where: { uploaderUuid: uploaderId },
+			where: { uploaderUuid: uploaderId, status: "published" },
 			order: { id: "DESC" },
 		});
 
@@ -264,7 +268,12 @@ export class TournamentsService {
 			throw new NotFoundException(`Турнир с id ${id} не найден`);
 		}
 
-		await this.tournamentRepo.remove(tournament);
+		try {
+			await this.tournamentRepo.remove(tournament);
+			return { id };
+		} catch (_error) {
+			throw new InternalServerErrorException(`Не удалось удалить турнир с id ${id}`);
+		}
 	}
 
 	async changeTournamentStatus({ id, status }: ChangeStatusDto) {

@@ -20,6 +20,7 @@ import { ChangeStatusDto } from "./dto/change-status.dto";
 import target from "./fixtures/tournament-target.json";
 import { diff } from "just-diff";
 import { UpdateTournamentDto } from "./dto/updateTournament.dto";
+import { User } from "../users/entity/user.entity";
 
 @Injectable()
 export class TournamentsService {
@@ -136,7 +137,11 @@ export class TournamentsService {
 		}
 	}
 
-	async getTournamentById(id: number) {
+	async getTournamentById(id: number, role: User["role"]) {
+		// доступ к неопубликованным турнирам администратору
+		if (role === "admin")
+			return this.tournamentRepo.findOne({ where: { id }, relations: ["editors", "questions"] });
+
 		const tournament = await this.tournamentRepo.findOne({
 			where: { id, status: "published" },
 			relations: ["editors", "questions"],
@@ -258,7 +263,6 @@ export class TournamentsService {
 	async getDrafts() {
 		return await this.tournamentRepo.find({
 			where: { status: "draft" },
-			relations: ["editors", "questions"],
 		});
 	}
 

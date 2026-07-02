@@ -12,14 +12,16 @@ import {
 	Patch,
 	Post,
 	Query,
+	Req,
 	UseGuards,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
-import { AdminGuard, SelfGuard } from "../auth/guards/role.guard";
+import { AdminGuard, OptionalAuthGuard, SelfGuard } from "../auth/guards/role.guard";
 import { TournamentDto } from "./dto/tournament.dto";
 import { TournamentsService } from "./tournaments.service";
 import { ChangeStatusDto } from "./dto/change-status.dto";
 import { UpdateTournamentDto } from "./dto/updateTournament.dto";
+import { AuthenticatedRequest } from "src/Shared/Types/AuthRequest.type";
 
 @Controller("tournaments")
 export class TournamentsController {
@@ -73,6 +75,7 @@ export class TournamentsController {
 		return this.tournamentsService.getRandomTournament(userId);
 	}
 
+	@UseGuards()
 	@Get("/statistics")
 	async getStatistics() {
 		return this.tournamentsService.getStatistics();
@@ -91,8 +94,10 @@ export class TournamentsController {
 	}
 
 	@Get(":id")
-	async getTournamentById(@Param("id", ParseIntPipe) id: number) {
-		return this.tournamentsService.getTournamentById(id);
+	@UseGuards(OptionalAuthGuard)
+	async getTournamentById(@Param("id", ParseIntPipe) id: number, @Req() req: AuthenticatedRequest) {
+		const role = req.user.role;
+		return this.tournamentsService.getTournamentById(id, role);
 	}
 
 	@UseGuards(JwtAuthGuard, AdminGuard)

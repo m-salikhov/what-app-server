@@ -10,7 +10,7 @@ export class User {
 	username: string;
 
 	@Column()
-	role: "user" | "admin";
+	role: "user" | "admin" | "guest";
 
 	@Column()
 	email: string;

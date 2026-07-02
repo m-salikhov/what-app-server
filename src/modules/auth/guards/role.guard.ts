@@ -5,6 +5,8 @@ import {
 	ForbiddenException,
 	Injectable,
 } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+import { guestAccount } from "src/Shared/constants/user.constants";
 import { AuthenticatedRequest } from "src/Shared/Types/AuthRequest.type";
 
 @Injectable()
@@ -45,5 +47,22 @@ export class SelfGuard implements CanActivate {
 		}
 
 		throw new ForbiddenException("Role not allowed");
+	}
+}
+
+@Injectable()
+export class OptionalAuthGuard extends AuthGuard("jwt") {
+	async canActivate(context: ExecutionContext): Promise<boolean> {
+		try {
+			// super.canActivate() вызовет JwtStrategy.validate,
+			return await (super.canActivate(context) as Promise<boolean>);
+		} catch {
+			// Если валидация JWT не прошла, то пропускаем и устанавливаем guest
+			return true;
+		}
+	}
+
+	handleRequest(_err, user) {
+		return user || guestAccount;
 	}
 }

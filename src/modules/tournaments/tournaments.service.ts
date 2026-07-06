@@ -254,8 +254,10 @@ export class TournamentsService {
 	}
 
 	async getStatistics() {
-		const tc = await this.tournamentRepo.count();
-		const qc = await this.questionRepo.count();
+		const tc = await this.tournamentRepo.countBy({ status: "published" });
+		const qc = await this.tournamentRepo.sum("questionsQuantity", {
+			status: "published",
+		});
 
 		return { tc, qc };
 	}

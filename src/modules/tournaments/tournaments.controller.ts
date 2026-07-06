@@ -75,7 +75,6 @@ export class TournamentsController {
 		return this.tournamentsService.getRandomTournament(userId);
 	}
 
-	@UseGuards()
 	@Get("/statistics")
 	async getStatistics() {
 		return this.tournamentsService.getStatistics();

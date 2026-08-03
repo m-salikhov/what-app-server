@@ -11,9 +11,9 @@ export class AuthService {
 		private jwtService: JwtService,
 	) {}
 
-	async validateUser(email: string, password: string) {
-		const user = await this.usersService.getUserByEmail(email);
-		const isMatch = await bcrypt.compare(password, user.password);
+	async validateUser(email: string, password: string): Promise<UserWithoutPassword> {
+		const { password: savedPassword, ...user } = await this.usersService.getUserByEmail(email);
+		const isMatch = await bcrypt.compare(password, savedPassword);
 		if (!isMatch) throw new UnauthorizedException("Неверный пароль");
 
 		return user;
@@ -27,8 +27,8 @@ export class AuthService {
 		};
 	}
 
-	async getUserById(id: string) {
-		const user = await this.usersService.getUserById(id);
+	async getUserById(id: string): Promise<UserWithoutPassword> {
+		const { password: _, ...user } = await this.usersService.getUserById(id);
 
 		return user;
 	}

@@ -24,7 +24,7 @@ type expiresInValue = `${number}s` | `${number}m` | `${number}h` | `${number}d` 
 		CacheModule.registerAsync({
 			useFactory: () => ({
 				store: new CacheableMemory({
-					ttl: 10 * 60 * 1000, // 10 минут
+					ttl: 30 * 60 * 1000, // 30 минут
 					lruSize: 500, // максимум 500 записей
 				}),
 			}),

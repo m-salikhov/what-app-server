@@ -14,13 +14,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 	) {
 		super({
 			jwtFromRequest: ExtractJwt.fromExtractors([
-				(request: Request) => {
-					const data = request?.cookies.access_token;
-					if (!data) {
-						return null;
-					}
-					return data;
-				},
+				(request: Request) => request?.cookies.access_token ?? null,
 			]),
 			ignoreExpiration: false,
 			secretOrKey: process.env.SECRET,
@@ -35,11 +29,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 		const id = payload.id;
 
 		const cachedUser = await this.cacheManager.get<UserWithoutPassword>(id);
-		if (cachedUser) {
-			return cachedUser;
-		}
+		if (cachedUser) return cachedUser;
 
-		const { password: _, ...user } = await this.authService.getUserById(id);
+		const user = await this.authService.getUserById(id);
 
 		await this.cacheManager.set(id, user);
 

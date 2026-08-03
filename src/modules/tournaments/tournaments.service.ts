@@ -196,24 +196,13 @@ export class TournamentsService {
 	}
 
 	async getRandomQuestions(n: number) {
-		const questionIdsResult: { id: number }[] = await this.questionRepo
+		return this.questionRepo
 			.createQueryBuilder("question")
-			.select("question.id", "id")
+			.leftJoinAndSelect("question.tournament", "tournament")
+			.leftJoinAndSelect("question.source", "source")
 			.orderBy("RAND()")
-			.limit(n)
-			.getRawMany();
-
-		const questionIds = questionIdsResult.map((item) => item.id);
-
-		if (questionIds.length === 0) {
-			return [];
-		}
-		const randomQuestions = await this.questionRepo.find({
-			where: { id: In(questionIds) },
-			relations: ["tournament", "source"],
-		});
-
-		return randomQuestions;
+			.take(n)
+			.getMany();
 	}
 
 	async paginate(amount: number, page: number, withSkip: boolean) {

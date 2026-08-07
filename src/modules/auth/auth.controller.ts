@@ -2,6 +2,8 @@ import { CACHE_MANAGER, type Cache } from "@nestjs/cache-manager";
 import {
 	Controller,
 	Get,
+	HttpCode,
+	HttpStatus,
 	Inject,
 	Post,
 	Req,
@@ -17,6 +19,8 @@ import { StatsInterceptor } from "../stats/stats.interceptor";
 import { AuthService } from "./auth.service";
 import { JwtAuthGuard } from "./guards/jwt.guard";
 import { LocalAuthGuard } from "./guards/local-auth.guard";
+import { LoginAttemptsGuard } from "./guards/login-attempts.guard";
+import { LoginAttemptsService } from "./login-attempts.service";
 
 @UseInterceptors(StatsInterceptor)
 @Controller("auth")
@@ -24,16 +28,23 @@ export class AuthController {
 	constructor(
 		private authService: AuthService,
 		private configService: ConfigService,
+		private loginAttemptsService: LoginAttemptsService,
+
 		@Inject(CACHE_MANAGER) private cacheManager: Cache,
 	) {}
 
-	@UseGuards(LocalAuthGuard)
+	@UseGuards(LoginAttemptsGuard, LocalAuthGuard)
+	@HttpCode(HttpStatus.OK)
 	@Post("login")
 	async login(
 		@Req() req: AuthenticatedRequest,
 		@Res({ passthrough: true }) response: Response,
 	): Promise<UserWithoutPassword> {
-		const { access_token } = await this.authService.login(req.user);
+		const { email, username, id } = req.user;
+
+		this.loginAttemptsService.resetAttempts(email);
+
+		const { access_token } = await this.authService.makeAccessToken(username, id);
 
 		const cookieOptions: CookieOptions = {
 			httpOnly: true,
@@ -49,12 +60,15 @@ export class AuthController {
 	}
 
 	@UseGuards(JwtAuthGuard)
+	@HttpCode(HttpStatus.OK)
 	@Get("login-first")
 	async loginFirst(
 		@Req() req: AuthenticatedRequest,
 		@Res({ passthrough: true }) response: Response,
 	) {
-		const { access_token } = await this.authService.login(req.user);
+		const { username, id } = req.user;
+
+		const { access_token } = await this.authService.makeAccessToken(username, id);
 
 		response.cookie("access_token", access_token, {
 			httpOnly: true,
@@ -68,6 +82,7 @@ export class AuthController {
 	}
 
 	@UseGuards(JwtAuthGuard)
+	@HttpCode(HttpStatus.OK)
 	@Post("logout")
 	logout(@Req() req: AuthenticatedRequest, @Res({ passthrough: true }) response: Response) {
 		this.cacheManager.del(req.user.id);

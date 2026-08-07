@@ -14,6 +14,7 @@ import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 import { LocalStrategy } from "./strategies/local.strategy";
+import { LoginAttemptsService } from "./login-attempts.service";
 
 type expiresInValue = `${number}s` | `${number}m` | `${number}h` | `${number}d` | number;
 
@@ -38,6 +39,6 @@ type expiresInValue = `${number}s` | `${number}m` | `${number}h` | `${number}d` 
 		}),
 	],
 	controllers: [AuthController],
-	providers: [AuthService, LocalStrategy, JwtStrategy, StatsService],
+	providers: [AuthService, LoginAttemptsService, LocalStrategy, JwtStrategy, StatsService],
 })
 export class AuthModule {}

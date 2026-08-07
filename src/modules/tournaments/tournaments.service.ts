@@ -72,9 +72,9 @@ export class TournamentsService {
 				}),
 			);
 
-			const savedQuestions = [];
+			const savedQuestions: Question[] = [];
 			for (const question of tournament.questions) {
-				const savedSources = [];
+				const savedSources: Source[] = [];
 				for (const source of question.source) {
 					const savedSource = await sourceRepo.save(source);
 					savedSources.push(savedSource);
@@ -206,7 +206,13 @@ export class TournamentsService {
 	}
 
 	async paginate(amount: number, page: number, withSkip: boolean) {
+		const count = await this.tournamentRepo.count();
+
+		const pageCount = Math.ceil(count / amount);
+		page = Math.min(pageCount, page);
+
 		const skip = (page - 1) * amount;
+		const hasMorePage = page < pageCount;
 
 		const tournaments = await this.tournamentRepo.find({
 			where: { status: "published" },
@@ -214,12 +220,6 @@ export class TournamentsService {
 			skip: withSkip ? skip : 0,
 			take: withSkip ? amount : amount * page,
 		});
-
-		const count = await this.tournamentRepo.count();
-
-		const pageCount = Math.ceil(count / amount);
-
-		const hasMorePage = page < pageCount;
 
 		return { tournaments, count, pageCount, hasMorePage };
 	}

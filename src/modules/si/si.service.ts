@@ -73,8 +73,8 @@ export class SiService {
 			};
 		}
 
-		if (this.rooms.get(roomId).users.has(userId)) {
-			const isConnected = this.rooms.get(roomId).users.get(userId).isConnected;
+		if (this.rooms.get(roomId)?.users.has(userId)) {
+			const isConnected = this.rooms.get(roomId)?.users.get(userId)?.isConnected;
 
 			if (isConnected) {
 				return {
@@ -82,7 +82,10 @@ export class SiService {
 					message: "Игрок уже в комнате",
 				};
 			} else {
-				this.rooms.get(roomId).users.get(userId).isConnected = true;
+				const user = this.rooms.get(roomId)?.users.get(userId);
+				if (user) user.isConnected = true;
+
+				// this.rooms.get(roomId).users.get(userId).isConnected = true;
 				client.data.roomId = roomId;
 				return {
 					success: true,
@@ -103,7 +106,7 @@ export class SiService {
 		};
 
 		// добавляем клиента в комнату
-		this.rooms.get(roomId).users.set(userId, user);
+		this.rooms.get(roomId)?.users.set(userId, user);
 
 		// запоминаем активную комнату клиента
 		this.clientActiveRoom.set(userId, roomId);
@@ -129,8 +132,8 @@ export class SiService {
 		this.clientActiveRoom.delete(userId);
 
 		// переводим игрока в неактивное состояние, но сохраняем на случай повторного входа
-		const player = this.rooms.get(roomId).users.get(userId);
-		player.isConnected = false;
+		const player = this.rooms.get(roomId)?.users.get(userId);
+		if (player) player.isConnected = false;
 
 		// console.log(this.rooms.size, this.rooms.get(roomId).users);
 

@@ -7,7 +7,6 @@ import {
 	HttpCode,
 	HttpStatus,
 	Param,
-	ParseBoolPipe,
 	ParseIntPipe,
 	Patch,
 	Post,
@@ -22,6 +21,8 @@ import { TournamentsService } from "./tournaments.service";
 import { ChangeStatusDto } from "./dto/change-status.dto";
 import { UpdateTournamentDto } from "./dto/updateTournament.dto";
 import { AuthenticatedRequest } from "src/Shared/Types/AuthRequest.type";
+import { RandomParamsDto } from "./dto/random-param.dto";
+import { PaginationParamsDto } from "./dto/pagination-params.dto";
 
 @Controller("tournaments")
 export class TournamentsController {
@@ -57,17 +58,14 @@ export class TournamentsController {
 	}
 
 	@Get("/paginate")
-	async paginate(
-		@Query("amount", ParseIntPipe) amount: number,
-		@Query("page", ParseIntPipe) page: number,
-		@Query("withSkip", ParseBoolPipe) withSkip: boolean,
-	) {
+	async paginate(@Query() params: PaginationParamsDto) {
+		const { amount, page, withSkip } = params;
 		return this.tournamentsService.paginate(amount, page, withSkip);
 	}
 
-	@Get("/random/:n")
-	async getRandomQuestions(@Param("n", ParseIntPipe) n: number) {
-		return this.tournamentsService.getRandomQuestions(n);
+	@Get("random/:n")
+	async getRandomQuestions(@Param() params: RandomParamsDto) {
+		return this.tournamentsService.getRandomQuestions(params.n);
 	}
 
 	@Get("/random-tournament")

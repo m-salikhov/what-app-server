@@ -2,6 +2,7 @@ import puppeteer, { Browser, Page } from "puppeteer";
 import type { Question } from "../entities/question.entity";
 import type { Tournament } from "../entities/tournament.entity";
 import { parseDate } from "./parse-date.helper";
+import { Editor } from "../entities/editors.entity";
 
 function removeTrailingDot(str: string): string {
 	if (str.endsWith(".")) {
@@ -22,8 +23,8 @@ const getTourNumber = (questionsQuantity: number, tours: number, qNumber: number
 };
 
 export const parseTournamentGotquestions = async (link: string) => {
-	let browser: Browser;
-	let page: Page;
+	let browser: Browser | undefined;
+	let page: Page | undefined;
 
 	try {
 		browser = await puppeteer.launch({
@@ -42,6 +43,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 		// нажимаем кнопку, чтобы открыть ответы
 		const button = await page.$('button[title="Показать/скрыть все ответы"]');
 		await page.evaluate((button) => {
+			if (!button) return;
 			const rect = button.getBoundingClientRect();
 			const event = new MouseEvent("click", {
 				view: window,
@@ -56,7 +58,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 
 		// Извлекаем название
 		const title = await page.evaluate(() => {
-			return document.querySelector("h1").textContent;
+			return document.querySelector("h1")?.textContent || "";
 		});
 
 		// проверяем есть ли Сложность и извлекаем
@@ -76,7 +78,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 
 		// Извлекаем данные для редакторов
 		const editors = await page.evaluate(() => {
-			const editors = [];
+			const editors: Editor[] = [];
 			const a = document.querySelectorAll(".pb-1 a");
 
 			a.forEach((e, i) => {
@@ -112,9 +114,11 @@ export const parseTournamentGotquestions = async (link: string) => {
 				const author = authorElement ? authorElement.textContent.trim() : "не указан";
 
 				// номер вопроса
-				const qNumber = +element
-					.querySelector('[href*="/question/"]')
-					.textContent.replace("Вопрос ", "");
+				let qNumber = 0;
+				const qNumberElement = element.querySelector('[href*="/question/"]');
+				if (qNumberElement) {
+					qNumber = +qNumberElement.textContent.replace("Вопрос ", "");
+				}
 
 				// если номер вопроса не определен или ноль, то вопрос считаем вне турнира
 				if (!qNumber) {
@@ -122,15 +126,18 @@ export const parseTournamentGotquestions = async (link: string) => {
 				}
 
 				// Раздатка. Если есть раздатка, то в первом спане будет текст "раздаточный"
-				const isAddExist = element
-					.querySelector("span")
-					.textContent.toLowerCase()
-					.includes("раздаточный");
+				const addElement = element.querySelector("span");
+				const isAddExist = addElement
+					? addElement.textContent.toLowerCase().includes("раздаточный")
+					: false;
 
 				if (isAddExist) {
 					const span = element.querySelector("span");
+					if (!span) return;
 					// тело раздатки лежит в следующем диве
 					const addContainer = span.nextElementSibling;
+
+					if (!addContainer) return;
 
 					// раздатка может быть либо картинкой, либо текстом
 					// пробуем вытянуть картинку
@@ -139,7 +146,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 					if (image) {
 						q.add = image.src;
 					} else {
-						q.add = addContainer.querySelector("span").textContent;
+						q.add = addContainer.querySelector("span")?.textContent ?? "";
 					}
 				}
 

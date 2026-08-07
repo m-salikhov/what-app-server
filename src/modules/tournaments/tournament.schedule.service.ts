@@ -27,7 +27,10 @@ export class TournamentScheduleService {
 				this.mailService.sendAdminEmail("Parse test: success", "");
 			}
 		} catch (error) {
-			this.mailService.sendAdminEmail("Parse test: error", error.toString());
+			if (error instanceof Error) {
+				this.mailService.sendAdminEmail("Parse test: error", error.message);
+			}
+			this.mailService.sendAdminEmail("Parse test: error", JSON.stringify(error));
 		}
 	}
 

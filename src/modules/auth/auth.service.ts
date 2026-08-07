@@ -12,9 +12,11 @@ export class AuthService {
 	) {}
 
 	async validateUser(email: string, password: string): Promise<UserWithoutPassword> {
-		const { password: savedPassword, ...user } = await this.usersService.getUserByEmail(email);
-		const isMatch = await bcrypt.compare(password, savedPassword);
-		if (!isMatch) throw new UnauthorizedException("Неверный пароль");
+		const user = await this.usersService.getUserByEmail(email);
+		if (!user) throw new UnauthorizedException("Неверный логин или пароль");
+
+		const isMatch = await bcrypt.compare(password, user.password);
+		if (!isMatch) throw new UnauthorizedException("Неверный логин или пароль");
 
 		return user;
 	}

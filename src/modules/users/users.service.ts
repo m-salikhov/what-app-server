@@ -116,9 +116,8 @@ export class UsersService {
 		return await this.userRepo.remove(user);
 	}
 
-	async getUserByEmail(email: string): Promise<User> {
+	async getUserByEmail(email: string) {
 		const user = await this.userRepo.findOne({ where: { email } });
-		if (!user) throw new NotFoundException("Пользователь не найден");
 
 		return user;
 	}

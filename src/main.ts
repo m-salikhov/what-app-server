@@ -24,6 +24,13 @@ async function bootstrap() {
 
 	app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
+	app.enableCors({
+		origin: ["http://localhost:5173", "https://4gk-base.andvarif.ru", "https://andvarif.ru"],
+		credentials: true,
+		methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+		allowedHeaders: "Content-Type, Accept, Authorization",
+	});
+
 	await app.listen(process.env.PORT || 3000);
 	Logger.log(`Server started on port ${process.env.PORT}`, "Main");
 }

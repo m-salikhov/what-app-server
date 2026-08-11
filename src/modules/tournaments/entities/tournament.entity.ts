@@ -2,6 +2,7 @@ import { Exclude } from "class-transformer";
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Editor } from "./editors.entity";
 import { Question } from "./question.entity";
+import { dateTransformer } from "src/Shared/Transformers/date.transformer";
 
 @Entity()
 export class Tournament {
@@ -11,7 +12,7 @@ export class Tournament {
 	@Column()
 	title: string;
 
-	@Column({ type: "date" })
+	@Column({ type: "date", transformer: dateTransformer })
 	date: Date;
 
 	@Column()

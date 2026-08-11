@@ -90,7 +90,7 @@ export class TournamentsService {
 
 			const newTournament = tournamentRepo.create({
 				...tournament,
-				dateUpload: new Date(),
+				dateUpload: new Date().toISOString().slice(0, 10),
 				editors: savedEditors,
 				questions: savedQuestions,
 				uploader: tournament.uploader || guestAccount.username,

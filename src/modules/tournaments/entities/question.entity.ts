@@ -15,7 +15,7 @@ export class Question {
 	@Column()
 	tourNumber: number;
 
-	@Column({ default: "" })
+	@Column({ type: "varchar", length: 2000, default: "" })
 	add?: string;
 
 	@Column({ type: "mediumtext" })
@@ -24,7 +24,7 @@ export class Question {
 	@Column({ type: "mediumtext" })
 	answer: string;
 
-	@Column({ default: "" })
+	@Column({ type: "varchar", length: 1000, default: "" })
 	alterAnswer?: string;
 
 	@Column({ type: "mediumtext" })

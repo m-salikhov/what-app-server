@@ -5,22 +5,25 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:?Set MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER:?Set MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD}
 
     ports:
       - "127.0.0.1:3308:3306"
 
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./dump:/dump
+      - ./dump:/docker-entrypoint-initdb.d
 
     command:
       - --default-authentication-plugin=mysql_native_password
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
-      - --max_allowed_packet=512M
+      - --max_allowed_packet=256M
+      - --innodb-buffer-pool-size=128M
+      - --max-connections=20
+      - --performance-schema=OFF
 
     logging:
       driver: json-file

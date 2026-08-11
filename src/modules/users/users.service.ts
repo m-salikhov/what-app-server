@@ -39,7 +39,6 @@ export class UsersService {
 			...createUserDto,
 			password: hash,
 			role: "user",
-			date: new Date(),
 		});
 
 		const { password: _, ...savedUser } = await this.userRepo.save(user);

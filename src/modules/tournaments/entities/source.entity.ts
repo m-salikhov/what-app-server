@@ -6,7 +6,7 @@ export class Source {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@Column({ type: "mediumtext" })
+	@Column({ type: "varchar", length: 1000, default: "" })
 	link: string;
 
 	@ManyToOne(

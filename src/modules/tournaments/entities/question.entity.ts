@@ -9,6 +9,7 @@ export class Question {
 
 	@Column({ default: "regular" })
 	type: "regular" | "double" | "triple" | "other" | "outside";
+
 	@Column()
 	qNumber: number;
 
@@ -18,16 +19,16 @@ export class Question {
 	@Column({ type: "varchar", length: 2000, default: "" })
 	add?: string;
 
-	@Column({ type: "mediumtext" })
+	@Column({ type: "varchar", length: 6000, default: "" })
 	text: string;
 
-	@Column({ type: "mediumtext" })
+	@Column({ type: "varchar", length: 1000, default: "" })
 	answer: string;
 
 	@Column({ type: "varchar", length: 1000, default: "" })
 	alterAnswer?: string;
 
-	@Column({ type: "mediumtext" })
+	@Column({ type: "varchar", length: 6000, default: "" })
 	comment: string;
 
 	@Column()

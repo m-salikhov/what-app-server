@@ -3,6 +3,7 @@ import { MailerModule } from "@nestjs-modules/mailer";
 // import { PugAdapter } from "@nestjs-modules/mailer/dist/adapters/pug.adapter";
 // import { join } from "path";
 import { MailService } from "./mail.service";
+console.log(process.env.SMTP_HOST, process.env.ADMIN_EMAIL, process.env.ADMIN_EMAIL_PASSWORD);
 
 @Module({
 	imports: [

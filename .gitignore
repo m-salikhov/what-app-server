@@ -6,18 +6,19 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+
+
 ./dist
 dist
-
-
 node_modules
 dist-ssr
+dump
 *.local
 .env
 tsconfig.build.tsbuildinfo
 
 # Editor directories and files
-.vscode/*
+.vscode
 !.vscode/extensions.json
 .idea
 .DS_Store

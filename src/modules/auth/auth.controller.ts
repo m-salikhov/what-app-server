@@ -49,9 +49,8 @@ export class AuthController {
 		const cookieOptions: CookieOptions = {
 			httpOnly: true,
 			maxAge: this.configService.get("COOKIES_MAX_AGE"),
-			sameSite: "none",
+			sameSite: "strict",
 			secure: true,
-			partitioned: true,
 		};
 
 		response.cookie("access_token", access_token, cookieOptions);
@@ -73,9 +72,8 @@ export class AuthController {
 		response.cookie("access_token", access_token, {
 			httpOnly: true,
 			maxAge: this.configService.get("COOKIES_MAX_AGE"),
-			sameSite: "none",
+			sameSite: "strict",
 			secure: true,
-			partitioned: true,
 		});
 
 		return req.user;
@@ -89,9 +87,8 @@ export class AuthController {
 
 		response.clearCookie("access_token", {
 			httpOnly: true,
-			sameSite: "none",
+			sameSite: "strict",
 			secure: true,
-			partitioned: true,
 		});
 
 		return { message: "logout" };

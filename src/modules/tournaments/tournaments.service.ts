@@ -73,11 +73,22 @@ export class TournamentsService {
 			);
 
 			const savedQuestions: Question[] = [];
+
 			for (const question of tournament.questions) {
 				const savedSources: Source[] = [];
-				for (const source of question.source) {
+				for (const source of question.source || []) {
 					const savedSource = await sourceRepo.save(source);
 					savedSources.push(savedSource);
+				}
+
+				if (question.addMetadata) {
+					// чистим на всякий случай
+					const { height, width, type } = question.addMetadata;
+					question.addMetadata = {
+						height,
+						width,
+						type,
+					};
 				}
 
 				const savedQuestion = await questionRepo.save({

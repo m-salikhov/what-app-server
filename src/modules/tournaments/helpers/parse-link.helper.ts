@@ -3,6 +3,7 @@ import type { Question } from "../entities/question.entity";
 import type { Tournament } from "../entities/tournament.entity";
 import { parseDate } from "./parse-date.helper";
 import { Editor } from "../entities/editors.entity";
+import { imageDimensionsFromStream } from "image-dimensions";
 
 function removeTrailingDot(str: string): string {
 	if (str.endsWith(".")) {
@@ -101,8 +102,11 @@ export const parseTournamentGotquestions = async (link: string) => {
 					qNumber: 0,
 					tourNumber: 0,
 					author: "",
+					add: "",
+					addMetadata: null,
 					text: "",
 					answer: "",
+					alterAnswer: "",
 					comment: "не указан",
 					type: "regular",
 					answerRatio: "",
@@ -155,32 +159,25 @@ export const parseTournamentGotquestions = async (link: string) => {
 
 				const text = textBlocks[0].textContent;
 
-				textBlocks.forEach((block) => {
-					if (block.textContent.startsWith("Ответ:")) {
-						q.answer = block.textContent
+				textBlocks.forEach(({ textContent }) => {
+					if (textContent.startsWith("Ответ:")) {
+						q.answer = textContent
 							.replace("Ответ:", "")
 							.trim()
 							.replace(/[.\s]+$/, "");
-					}
-
-					if (block.textContent.startsWith("Зачёт:")) {
-						q.alterAnswer = block.textContent
+					} else if (textContent.startsWith("Зачёт:")) {
+						q.alterAnswer = textContent
 							.replace("Зачёт:", "")
 							.trim()
 							.replace(/[.\s]+$/, "");
-					}
-
-					if (block.textContent.startsWith("Комментарий:")) {
-						q.comment = block.textContent.replace("Комментарий:", "").trim();
-					}
-
-					if (block.textContent.startsWith("Источники:")) {
-						const sources = block.textContent
+					} else if (textContent.startsWith("Комментарий:")) {
+						q.comment = textContent.replace("Комментарий:", "").trim();
+					} else if (textContent.startsWith("Источники:")) {
+						const sources = textContent
 							.replace("Источники:", "")
 							.trim()
 							.split("\n")
-							.map((s) => s.trim())
-							.map((s, i) => ({ link: s, id: i + 1 }));
+							.map((s, i) => ({ link: s.trim(), id: i + 1 }));
 
 						if (sources.length === 1) {
 							q.source = sources;
@@ -257,19 +254,47 @@ export const parseTournamentGotquestions = async (link: string) => {
 		// Закрываем браузер
 		await browser.close();
 
+		for (const question of questions) {
+			if (!question.add.startsWith("http")) continue;
+
+			try {
+				const { body } = await fetch(question.add);
+
+				if (!body) {
+					throw new Error(`No response body: ${question.id} ${question.add}`);
+				}
+
+				const dimensions = await imageDimensionsFromStream(body);
+
+				if (!dimensions) {
+					throw new Error(`Cant determine image dimensions: ${question.id} ${question.add}`);
+				}
+
+				question.addMetadata = {
+					type: dimensions.type,
+					width: dimensions.width,
+					height: dimensions.height,
+				};
+			} catch (err) {
+				console.error(err);
+			}
+		}
+
+		console.log(questions);
+
 		//сборка турнира
 		const t: Tournament = {
 			id: 0,
 			title: removeTrailingDot(title),
-			tours,
-			questionsQuantity,
 			date: parseDate(date),
-			link,
 			uploader: "",
 			uploaderUuid: "",
 			dateUpload: new Date(),
-			difficulty,
 			status: "draft",
+			link,
+			tours,
+			questionsQuantity,
+			difficulty,
 			editors,
 			questions,
 		};

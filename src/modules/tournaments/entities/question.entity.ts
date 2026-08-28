@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Source } from "./source.entity";
 import { Tournament } from "./tournament.entity";
+import { AddMetadata } from "./add-metadata.entity";
 
 @Entity()
 export class Question {
@@ -17,7 +18,7 @@ export class Question {
 	tourNumber: number;
 
 	@Column({ type: "varchar", length: 2000, default: "" })
-	add?: string;
+	add: string;
 
 	@Column({ type: "varchar", length: 6000, default: "" })
 	text: string;
@@ -26,7 +27,7 @@ export class Question {
 	answer: string;
 
 	@Column({ type: "varchar", length: 1000, default: "" })
-	alterAnswer?: string;
+	alterAnswer: string;
 
 	@Column({ type: "varchar", length: 6000, default: "" })
 	comment: string;
@@ -40,7 +41,11 @@ export class Question {
 	@OneToMany(
 		() => Source,
 		(source) => source.question,
-		{ eager: true },
+		{
+			eager: true,
+			cascade: ["insert", "update"],
+			onDelete: "CASCADE",
+		},
 	)
 	source: Source[];
 
@@ -52,4 +57,15 @@ export class Question {
 		},
 	)
 	tournament?: Tournament;
+
+	@OneToOne(
+		() => AddMetadata,
+		(addMetadata) => addMetadata.question,
+		{
+			eager: true,
+			cascade: ["insert", "update"],
+			onDelete: "CASCADE",
+		},
+	)
+	addMetadata: AddMetadata | null;
 }

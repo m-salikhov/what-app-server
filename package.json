@@ -46,6 +46,7 @@
 		"deep-object-diff": "^1.1.9",
 		"dotenv": "^17.2.3",
 		"express-session": "^1.18.2",
+		"image-dimensions": "^2.5.1",
 		"just-diff": "^6.0.2",
 		"mysql2": "^3.22.5",
 		"nanoid": "^5.1.6",

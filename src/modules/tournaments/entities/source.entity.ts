@@ -14,7 +14,6 @@ export class Source {
 		(question) => question.source,
 		{
 			onDelete: "CASCADE",
-			nullable: true,
 		},
 	)
 	question?: Question;

@@ -6,6 +6,21 @@ export class SourceDto {
 	link: string;
 }
 
+export class AddMetadataDto {
+	@IsInt()
+	@IsOptional()
+	id?: number;
+
+	@IsString()
+	type: string;
+
+	@IsInt()
+	width: number;
+
+	@IsInt()
+	height: number;
+}
+
 export class QuestionDto {
 	@IsIn(["regular", "double", "triple", "other", "outside"])
 	type: "regular" | "double" | "triple" | "other" | "outside";
@@ -16,9 +31,8 @@ export class QuestionDto {
 	@IsInt()
 	tourNumber: number;
 
-	@IsOptional()
 	@IsString()
-	add?: string;
+	add: string;
 
 	@IsString()
 	text: string;
@@ -26,13 +40,11 @@ export class QuestionDto {
 	@IsString()
 	answer: string;
 
-	@IsOptional()
 	@IsString()
-	alterAnswer?: string;
+	alterAnswer: string;
 
-	@IsOptional()
 	@IsString()
-	comment?: string;
+	comment: string;
 
 	@IsString()
 	author: string;
@@ -44,4 +56,9 @@ export class QuestionDto {
 	@Type(() => SourceDto)
 	@ArrayMinSize(1)
 	source: SourceDto[];
+
+	@ValidateNested()
+	@Type(() => AddMetadataDto)
+	@IsOptional()
+	addMetadata?: AddMetadataDto | null;
 }

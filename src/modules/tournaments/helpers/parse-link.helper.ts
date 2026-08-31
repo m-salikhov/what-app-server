@@ -283,6 +283,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 				}
 
 				question.addMetadata = {
+					id: 1,
 					type: dimensions.type,
 					width: dimensions.width,
 					height: dimensions.height,

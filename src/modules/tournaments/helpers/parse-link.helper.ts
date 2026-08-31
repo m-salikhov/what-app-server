@@ -32,9 +32,8 @@ export const parseTournamentGotquestions = async (link: string) => {
 			args: ["--no-sandbox", "--disable-setuid-sandbox"],
 		});
 		page = await browser.newPage();
-
 		// Переходим на нужный сайт
-		await page.goto(link, { waitUntil: "networkidle0", timeout: 50000 });
+		await page.goto(link, { waitUntil: "networkidle2", timeout: 50000 });
 
 		// если нужен лог внутри evaluate
 		page.on("console", (msg) => {
@@ -42,7 +41,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 		});
 
 		// нажимаем кнопку, чтобы открыть ответы
-		const button = await page.$('button[title="Показать/скрыть все ответы"]');
+		const button = await page.$('button[aria-label="Развернуть все"]');
 		await page.evaluate((button) => {
 			if (!button) return;
 			const rect = button.getBoundingClientRect();
@@ -62,28 +61,38 @@ export const parseTournamentGotquestions = async (link: string) => {
 			return document.querySelector("h1")?.textContent || "";
 		});
 
-		// проверяем есть ли Сложность и извлекаем
-		const isExist = (await page.$("div.p-4 div.justify-between:has(span.font-light)")) !== null;
-		let difficulty: string | number = 0;
+		// извлекаем сложность и дату отыгрыша из боковой панели
+		const { difficulty, dateStr } = await page.evaluate(() => {
+			const asideInfoStrings = Array.from(
+				document.querySelectorAll("aside div.flex.justify-between.py-0\\.5"),
+				(div) => {
+					return div.textContent;
+				},
+			);
 
-		if (isExist) {
-			const element = await page.$("div.p-4 div.justify-between:has(span.font-light)");
-			const text = await element?.evaluate((el) => el.textContent);
-			const match = text?.match(/DL(\d+(?:\.\d+)?)/);
-			difficulty = match ? match[1] : 0;
-		}
+			let difficulty = 0;
+			const difficultyStr = asideInfoStrings.find((str) => str.includes("TrueDL"));
+			if (difficultyStr) {
+				const difficultyString = difficultyStr.replace("TrueDL", "").trim().split(" · ")[0];
+				difficulty = /^\d+(\.\d+)?$/.test(difficultyString) ? Number(difficultyString) : 0;
+			}
 
-		if (difficulty !== 0) {
-			difficulty = Number(difficulty);
-		}
+			let dateStr = asideInfoStrings.find((str) => str.includes("Начало")) ?? "";
+			if (dateStr) {
+				dateStr = dateStr.replace("Начало", "").trim();
+			}
+
+			return { difficulty, dateStr };
+		});
+		const date = parseDate(dateStr);
 
 		// Извлекаем данные для редакторов
 		const editors = await page.evaluate(() => {
 			const editors: Editor[] = [];
-			const a = document.querySelectorAll(".pb-1 a");
+			const a = document.querySelectorAll("aside span.font-medium a");
 
 			a.forEach((e, i) => {
-				const name = e.textContent;
+				const name = e.textContent.trim();
 				editors.push({ name, id: i + 1 });
 			});
 
@@ -94,9 +103,13 @@ export const parseTournamentGotquestions = async (link: string) => {
 		const questions = await page.evaluate(() => {
 			const questions: Question[] = [];
 			// Находим все блоки вопросов
-			const elements = document.querySelectorAll("[number]");
+			const questionsNodeList = Array.from(
+				document.querySelectorAll(
+					"div.bg-surface-container-low.rounded-2xl:has(a[href*='/question/'])",
+				),
+			);
 
-			elements.forEach((element, i) => {
+			questionsNodeList.forEach((element, i) => {
 				const q: Question = {
 					id: i + 1,
 					qNumber: 0,
@@ -165,16 +178,16 @@ export const parseTournamentGotquestions = async (link: string) => {
 							.replace("Ответ:", "")
 							.trim()
 							.replace(/[.\s]+$/, "");
-					} else if (textContent.startsWith("Зачёт:")) {
+					} else if (textContent.startsWith("Зачет:")) {
 						q.alterAnswer = textContent
-							.replace("Зачёт:", "")
+							.replace("Зачет:", "")
 							.trim()
 							.replace(/[.\s]+$/, "");
 					} else if (textContent.startsWith("Комментарий:")) {
 						q.comment = textContent.replace("Комментарий:", "").trim();
-					} else if (textContent.startsWith("Источники:")) {
+					} else if (textContent.startsWith("Источник:")) {
 						const sources = textContent
-							.replace("Источники:", "")
+							.replace("Источник:", "")
 							.trim()
 							.split("\n")
 							.map((s, i) => ({ link: s.trim(), id: i + 1 }));
@@ -198,10 +211,14 @@ export const parseTournamentGotquestions = async (link: string) => {
 				});
 
 				// процент правильных ответов
-				const elementAnswerRatio = element.querySelector("div.mb-2");
-				const answerRatio = elementAnswerRatio
-					? elementAnswerRatio.textContent.replace(" ", "")
-					: "";
+				const elementAnswerRatio = element.querySelector('div[aria-label="Процент взятия"] span');
+				let answerRatio = "";
+				if (elementAnswerRatio) {
+					const nums = elementAnswerRatio.textContent.match(/[0-9]+/g) || [];
+					if (nums.length === 2) {
+						answerRatio = `${+nums[0]}/${+nums[1]} · ${Math.round((+nums[0] / +nums[1]) * 100)}%`;
+					}
+				}
 
 				questions.push({
 					...q,
@@ -224,7 +241,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 		// Подсчёт количества туров
 		let tours = await page.evaluate(() => {
 			let tours = 0;
-			const elements = document.querySelectorAll("h3");
+			const elements = document.querySelectorAll("h2");
 
 			elements.forEach((element) => {
 				const text = element.textContent.toLowerCase();
@@ -245,15 +262,10 @@ export const parseTournamentGotquestions = async (link: string) => {
 			v.tourNumber = getTourNumber(questionsQuantity, tours, v.qNumber);
 		});
 
-		const date = await page.evaluate(() => {
-			const divs = document.querySelectorAll(".p-4 .flex.justify-between");
-
-			return divs[1].textContent.slice(6).trim();
-		});
-
 		// Закрываем браузер
 		await browser.close();
 
+		// определение размеров картинок в вопросах
 		for (const question of questions) {
 			if (!question.add.startsWith("http")) continue;
 
@@ -280,21 +292,19 @@ export const parseTournamentGotquestions = async (link: string) => {
 			}
 		}
 
-		console.log(questions);
-
-		//сборка турнира
+		// сборка турнира
 		const t: Tournament = {
 			id: 0,
 			title: removeTrailingDot(title),
-			date: parseDate(date),
+			link,
+			date,
+			tours,
+			questionsQuantity,
+			difficulty,
 			uploader: "",
 			uploaderUuid: "",
 			dateUpload: new Date(),
 			status: "draft",
-			link,
-			tours,
-			questionsQuantity,
-			difficulty,
 			editors,
 			questions,
 		};

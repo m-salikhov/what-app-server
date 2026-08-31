@@ -30,7 +30,6 @@ export class TournamentsController {
 
 	@Post()
 	async createTournament(@Body() tournament: TournamentDto) {
-		console.log(tournament);
 		return this.tournamentsService.createTournament(tournament);
 	}
 

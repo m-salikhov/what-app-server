@@ -210,6 +210,7 @@ export class TournamentsService {
 		return this.questionRepo
 			.createQueryBuilder("question")
 			.leftJoinAndSelect("question.tournament", "tournament")
+			.leftJoinAndSelect("question.addMetadata", "addMetadata")
 			.leftJoinAndSelect("question.source", "source")
 			.orderBy("RAND()")
 			.take(n)
@@ -331,14 +332,10 @@ export class TournamentsService {
 			...target,
 			date: new Date(target.date),
 		};
-
 		const linkTarget = "https://gotquestions.online/pack/394";
-
 		// убираем dateUpload - это всегда new Date()
 		const { dateUpload, ...parsedTournament } = await parseTournamentGotquestions(linkTarget);
-
 		const res = diff(targetTournament, parsedTournament);
-
 		if (res.length > 0) {
 			return res;
 		} else {

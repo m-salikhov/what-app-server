@@ -49,7 +49,7 @@ export class AuthController {
 		const cookieOptions: CookieOptions = {
 			httpOnly: true,
 			maxAge: this.configService.get("COOKIES_MAX_AGE"),
-			sameSite: "strict",
+			sameSite: "lax",
 			secure: true,
 		};
 
@@ -72,7 +72,7 @@ export class AuthController {
 		response.cookie("access_token", access_token, {
 			httpOnly: true,
 			maxAge: this.configService.get("COOKIES_MAX_AGE"),
-			sameSite: "strict",
+			sameSite: "lax",
 			secure: true,
 		});
 
@@ -87,7 +87,7 @@ export class AuthController {
 
 		response.clearCookie("access_token", {
 			httpOnly: true,
-			sameSite: "strict",
+			sameSite: "lax",
 			secure: true,
 		});
 

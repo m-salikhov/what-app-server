@@ -35,6 +35,7 @@
 			"author": "Елизавета Болотова",
 			"add": "https://gotquestions.online/pics/394/17629_razdatka.png",
 			"addMetadata": {
+        "id": 1,
 				"type": "png",
 				"width": 600,
 				"height": 375
@@ -63,6 +64,7 @@
 			"author": "Никита Роенко",
 			"add": "https://gotquestions.online/pics/394/17630_razdatka.png",
 			"addMetadata": {
+        "id": 1,
 				"type": "png",
 				"width": 600,
 				"height": 580
@@ -343,6 +345,7 @@
 			"author": "Александр Печеный",
 			"add": "https://gotquestions.online/pics/394/17642_razdatka.png",
 			"addMetadata": {
+        "id": 1,
 				"type": "png",
 				"width": 600,
 				"height": 241
@@ -619,6 +622,7 @@
 			"author": "Александр Печеный",
 			"add": "https://gotquestions.online/pics/394/17654_razdatka.png",
 			"addMetadata": {
+        "id": 1,
 				"type": "png",
 				"width": 600,
 				"height": 300

@@ -71,15 +71,17 @@ export const parseTournamentGotquestions = async (link: string) => {
 			);
 
 			let difficulty = 0;
-			const difficultyStr = asideInfoStrings.find((str) => str.includes("TrueDL"));
-			if (difficultyStr) {
-				const difficultyString = difficultyStr.replace("TrueDL", "").trim().split(" · ")[0];
-				difficulty = /^\d+(\.\d+)?$/.test(difficultyString) ? Number(difficultyString) : 0;
-			}
+			let dateStr = "";
 
-			let dateStr = asideInfoStrings.find((str) => str.includes("Начало")) ?? "";
-			if (dateStr) {
-				dateStr = dateStr.replace("Начало", "").trim();
+			for (const str of asideInfoStrings) {
+				if (str.includes("TrueDL")) {
+					const difficultyString = str.replace("TrueDL", "").trim().split(" · ")[0];
+					difficulty = /^\d+(\.\d+)?$/.test(difficultyString) ? Number(difficultyString) : 0;
+				}
+
+				if (str.includes("Начало")) {
+					dateStr = str.replace("Начало", "").trim();
+				}
 			}
 
 			return { difficulty, dateStr };
@@ -216,7 +218,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 				if (elementAnswerRatio) {
 					const nums = elementAnswerRatio.textContent.match(/[0-9]+/g) || [];
 					if (nums.length === 2) {
-						answerRatio = `${+nums[0]}/${+nums[1]} · ${Math.round((+nums[0] / +nums[1]) * 100)}%`;
+						answerRatio = `${nums[0]}/${nums[1]} · ${Math.round((+nums[0] / +nums[1]) * 100)}%`;
 					}
 				}
 
@@ -266,32 +268,29 @@ export const parseTournamentGotquestions = async (link: string) => {
 		await browser.close();
 
 		// определение размеров картинок в вопросах
-		for (const question of questions) {
-			if (!question.add.startsWith("http")) continue;
+		await Promise.allSettled(
+			questions.map(async (question) => {
+				if (!question.add.startsWith("http")) return;
 
-			try {
-				const { body } = await fetch(question.add);
+				try {
+					const { body } = await fetch(question.add);
+					if (!body) throw new Error(`No response body: ${question.id} ${question.add}`);
 
-				if (!body) {
-					throw new Error(`No response body: ${question.id} ${question.add}`);
+					const dimensions = await imageDimensionsFromStream(body);
+					if (!dimensions)
+						throw new Error(`Cant determine image dimensions: ${question.id} ${question.add}`);
+
+					question.addMetadata = {
+						id: 1,
+						type: dimensions.type,
+						width: dimensions.width,
+						height: dimensions.height,
+					};
+				} catch (err) {
+					console.error(`Ошибка для вопроса ${question.id}:`, err);
 				}
-
-				const dimensions = await imageDimensionsFromStream(body);
-
-				if (!dimensions) {
-					throw new Error(`Cant determine image dimensions: ${question.id} ${question.add}`);
-				}
-
-				question.addMetadata = {
-					id: 1,
-					type: dimensions.type,
-					width: dimensions.width,
-					height: dimensions.height,
-				};
-			} catch (err) {
-				console.error(err);
-			}
-		}
+			}),
+		);
 
 		// сборка турнира
 		const t: Tournament = {

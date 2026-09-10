@@ -333,9 +333,14 @@ export class TournamentsService {
 			date: new Date(target.date),
 		};
 		const linkTarget = "https://gotquestions.online/pack/394";
+		const parsedTournament = await parseTournamentGotquestions(linkTarget);
+		if (!parsedTournament) {
+			return "ошибка при парсинге";
+		}
+
 		// убираем dateUpload - это всегда new Date()
-		const { dateUpload, ...parsedTournament } = await parseTournamentGotquestions(linkTarget);
-		const res = diff(targetTournament, parsedTournament);
+		const { dateUpload, ...rest } = parsedTournament;
+		const res = diff(targetTournament, rest);
 		if (res.length > 0) {
 			return res;
 		} else {

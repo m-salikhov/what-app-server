@@ -1,9 +1,11 @@
-import puppeteer, { Browser, Page } from "puppeteer";
+import type { Browser, Page } from "puppeteer";
+import puppeteer from "puppeteer-extra";
 import type { Question } from "../entities/question.entity";
 import type { Tournament } from "../entities/tournament.entity";
-import { parseDate } from "./parse-date.helper";
-import { Editor } from "../entities/editors.entity";
 import { imageDimensionsFromStream } from "image-dimensions";
+import stealthPlugin from "puppeteer-extra-plugin-stealth";
+import { Pack } from "../Types/GotQuestionsTypes";
+import { NotFoundException } from "@nestjs/common";
 
 function removeTrailingDot(str: string): string {
 	if (str.endsWith(".")) {
@@ -12,16 +14,9 @@ function removeTrailingDot(str: string): string {
 	return str;
 }
 
-const getTourNumber = (questionsQuantity: number, tours: number, qNumber: number) => {
-	const remainder = questionsQuantity % tours;
-	const tourLength = (questionsQuantity - remainder) / tours;
+const gotQuestionLink = "https://gotquestions.online";
 
-	if (qNumber <= questionsQuantity - remainder) {
-		return Math.ceil(qNumber / tourLength);
-	} else {
-		return tours;
-	}
-};
+puppeteer.use(stealthPlugin());
 
 export const parseTournamentGotquestions = async (link: string) => {
 	let browser: Browser | undefined;
@@ -30,239 +25,164 @@ export const parseTournamentGotquestions = async (link: string) => {
 	try {
 		browser = await puppeteer.launch({
 			args: ["--no-sandbox", "--disable-setuid-sandbox"],
+			headless: true,
 		});
 		page = await browser.newPage();
 		// Переходим на нужный сайт
-		await page.goto(link, { waitUntil: "networkidle2", timeout: 50000 });
+		const response = await page.goto(link, { waitUntil: "networkidle2", timeout: 50000 });
 
+		if (!response || response.status() !== 200) {
+			throw new Error(`Response status: ${response?.status()}`);
+		}
 		// если нужен лог внутри evaluate
 		page.on("console", (msg) => {
 			console.log("Browser console:", msg.text());
 		});
 
-		// нажимаем кнопку, чтобы открыть ответы
-		const button = await page.$('button[aria-label="Развернуть все"]');
-		await page.evaluate((button) => {
-			if (!button) return;
-			const rect = button.getBoundingClientRect();
-			const event = new MouseEvent("click", {
-				view: window,
-				bubbles: true,
-				cancelable: true,
-				clientX: rect.left + rect.width / 2,
-				clientY: rect.top + rect.height / 2,
-			});
+		const packData: Pack | null = await page.evaluate(() => {
+			const scripts = document.querySelectorAll("script");
+			for (const script of scripts) {
+				const content = script.textContent;
+				if (!content.includes("self.__next_f.push")) continue;
 
-			button.dispatchEvent(event);
-		}, button);
+				// Ищем "pack" (независимо от кавычек)
+				let idx = content.indexOf("pack");
 
-		// Извлекаем название
-		const title = await page.evaluate(() => {
-			return document.querySelector("h1")?.textContent || "";
-		});
-
-		// извлекаем сложность и дату отыгрыша из боковой панели
-		const { difficulty, dateStr } = await page.evaluate(() => {
-			const asideInfoStrings = Array.from(
-				document.querySelectorAll("aside div.flex.justify-between.py-0\\.5"),
-				(div) => {
-					return div.textContent;
-				},
-			);
-
-			let difficulty = 0;
-			let dateStr = "";
-
-			for (const str of asideInfoStrings) {
-				if (str.includes("TrueDL")) {
-					const difficultyString = str.replace("TrueDL", "").trim().split(" · ")[0];
-					difficulty = /^\d+(\.\d+)?$/.test(difficultyString) ? Number(difficultyString) : 0;
-				}
-
-				if (str.includes("Начало")) {
-					dateStr = str.replace("Начало", "").trim();
-				}
-			}
-
-			return { difficulty, dateStr };
-		});
-		const date = parseDate(dateStr);
-
-		// Извлекаем данные для редакторов
-		const editors = await page.evaluate(() => {
-			const editors: Editor[] = [];
-			const a = document.querySelectorAll("aside span.font-medium a");
-
-			a.forEach((e, i) => {
-				const name = e.textContent.trim();
-				editors.push({ name, id: i + 1 });
-			});
-
-			return editors;
-		});
-
-		// Извлекаем данные для вопросов
-		const questions = await page.evaluate(() => {
-			const questions: Question[] = [];
-			// Находим все блоки вопросов
-			const questionsNodeList = Array.from(
-				document.querySelectorAll(
-					"div.bg-surface-container-low.rounded-2xl:has(a[href*='/question/'])",
-				),
-			);
-
-			questionsNodeList.forEach((element, i) => {
-				const q: Question = {
-					id: i + 1,
-					qNumber: 0,
-					tourNumber: 0,
-					author: "",
-					add: "",
-					addMetadata: null,
-					text: "",
-					answer: "",
-					alterAnswer: "",
-					comment: "не указан",
-					type: "regular",
-					answerRatio: "",
-					source: [{ id: 1, link: "не указан" }],
-				};
-
-				// имя автора лежит последней ссылкой в блоке вопроса
-				const authorElement = element.querySelector('[href*="/person/"]');
-				const author = authorElement ? authorElement.textContent.trim() : "не указан";
-
-				// номер вопроса
-				let qNumber = 0;
-				const qNumberElement = element.querySelector('[href*="/question/"]');
-				if (qNumberElement) {
-					qNumber = +qNumberElement.textContent.replace("Вопрос ", "");
-				}
-
-				// если номер вопроса не определен или ноль, то вопрос считаем вне турнира
-				if (!qNumber) {
-					q.type = "outside";
-				}
-
-				// Раздатка. Если есть раздатка, то в первом спане будет текст "раздаточный"
-				const addElement = element.querySelector("span");
-				const isAddExist = addElement
-					? addElement.textContent.toLowerCase().includes("раздаточный")
-					: false;
-
-				if (isAddExist) {
-					const span = element.querySelector("span");
-					if (!span) return;
-					// тело раздатки лежит в следующем диве
-					const addContainer = span.nextElementSibling;
-
-					if (!addContainer) return;
-
-					// раздатка может быть либо картинкой, либо текстом
-					// пробуем вытянуть картинку
-					const image = addContainer.querySelector("img");
-
-					if (image) {
-						q.add = image.src;
-					} else {
-						q.add = addContainer.querySelector("span")?.textContent ?? "";
+				while (idx !== -1) {
+					// Двигаемся от позиции после "pack" до двоеточия
+					let pos = idx + 4; // длина "pack"
+					while (
+						pos < content.length &&
+						(content[pos] === " " || content[pos] === '"' || content[pos] === "\\")
+					) {
+						pos++;
 					}
-				}
+					if (pos < content.length && content[pos] === ":") {
+						// Нашли двоеточие, теперь ищем первую '{' после него
+						let start = pos + 1;
+						while (start < content.length && content[start] !== "{") start++;
+						if (start < content.length) {
+							// Извлекаем объект с учётом вложенности
+							let depth = 0;
+							let i = start;
+							for (; i < content.length; i++) {
+								const ch = content[i];
+								if (ch === "{") depth++;
+								else if (ch === "}") {
+									depth--;
+									if (depth === 0) break;
+								}
+							}
+							if (i < content.length) {
+								let jsonStr = content.substring(start, i + 1);
+								if (jsonStr.length > 1000) {
+									// Удаляем экранирующие / перед кавычками
+									jsonStr = jsonStr.replace(/(?<!\\)\\"/g, '"');
 
-				// блоки с текстом (вопрос, ответ, зачёт, комментарий, источники)
-				const textBlocks = element.querySelectorAll("div.whitespace-pre-wrap");
-
-				const text = textBlocks[0].textContent;
-
-				textBlocks.forEach(({ textContent }) => {
-					if (textContent.startsWith("Ответ:")) {
-						q.answer = textContent
-							.replace("Ответ:", "")
-							.trim()
-							.replace(/[.\s]+$/, "");
-					} else if (textContent.startsWith("Зачет:")) {
-						q.alterAnswer = textContent
-							.replace("Зачет:", "")
-							.trim()
-							.replace(/[.\s]+$/, "");
-					} else if (textContent.startsWith("Комментарий:")) {
-						q.comment = textContent.replace("Комментарий:", "").trim();
-					} else if (textContent.startsWith("Источник:")) {
-						const sources = textContent
-							.replace("Источник:", "")
-							.trim()
-							.split("\n")
-							.map((s, i) => ({ link: s.trim(), id: i + 1 }));
-
-						if (sources.length === 1) {
-							q.source = sources;
-						} else if (sources.length > 1) {
-							q.source = sources.map((s) => ({
-								...s,
-								link: /^\d/.test(s.link) ? s.link.slice(2).trim() : s.link,
-							}));
-						} else {
-							q.source = [
-								{
-									id: 1,
-									link: "Источник не указан",
-								},
-							];
+									try {
+										const result = JSON.parse(jsonStr);
+										return result;
+									} catch (e) {
+										if (e instanceof SyntaxError) {
+											console.error("SyntaxError:", e.message);
+											// Извлекаем позицию ошибки
+											const match = e.message.match(/position (\d+)/);
+											if (match) {
+												const pos = Number(match[1]);
+												const start = Math.max(0, pos - 100);
+												const end = Math.min(jsonStr.length, pos + 100);
+												const snippet = jsonStr.substring(start, end);
+												console.error("Фрагмент вокруг ошибки (позиция", pos, "):", snippet);
+												console.error("Длина строки:", jsonStr.length);
+											}
+										}
+									}
+								}
+							}
 						}
 					}
-				});
-
-				// процент правильных ответов
-				const elementAnswerRatio = element.querySelector('div[aria-label="Процент взятия"] span');
-				let answerRatio = "";
-				if (elementAnswerRatio) {
-					const nums = elementAnswerRatio.textContent.match(/[0-9]+/g) || [];
-					if (nums.length === 2) {
-						answerRatio = `${nums[0]}/${nums[1]} · ${Math.round((+nums[0] / +nums[1]) * 100)}%`;
-					}
+					// Ищем следующее вхождение "pack"
+					idx = content.indexOf("pack", idx + 1);
 				}
-
-				questions.push({
-					...q,
-					qNumber,
-					text,
-					author,
-					answerRatio,
-				});
-			});
-
-			return questions;
+			}
+			return null;
 		});
 
-		// Подсчёт количества вопросов. Только входящие в основную дисциплину
-		let questionsQuantity = 0;
-		questions.forEach((v) => {
-			if (v.type !== "outside") questionsQuantity++;
-		});
+		if (!packData) throw new Error("Failed to extract pack data");
 
-		// Подсчёт количества туров
-		let tours = await page.evaluate(() => {
-			let tours = 0;
-			const elements = document.querySelectorAll("h2");
+		const questionsQuantity = packData.tours.reduce(
+			(acc, tour) =>
+				acc + tour.questions.reduce((acc, question) => (question.number > 0 ? acc + 1 : acc), 0),
+			0,
+		);
 
-			elements.forEach((element) => {
-				const text = element.textContent.toLowerCase();
-				if (text.includes("тур") || text.includes("блок")) {
-					tours++;
-				}
-			});
-
-			return tours;
-		});
-		if (tours === 0) {
-			// Если разбивка на туры не определена, то считаем по 12 вопросов
-			tours = Math.ceil(questionsQuantity / 12);
+		let difficulty = 0;
+		if (packData.truedls && packData.truedls.length > 0) {
+			difficulty = Math.round(packData.truedls[0] * 10) / 10;
 		}
 
-		// Подсчёт номера тура для каждого вопроса
-		questions.forEach((v) => {
-			v.tourNumber = getTourNumber(questionsQuantity, tours, v.qNumber);
+		const editors = packData.editors.map((ed) => {
+			return {
+				id: ed.personId,
+				name: ed.person.name,
+			};
 		});
+
+		const questions: Tournament["questions"] = [];
+
+		for (let tourNumber = 0; tourNumber < packData.tours.length; tourNumber++) {
+			const tour = packData.tours[tourNumber];
+
+			for (const question of tour.questions) {
+				let author = "";
+				if (question.authors && question.authors.length > 0) {
+					const authorsNames = question.authors.map((author) => author.person.name);
+					author = authorsNames.join(", ");
+				}
+
+				let answerRatio = "";
+				if (packData.teams.length > 0 && question.correctAnswers.length > 0) {
+					answerRatio = `${question.correctAnswers[0]}/${packData.teams[0]} · ${Math.round((question.correctAnswers[0] / packData.teams[0]) * 100)}%`;
+				}
+
+				let source = [{ id: 1, link: "не указан" }];
+				if (question.source) {
+					const regex = /(?:^|\\n|\r?\n)\s*\d+[.)]\s*/g;
+					const links = question.source
+						.split(regex)
+						// Убираем лишние пробелы и точки в начале и конце
+						.map((item) => item.replace(/^[. ]+|[. ]+$/g, ""))
+						.filter((item) => item.length > 0);
+
+					source = links.map((link, i) => ({ id: i, link: link }));
+				}
+
+				let add = "";
+				if (question.razdatkaPic) {
+					add = gotQuestionLink + question.razdatkaPic;
+				} else if (question.razdatkaText) {
+					add = question.razdatkaText;
+				}
+
+				const q: Question = {
+					id: question.id,
+					qNumber: question.number,
+					tourNumber: tourNumber + 1,
+					author,
+					add,
+					addMetadata: null,
+					text: question.text,
+					answer: removeTrailingDot(question.answer),
+					alterAnswer: removeTrailingDot(question.zachet),
+					comment: question.comment,
+					type: question.number > 0 ? "regular" : "outside",
+					answerRatio,
+					source,
+				};
+
+				questions.push(q);
+			}
+		}
 
 		// Закрываем браузер
 		await browser.close();
@@ -293,22 +213,26 @@ export const parseTournamentGotquestions = async (link: string) => {
 		);
 
 		// сборка турнира
-		const t: Tournament = {
+		const tournament: Tournament = {
 			id: 0,
-			title: removeTrailingDot(title),
-			link,
-			date,
-			tours,
-			questionsQuantity,
-			difficulty,
 			uploader: "",
 			uploaderUuid: "",
+			title: removeTrailingDot(packData.longTitle || packData.title),
+			link,
+			date: new Date(packData.startDate),
+			tours: packData.tours.length,
+			difficulty,
+			questionsQuantity,
 			dateUpload: new Date(),
 			status: "draft",
 			editors,
 			questions,
 		};
-		return t;
+
+		return tournament;
+	} catch (err) {
+		console.error(err);
+		// throw new NotFoundException("Турнир не найден");
 	} finally {
 		if (browser) {
 			try {

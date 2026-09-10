@@ -161,7 +161,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 				if (question.razdatkaPic) {
 					add = gotQuestionLink + question.razdatkaPic;
 				} else if (question.razdatkaText) {
-					add = question.razdatkaText;
+					add = question.razdatkaText.replace(/\\n/g, "\n");
 				}
 
 				const q: Question = {
@@ -171,10 +171,10 @@ export const parseTournamentGotquestions = async (link: string) => {
 					author,
 					add,
 					addMetadata: null,
-					text: question.text,
-					answer: removeTrailingDot(question.answer),
+					text: question.text.replace(/\\n/g, "\n"),
+					answer: removeTrailingDot(question.answer).replace(/\\n/g, "\n"),
 					alterAnswer: removeTrailingDot(question.zachet),
-					comment: question.comment,
+					comment: question.comment.replace(/\\n/g, "\n"),
 					type: question.number > 0 ? "regular" : "outside",
 					answerRatio,
 					source,
@@ -212,6 +212,8 @@ export const parseTournamentGotquestions = async (link: string) => {
 			}),
 		);
 
+		console.log(packData);
+
 		// сборка турнира
 		const tournament: Tournament = {
 			id: 0,
@@ -228,6 +230,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 			editors,
 			questions,
 		};
+		console.log(tournament);
 
 		return tournament;
 	} catch (err) {

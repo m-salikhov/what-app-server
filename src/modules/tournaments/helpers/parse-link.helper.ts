@@ -212,8 +212,6 @@ export const parseTournamentGotquestions = async (link: string) => {
 			}),
 		);
 
-		console.log(packData);
-
 		// сборка турнира
 		const tournament: Tournament = {
 			id: 0,
@@ -230,7 +228,6 @@ export const parseTournamentGotquestions = async (link: string) => {
 			editors,
 			questions,
 		};
-		console.log(tournament);
 
 		return tournament;
 	} catch (err) {

@@ -5,7 +5,6 @@ import type { Tournament } from "../entities/tournament.entity";
 import { imageDimensionsFromStream } from "image-dimensions";
 import stealthPlugin from "puppeteer-extra-plugin-stealth";
 import { Pack } from "../Types/GotQuestionsTypes";
-import { NotFoundException } from "@nestjs/common";
 
 function removeTrailingDot(str: string): string {
 	if (str.endsWith(".")) {
@@ -43,6 +42,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 			const scripts = document.querySelectorAll("script");
 			for (const script of scripts) {
 				const content = script.textContent;
+				if (!content) continue;
 				if (!content.includes("self.__next_f.push")) continue;
 
 				// Ищем "pack" (независимо от кавычек)
@@ -62,21 +62,60 @@ export const parseTournamentGotquestions = async (link: string) => {
 						let start = pos + 1;
 						while (start < content.length && content[start] !== "{") start++;
 						if (start < content.length) {
-							// Извлекаем объект с учётом вложенности
+							// Извлекаем объект с учётом вложенности И строковых литералов
 							let depth = 0;
+							let inString = false;
+							let pendingEscape = false; // true, когда в JSON-тексте предыдущий символ был \
 							let i = start;
-							for (; i < content.length; i++) {
+							while (i < content.length) {
 								const ch = content[i];
+
+								// Разбираем JS-escape последовательность в исходнике
+								if (ch === "\\" && i + 1 < content.length) {
+									const next = content[i + 1];
+									let valueChar: string;
+									if (next === "n") valueChar = "\n";
+									else if (next === "t") valueChar = "\t";
+									else if (next === "r") valueChar = "\r";
+									else if (next === '"') valueChar = '"';
+									else if (next === "\\") valueChar = "\\";
+									else valueChar = next;
+									i += 2;
+
+									if (pendingEscape) {
+										// этот символ экранирован в JSON-тексте — не влияет на состояние строки
+										pendingEscape = false;
+										continue;
+									}
+									if (valueChar === "\\") {
+										// в JSON-тексте это начало escape-последовательности
+										pendingEscape = true;
+										continue;
+									}
+									if (valueChar === '"') {
+										inString = !inString;
+									}
+									continue;
+								}
+
+								i++;
+								if (pendingEscape) {
+									pendingEscape = false;
+									continue;
+								}
+								if (inString) continue;
 								if (ch === "{") depth++;
 								else if (ch === "}") {
 									depth--;
 									if (depth === 0) break;
 								}
 							}
-							if (i < content.length) {
-								let jsonStr = content.substring(start, i + 1);
+
+							if (depth === 0 && i > start) {
+								let jsonStr = content.substring(start, i);
+
 								if (jsonStr.length > 1000) {
-									// Удаляем экранирующие / перед кавычками
+									// Удаляем экранирующий \ перед кавычками
 									jsonStr = jsonStr.replace(/(?<!\\)\\"/g, '"');
 
 									try {
@@ -85,16 +124,16 @@ export const parseTournamentGotquestions = async (link: string) => {
 									} catch (e) {
 										if (e instanceof SyntaxError) {
 											console.error("SyntaxError:", e.message);
-											// Извлекаем позицию ошибки
 											const match = e.message.match(/position (\d+)/);
 											if (match) {
-												const pos = Number(match[1]);
-												const start = Math.max(0, pos - 100);
-												const end = Math.min(jsonStr.length, pos + 100);
-												const snippet = jsonStr.substring(start, end);
-												console.error("Фрагмент вокруг ошибки (позиция", pos, "):", snippet);
+												const posErr = Number(match[1]);
+												const startS = Math.max(0, posErr - 100);
+												const endS = Math.min(jsonStr.length, posErr + 100);
+												const snippet = jsonStr.substring(startS, endS);
+												console.error("Фрагмент вокруг ошибки (позиция", posErr, "):", snippet);
 												console.error("Длина строки:", jsonStr.length);
 											}
+											throw e;
 										}
 									}
 								}
@@ -110,10 +149,16 @@ export const parseTournamentGotquestions = async (link: string) => {
 
 		if (!packData) throw new Error("Failed to extract pack data");
 
-		const questionsQuantity = packData.tours.reduce(
-			(acc, tour) =>
-				acc + tour.questions.reduce((acc, question) => (question.number > 0 ? acc + 1 : acc), 0),
-			0,
+		const { questionsQuantity, toursQuantity } = packData.tours.reduce(
+			(acc, tour) => {
+				if (tour.number > 0) {
+					acc.questionsQuantity += tour.questions.length;
+					acc.toursQuantity += 1;
+				}
+				return acc;
+			},
+
+			{ questionsQuantity: 0, toursQuantity: 0 },
 		);
 
 		let difficulty = 0;
@@ -130,9 +175,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 
 		const questions: Tournament["questions"] = [];
 
-		for (let tourNumber = 0; tourNumber < packData.tours.length; tourNumber++) {
-			const tour = packData.tours[tourNumber];
-
+		for (const tour of packData.tours) {
 			for (const question of tour.questions) {
 				let author = "";
 				if (question.authors && question.authors.length > 0) {
@@ -167,7 +210,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 				const q: Question = {
 					id: question.id,
 					qNumber: question.number,
-					tourNumber: tourNumber + 1,
+					tourNumber: tour.number,
 					author,
 					add,
 					addMetadata: null,
@@ -220,7 +263,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 			title: removeTrailingDot(packData.longTitle || packData.title),
 			link,
 			date: new Date(packData.startDate),
-			tours: packData.tours.length,
+			tours: toursQuantity,
 			difficulty,
 			questionsQuantity,
 			dateUpload: new Date(),
@@ -232,7 +275,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 		return tournament;
 	} catch (err) {
 		console.error(err);
-		// throw new NotFoundException("Турнир не найден");
+		throw err;
 	} finally {
 		if (browser) {
 			try {

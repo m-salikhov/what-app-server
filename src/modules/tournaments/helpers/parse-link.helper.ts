@@ -39,6 +39,28 @@ export const parseTournamentGotquestions = async (link: string) => {
 		});
 
 		const packData: Pack | null = await page.evaluate(() => {
+			function unescapeDeep<T>(value: T): T {
+				if (typeof value === "string") {
+					// Разэкранируем оставшиеся последовательности из вложенного JSON
+					const unescaped = value
+						.replace(/\\n/g, "\n")
+						.replace(/\\r/g, "\r")
+						.replace(/\\t/g, "\t")
+						.replace(/\\"/g, '"');
+					return unescaped as T;
+				}
+				if (Array.isArray(value)) {
+					return value.map((v) => unescapeDeep(v)) as T;
+				}
+				if (value !== null && typeof value === "object") {
+					const obj = value as Record<string, unknown>;
+					for (const key of Object.keys(obj)) {
+						obj[key] = unescapeDeep(obj[key]);
+					}
+					return value;
+				}
+				return value;
+			}
 			const scripts = document.querySelectorAll("script");
 			for (const script of scripts) {
 				const content = script.textContent;
@@ -120,10 +142,11 @@ export const parseTournamentGotquestions = async (link: string) => {
 
 									try {
 										const result = JSON.parse(jsonStr);
-										return result;
+										return unescapeDeep(result);
 									} catch (e) {
+										console.log(e);
 										if (e instanceof SyntaxError) {
-											console.error("SyntaxError:", e.message);
+											console.log("SyntaxError:", e.message);
 											const match = e.message.match(/position (\d+)/);
 											if (match) {
 												const posErr = Number(match[1]);

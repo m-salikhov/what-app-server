@@ -144,7 +144,6 @@ export const parseTournamentGotquestions = async (link: string) => {
 										const result = JSON.parse(jsonStr);
 										return unescapeDeep(result);
 									} catch (e) {
-										console.log(e);
 										if (e instanceof SyntaxError) {
 											console.log("SyntaxError:", e.message);
 											const match = e.message.match(/position (\d+)/);
@@ -195,6 +194,19 @@ export const parseTournamentGotquestions = async (link: string) => {
 				name: ed.person.name,
 			};
 		});
+
+		// заглушка на случай отсутствия даты
+		let date = new Date("1900-01-01");
+		if (packData.startDate) {
+			const dateStr = packData.startDate.startsWith("$")
+				? packData.startDate.slice(2)
+				: packData.startDate;
+			const parsedDate = new Date(dateStr);
+
+			if (!Number.isNaN(parsedDate.getTime())) {
+				date = parsedDate;
+			}
+		}
 
 		const questions: Tournament["questions"] = [];
 
@@ -250,9 +262,6 @@ export const parseTournamentGotquestions = async (link: string) => {
 			}
 		}
 
-		// Закрываем браузер
-		await browser.close();
-
 		// определение размеров картинок в вопросах
 		await Promise.allSettled(
 			questions.map(async (question) => {
@@ -285,7 +294,7 @@ export const parseTournamentGotquestions = async (link: string) => {
 			uploaderUuid: "",
 			title: removeTrailingDot(packData.longTitle || packData.title),
 			link,
-			date: new Date(packData.startDate),
+			date,
 			tours: toursQuantity,
 			difficulty,
 			questionsQuantity,

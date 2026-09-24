@@ -1,41 +1,41 @@
 {
 	"id": 0,
-	"title": "Синхронный турнир «All Cats Are Beautiful»",
-	"link": "https://gotquestions.online/pack/394",
-	"date": "2019-09-06T00:00:00.000Z",
-	"tours": 3,
-	"questionsQuantity": 36,
-	"difficulty": 7.2,
 	"uploader": "",
 	"uploaderUuid": "",
+	"title": "Синхронный турнир «All Cats Are Beautiful»",
+	"link": "https://gotquestions.online/pack/394",
+	"date": "2019-09-06T19:00:00.000Z",
+	"tours": 3,
+	"difficulty": 7.2,
+	"questionsQuantity": 39,
 	"status": "draft",
 	"editors": [
 		{
-			"name": "Сергей Спешков",
-			"id": 1
+			"id": 79,
+			"name": "Сергей Спешков"
 		},
 		{
-			"name": "Никита Роенко",
-			"id": 2
+			"id": 352,
+			"name": "Никита Роенко"
 		},
 		{
-			"name": "Александр Григорьев",
-			"id": 3
+			"id": 353,
+			"name": "Александр Григорьев"
 		},
 		{
-			"name": "Александр Печеный",
-			"id": 4
+			"id": 413,
+			"name": "Александр Печеный"
 		}
 	],
 	"questions": [
 		{
-			"id": 1,
+			"id": 17629,
 			"qNumber": 0,
-			"tourNumber": 0,
+			"tourNumber": 1,
 			"author": "Елизавета Болотова",
 			"add": "https://gotquestions.online/pics/394/17629_razdatka.png",
 			"addMetadata": {
-        "id": 1,
+				"id": 1,
 				"type": "png",
 				"width": 600,
 				"height": 375
@@ -48,23 +48,23 @@
 			"answerRatio": "",
 			"source": [
 				{
-					"link": "https://thequestion.ru/questions/421086/pochemu-vo-mnogikh-abstraktnykh-memakh-ispolzuyut-shrift-lobster",
-					"id": 1
+					"id": 0,
+					"link": "https://thequestion.ru/questions/421086/pochemu-vo-mnogikh-abstraktnykh-memakh-ispolzuyut-shrift-lobster"
 				},
 				{
-					"link": "https://vk.com/wall-95648824_39780",
-					"id": 2
+					"id": 1,
+					"link": "https://vk.com/wall-95648824_39780"
 				}
 			]
 		},
 		{
-			"id": 2,
+			"id": 17630,
 			"qNumber": 1,
 			"tourNumber": 1,
 			"author": "Никита Роенко",
 			"add": "https://gotquestions.online/pics/394/17630_razdatka.png",
 			"addMetadata": {
-        "id": 1,
+				"id": 1,
 				"type": "png",
 				"width": 600,
 				"height": 580
@@ -77,17 +77,17 @@
 			"answerRatio": "32/209 · 15%",
 			"source": [
 				{
-					"link": "Х/ф «Внутренний порок», режиссёр — Пол Томас Андерсон",
-					"id": 1
+					"id": 0,
+					"link": "Х/ф «Внутренний порок», режиссёр — Пол Томас Андерсон"
 				},
 				{
-					"link": "https://en.wikipedia.org/wiki/Saxophone",
-					"id": 2
+					"id": 1,
+					"link": "https://en.wikipedia.org/wiki/Saxophone"
 				}
 			]
 		},
 		{
-			"id": 3,
+			"id": 17631,
 			"qNumber": 2,
 			"tourNumber": 1,
 			"author": "Александр Григорьев",
@@ -101,13 +101,13 @@
 			"answerRatio": "29/209 · 14%",
 			"source": [
 				{
-					"link": "лекция Вероники Самоцкой «Птицы вокруг нас» — https://youtu.be/GtK7e2Hxr7w",
-					"id": 1
+					"id": 0,
+					"link": "лекция Вероники Самоцкой «Птицы вокруг нас» — https://youtu.be/GtK7e2Hxr7w"
 				}
 			]
 		},
 		{
-			"id": 4,
+			"id": 17632,
 			"qNumber": 3,
 			"tourNumber": 1,
 			"author": "Александр Григорьев",
@@ -121,13 +121,13 @@
 			"answerRatio": "18/209 · 9%",
 			"source": [
 				{
-					"link": "Розамунд Янг, «Секретная жизнь коров»",
-					"id": 1
+					"id": 0,
+					"link": "Розамунд Янг, «Секретная жизнь коров»"
 				}
 			]
 		},
 		{
-			"id": 5,
+			"id": 17633,
 			"qNumber": 4,
 			"tourNumber": 1,
 			"author": "Никита Роенко",
@@ -141,13 +141,13 @@
 			"answerRatio": "31/209 · 15%",
 			"source": [
 				{
-					"link": "Доминик Гийо «Люди и собаки»",
-					"id": 1
+					"id": 0,
+					"link": "Доминик Гийо «Люди и собаки»"
 				}
 			]
 		},
 		{
-			"id": 6,
+			"id": 17634,
 			"qNumber": 5,
 			"tourNumber": 1,
 			"author": "Александр Григорьев",
@@ -161,17 +161,17 @@
 			"answerRatio": "44/209 · 21%",
 			"source": [
 				{
-					"link": "документальный сериал ‘Cats 101’, серия 1",
-					"id": 1
+					"id": 0,
+					"link": "документальный сериал ‘Cats 101’, серия 1"
 				},
 				{
-					"link": "https://en.wikipedia.org/wiki/Three_Colours_trilogy",
-					"id": 2
+					"id": 1,
+					"link": "https://en.wikipedia.org/wiki/Three_Colours_trilogy"
 				}
 			]
 		},
 		{
-			"id": 7,
+			"id": 17635,
 			"qNumber": 6,
 			"tourNumber": 1,
 			"author": "Александр Григорьев",
@@ -185,13 +185,13 @@
 			"answerRatio": "81/209 · 39%",
 			"source": [
 				{
-					"link": "https://twitter.com/memy_pro_kotow/status/1160868538946588672",
-					"id": 1
+					"id": 0,
+					"link": "https://twitter.com/memy_pro_kotow/status/1160868538946588672"
 				}
 			]
 		},
 		{
-			"id": 8,
+			"id": 17636,
 			"qNumber": 7,
 			"tourNumber": 1,
 			"author": "Александр Григорьев",
@@ -205,17 +205,17 @@
 			"answerRatio": "142/209 · 68%",
 			"source": [
 				{
-					"link": "https://catdog.fandom.com/wiki/CatDog",
-					"id": 1
+					"id": 0,
+					"link": "https://catdog.fandom.com/wiki/CatDog"
 				},
 				{
-					"link": "https://en.m.wikipedia.org/wiki/The_Odd_Couple_(2015_TV_series)",
-					"id": 2
+					"id": 1,
+					"link": "https://en.m.wikipedia.org/wiki/The_Odd_Couple_(2015_TV_series)"
 				}
 			]
 		},
 		{
-			"id": 9,
+			"id": 17637,
 			"qNumber": 8,
 			"tourNumber": 1,
 			"author": "Антон Мартыненко",
@@ -229,29 +229,29 @@
 			"answerRatio": "105/209 · 50%",
 			"source": [
 				{
-					"link": "http://www.songfacts.com/detail.php?id=3414",
-					"id": 1
+					"id": 0,
+					"link": "http://www.songfacts.com/detail.php?id=3414"
 				},
 				{
-					"link": "https://twitter.com/harrisonhudson/status/304986122478559232",
-					"id": 2
+					"id": 1,
+					"link": "https://twitter.com/harrisonhudson/status/304986122478559232"
 				},
 				{
-					"link": "https://twitter.com/zerokns/status/209012696547471361",
-					"id": 3
+					"id": 2,
+					"link": "https://twitter.com/zerokns/status/209012696547471361"
 				},
 				{
-					"link": "http://www.escapistmagazine.com/forums/read/7.841171-Disney-Making-Live-Action-Chip-n-Dale-Film#20680008",
-					"id": 4
+					"id": 3,
+					"link": "http://www.escapistmagazine.com/forums/read/7.841171-Disney-Making-Live-Action-Chip-n-Dale-Film#20680008"
 				},
 				{
-					"link": "http://www.ipaghost.com/photos/time-lapse-with-deanna-deadly/",
-					"id": 5
+					"id": 4,
+					"link": "http://www.ipaghost.com/photos/time-lapse-with-deanna-deadly/"
 				}
 			]
 		},
 		{
-			"id": 10,
+			"id": 17638,
 			"qNumber": 9,
 			"tourNumber": 1,
 			"author": "Никита Роенко",
@@ -265,17 +265,17 @@
 			"answerRatio": "118/209 · 56%",
 			"source": [
 				{
-					"link": "Елена Елисеева «Визуальные метафоры в фильмах Сергея Эйзенштейна»",
-					"id": 1
+					"id": 0,
+					"link": "Елена Елисеева «Визуальные метафоры в фильмах Сергея Эйзенштейна»"
 				},
 				{
-					"link": "https://hvatalkin.ru/zagadka/810",
-					"id": 2
+					"id": 1,
+					"link": "https://hvatalkin.ru/zagadka/810"
 				}
 			]
 		},
 		{
-			"id": 11,
+			"id": 17639,
 			"qNumber": 10,
 			"tourNumber": 1,
 			"author": "Никита Роенко",
@@ -289,13 +289,13 @@
 			"answerRatio": "112/209 · 54%",
 			"source": [
 				{
-					"link": "Тим Беркхед «Самая совершенная вещь на свете. Внутри и снаружи птичьего яйца»",
-					"id": 1
+					"id": 0,
+					"link": "Тим Беркхед «Самая совершенная вещь на свете. Внутри и снаружи птичьего яйца»"
 				}
 			]
 		},
 		{
-			"id": 12,
+			"id": 17640,
 			"qNumber": 11,
 			"tourNumber": 1,
 			"author": "Александр Григорьев",
@@ -309,13 +309,13 @@
 			"answerRatio": "2/209 · 1%",
 			"source": [
 				{
-					"link": "https://medium.com/@jonfollett/ever-wonder-how-they-choose-animals-for-the-covers-of-o-reilly-books-46bd5066b7b6",
-					"id": 1
+					"id": 0,
+					"link": "https://medium.com/@jonfollett/ever-wonder-how-they-choose-animals-for-the-covers-of-o-reilly-books-46bd5066b7b6"
 				}
 			]
 		},
 		{
-			"id": 13,
+			"id": 17641,
 			"qNumber": 12,
 			"tourNumber": 1,
 			"author": "Никита Роенко",
@@ -329,23 +329,23 @@
 			"answerRatio": "67/209 · 32%",
 			"source": [
 				{
-					"link": "https://cyberleninka.ru/article/v/zverobogi-drevnego-egipta",
-					"id": 1
+					"id": 0,
+					"link": "https://cyberleninka.ru/article/v/zverobogi-drevnego-egipta"
 				},
 				{
-					"link": "https://www.lacoste.com/gb/lacoste-brand/lacoste-history.html",
-					"id": 2
+					"id": 1,
+					"link": "https://www.lacoste.com/gb/lacoste-brand/lacoste-history.html"
 				}
 			]
 		},
 		{
-			"id": 14,
+			"id": 17642,
 			"qNumber": 0,
-			"tourNumber": 0,
+			"tourNumber": 2,
 			"author": "Александр Печеный",
 			"add": "https://gotquestions.online/pics/394/17642_razdatka.png",
 			"addMetadata": {
-        "id": 1,
+				"id": 1,
 				"type": "png",
 				"width": 600,
 				"height": 241
@@ -358,17 +358,17 @@
 			"answerRatio": "",
 			"source": [
 				{
-					"link": "visualoop.com/blog/6708/looking-at-a-lion-for-the-first-time",
-					"id": 1
+					"id": 0,
+					"link": "visualoop.com/blog/6708/looking-at-a-lion-for-the-first-time"
 				},
 				{
-					"link": "Linda Kalof, «Looking at Animals in Human History» (https://clck.ru/HYxoh)",
-					"id": 2
+					"id": 1,
+					"link": "Linda Kalof, «Looking at Animals in Human History» (https://clck.ru/HYxoh)"
 				}
 			]
 		},
 		{
-			"id": 15,
+			"id": 17643,
 			"qNumber": 13,
 			"tourNumber": 2,
 			"author": "Александр Печеный",
@@ -382,13 +382,13 @@
 			"answerRatio": "2/209 · 1%",
 			"source": [
 				{
-					"link": "Linda Kalof, «Looking at Animals in Human History» (https://clck.ru/HZAME)",
-					"id": 1
+					"id": 0,
+					"link": "Linda Kalof, «Looking at Animals in Human History» (https://clck.ru/HZAME)"
 				}
 			]
 		},
 		{
-			"id": 16,
+			"id": 17644,
 			"qNumber": 14,
 			"tourNumber": 2,
 			"author": "Александр Печеный",
@@ -402,13 +402,13 @@
 			"answerRatio": "117/209 · 56%",
 			"source": [
 				{
-					"link": "Ruth Mellinkoff, «Riding Backwards: Theme of Humiliation and Symbol of Evil» (https://clck.ru/HZZKg, https://clck.ru/HZZKX)",
-					"id": 1
+					"id": 0,
+					"link": "Ruth Mellinkoff, «Riding Backwards: Theme of Humiliation and Symbol of Evil» (https://clck.ru/HZZKg, https://clck.ru/HZZKX)"
 				}
 			]
 		},
 		{
-			"id": 17,
+			"id": 17645,
 			"qNumber": 15,
 			"tourNumber": 2,
 			"author": "Александр Печеный",
@@ -422,13 +422,13 @@
 			"answerRatio": "104/209 · 50%",
 			"source": [
 				{
-					"link": "Douglas Candland, «Feral Children and Clever Animals» (https://clck.ru/Hocfb)",
-					"id": 1
+					"id": 0,
+					"link": "Douglas Candland, «Feral Children and Clever Animals» (https://clck.ru/Hocfb)"
 				}
 			]
 		},
 		{
-			"id": 18,
+			"id": 17646,
 			"qNumber": 16,
 			"tourNumber": 2,
 			"author": "Александр Печеный",
@@ -442,21 +442,21 @@
 			"answerRatio": "1/209 · 0%",
 			"source": [
 				{
-					"link": "Esther Cohen, «Animals in Medieval Perceptions: The Image of the Ubiquitous Other» (https://clck.ru/HZEUG)",
-					"id": 1
+					"id": 0,
+					"link": "Esther Cohen, «Animals in Medieval Perceptions: The Image of the Ubiquitous Other» (https://clck.ru/HZEUG)"
 				},
 				{
-					"link": "Sylvie Laurent, «Naître au moyen age: de la conception à la naissance: la grossesse et l’accouchement, XIIe-XVe siècle» (https://clck.ru/Hv9Ha)",
-					"id": 2
+					"id": 1,
+					"link": "Sylvie Laurent, «Naître au moyen age: de la conception à la naissance: la grossesse et l’accouchement, XIIe-XVe siècle» (https://clck.ru/Hv9Ha)"
 				},
 				{
-					"link": "https://www.researchgate.net/publication/308801170_Hoof_of_mule_causes_contraception-a_pilot_study_on_female_wistar_rats/link/58a83e8692851cf0e3bd6489/download",
-					"id": 3
+					"id": 2,
+					"link": "https://www.researchgate.net/publication/308801170_Hoof_of_mule_causes_contraception-a_pilot_study_on_female_wistar_rats/link/58a83e8692851cf0e3bd6489/download"
 				}
 			]
 		},
 		{
-			"id": 19,
+			"id": 17647,
 			"qNumber": 17,
 			"tourNumber": 2,
 			"author": "Александр Печеный",
@@ -470,13 +470,13 @@
 			"answerRatio": "79/209 · 38%",
 			"source": [
 				{
-					"link": "Linda Kalof, «Looking at Animals in Human History» (https://clck.ru/HZB7L)",
-					"id": 1
+					"id": 0,
+					"link": "Linda Kalof, «Looking at Animals in Human History» (https://clck.ru/HZB7L)"
 				}
 			]
 		},
 		{
-			"id": 20,
+			"id": 17648,
 			"qNumber": 18,
 			"tourNumber": 2,
 			"author": "Александр Печеный",
@@ -490,13 +490,13 @@
 			"answerRatio": "38/209 · 18%",
 			"source": [
 				{
-					"link": "Мишель Фуко, «Надзирать и наказывать» (https://clck.ru/HZAsZ)",
-					"id": 1
+					"id": 0,
+					"link": "Мишель Фуко, «Надзирать и наказывать» (https://clck.ru/HZAsZ)"
 				}
 			]
 		},
 		{
-			"id": 21,
+			"id": 17649,
 			"qNumber": 19,
 			"tourNumber": 2,
 			"author": "Александр Печеный",
@@ -510,13 +510,13 @@
 			"answerRatio": "56/209 · 27%",
 			"source": [
 				{
-					"link": "Linda Kalof, «Looking at Animals in Human History» (https://clck.ru/HYxqz)",
-					"id": 1
+					"id": 0,
+					"link": "Linda Kalof, «Looking at Animals in Human History» (https://clck.ru/HYxqz)"
 				}
 			]
 		},
 		{
-			"id": 22,
+			"id": 17650,
 			"qNumber": 20,
 			"tourNumber": 2,
 			"author": "Александр Печеный",
@@ -530,17 +530,17 @@
 			"answerRatio": "12/209 · 6%",
 			"source": [
 				{
-					"link": "http://www.aoh61.com/images/ir_cartoons/punchXL.htm (https://archive.li/81Jau)",
-					"id": 1
+					"id": 0,
+					"link": "http://www.aoh61.com/images/ir_cartoons/punchXL.htm (https://archive.li/81Jau)"
 				},
 				{
-					"link": "https://www.irishpost.com/life-style/80-popular-irish-names-100-years-ago-106221",
-					"id": 2
+					"id": 1,
+					"link": "https://www.irishpost.com/life-style/80-popular-irish-names-100-years-ago-106221"
 				}
 			]
 		},
 		{
-			"id": 23,
+			"id": 17651,
 			"qNumber": 21,
 			"tourNumber": 2,
 			"author": "Александр Печеный",
@@ -554,21 +554,21 @@
 			"answerRatio": "13/209 · 6%",
 			"source": [
 				{
-					"link": "Frans de Waal, «Are We Smart Enough to Know How Smart Animals Are?» (https://clck.ru/HaKEV)",
-					"id": 1
+					"id": 0,
+					"link": "Frans de Waal, «Are We Smart Enough to Know How Smart Animals Are?» (https://clck.ru/HaKEV)"
 				},
 				{
-					"link": "http://ushakovdictionary.ru/word.php?wordid=27709",
-					"id": 2
+					"id": 1,
+					"link": "http://ushakovdictionary.ru/word.php?wordid=27709"
 				},
 				{
-					"link": "https://dic.academic.ru/dic.nsf/ogegova/99494",
-					"id": 3
+					"id": 2,
+					"link": "https://dic.academic.ru/dic.nsf/ogegova/99494"
 				}
 			]
 		},
 		{
-			"id": 24,
+			"id": 17652,
 			"qNumber": 22,
 			"tourNumber": 2,
 			"author": "Александр Печеный",
@@ -582,17 +582,17 @@
 			"answerRatio": "15/209 · 7%",
 			"source": [
 				{
-					"link": "Frans de Waal, «Are We Smart Enough to Know How Smart Animals Are?» (https://clck.ru/HZAmS)",
-					"id": 1
+					"id": 0,
+					"link": "Frans de Waal, «Are We Smart Enough to Know How Smart Animals Are?» (https://clck.ru/HZAmS)"
 				},
 				{
-					"link": "https://www.theamericanconservative.com/mccarthy/how-philosophy-became-theology/",
-					"id": 2
+					"id": 1,
+					"link": "https://www.theamericanconservative.com/mccarthy/how-philosophy-became-theology/"
 				}
 			]
 		},
 		{
-			"id": 25,
+			"id": 17653,
 			"qNumber": 23,
 			"tourNumber": 2,
 			"author": "Александр Печеный",
@@ -606,23 +606,23 @@
 			"answerRatio": "16/209 · 8%",
 			"source": [
 				{
-					"link": "Frans de Waal, «Are We Smart Enough to Know How Smart Animals Are?» (https://clck.ru/HZErR)",
-					"id": 1
+					"id": 0,
+					"link": "Frans de Waal, «Are We Smart Enough to Know How Smart Animals Are?» (https://clck.ru/HZErR)"
 				},
 				{
-					"link": "https://www.livescience.com/14819-crows-learn-dangerous-faces.html",
-					"id": 2
+					"id": 1,
+					"link": "https://www.livescience.com/14819-crows-learn-dangerous-faces.html"
 				}
 			]
 		},
 		{
-			"id": 26,
+			"id": 17654,
 			"qNumber": 24,
 			"tourNumber": 2,
 			"author": "Александр Печеный",
 			"add": "https://gotquestions.online/pics/394/17654_razdatka.png",
 			"addMetadata": {
-        "id": 1,
+				"id": 1,
 				"type": "png",
 				"width": 600,
 				"height": 300
@@ -635,35 +635,35 @@
 			"answerRatio": "27/209 · 13%",
 			"source": [
 				{
-					"link": "The Master of Game (https://clck.ru/Gsqkp)",
-					"id": 1
+					"id": 0,
+					"link": "The Master of Game (https://clck.ru/Gsqkp)"
 				},
 				{
-					"link": "https://en.wikipedia.org/wiki/The_Master_of_Game",
-					"id": 2
+					"id": 1,
+					"link": "https://en.wikipedia.org/wiki/The_Master_of_Game"
 				},
 				{
-					"link": "https://en.wikipedia.org/wiki/Collective_noun#Terms_of_venery",
-					"id": 3
+					"id": 2,
+					"link": "https://en.wikipedia.org/wiki/Collective_noun#Terms_of_venery"
 				},
 				{
-					"link": "https://en.wikipedia.org/wiki/List_of_English_terms_of_venery,_by_animal",
-					"id": 4
+					"id": 3,
+					"link": "https://en.wikipedia.org/wiki/List_of_English_terms_of_venery,_by_animal"
 				},
 				{
-					"link": "https://en.wikipedia.org/wiki/Bristol_stool_scale",
-					"id": 5
+					"id": 4,
+					"link": "https://en.wikipedia.org/wiki/Bristol_stool_scale"
 				}
 			]
 		},
 		{
-			"id": 27,
+			"id": 17655,
 			"qNumber": 0,
-			"tourNumber": 0,
+			"tourNumber": 3,
 			"author": "Сергей Спешков",
 			"add": "",
 			"addMetadata": null,
-			"text": "Дуплет. Два вопроса по 30 секунд обсуждения на каждый. Ответы сдаются на одном бланке в конце минуты.\n1. Пользователи сервиса Google Maps [Гугл Мэпс] нашли изображение кота, который из-за дефекта фотосъёмки оказался коротким и двухлапым. Автор вопрос считает, что у этого кота ПРОПУСК. Заполните ПРОПУСК.\n2. Автор вопроса считает, что если бы известное произведение написал кот, то он бы сказал, что прошло ПРОПУСК. Заполните ПРОПУСК.",
+			"text": "Дуплет. Два вопроса по 30 секунд обсуждения на каждый. Ответы сдаются на одном бланке в конце минуты.\r\n1. Пользователи сервиса Google Maps [Гугл Мэпс] нашли изображение кота, который из-за дефекта фотосъёмки оказался коротким и двухлапым. Автор вопрос считает, что у этого кота ПРОПУСК. Заполните ПРОПУСК.\r\n2. Автор вопроса считает, что если бы известное произведение написал кот, то он бы сказал, что прошло ПРОПУСК. Заполните ПРОПУСК.",
 			"answer": "1. Четыре с половиной жизни.\r\n2. Четыре с половиной жизни",
 			"alterAnswer": "4,5 жизни",
 			"comment": "Дуплет посвящён девяти кошачьим жизням. Поскольку на изображении с Google Maps скорее полкота, то и жизней у него не девять, а в два раза меньше. В самом начале «Божественной комедии» Данте говорит, что прошёл половину жизни. Резонно, что кот в такой ситуации мог бы сказать о четырёх с половиной жизнях. В сумме ответы на две половинки дуплета составляют искомые девять жизней",
@@ -671,17 +671,17 @@
 			"answerRatio": "",
 			"source": [
 				{
-					"link": "https://www.dailymail.co.uk/sciencetech/article-3454417/From-headless-bodies-two-legged-cats-zooming-Google-Maps-reveals-bizarre-disturbing-Street-View-images.html",
-					"id": 1
+					"id": 0,
+					"link": "https://www.dailymail.co.uk/sciencetech/article-3454417/From-headless-bodies-two-legged-cats-zooming-Google-Maps-reveals-bizarre-disturbing-Street-View-images.html"
 				},
 				{
-					"link": "Данте Алигьери. Божественная комедия.",
-					"id": 2
+					"id": 1,
+					"link": "Данте Алигьери. Божественная комедия"
 				}
 			]
 		},
 		{
-			"id": 28,
+			"id": 17656,
 			"qNumber": 25,
 			"tourNumber": 3,
 			"author": "Сергей Спешков",
@@ -695,13 +695,13 @@
 			"answerRatio": "79/209 · 38%",
 			"source": [
 				{
-					"link": "https://bandaumnikov.ru/product/gde-yezh/",
-					"id": 1
+					"id": 0,
+					"link": "https://bandaumnikov.ru/product/gde-yezh/"
 				}
 			]
 		},
 		{
-			"id": 29,
+			"id": 17657,
 			"qNumber": 26,
 			"tourNumber": 3,
 			"author": "Сергей Спешков",
@@ -715,16 +715,16 @@
 			"answerRatio": "72/209 · 34%",
 			"source": [
 				{
-					"link": "https://en.wikipedia.org/wiki/Abbott_Handerson_Thayer",
-					"id": 1
+					"id": 0,
+					"link": "https://en.wikipedia.org/wiki/Abbott_Handerson_Thayer"
 				}
 			]
 		},
 		{
-			"id": 30,
+			"id": 17658,
 			"qNumber": 27,
 			"tourNumber": 3,
-			"author": "Сергей Спешков",
+			"author": "Сергей Спешков, Илья Петров, Игорь Петров",
 			"add": "",
 			"addMetadata": null,
 			"text": "Поселившись в начале семнадцатого века в Северной Америке, англичане сразу же встретились с опоссумами. Неудивительно, что «опоссум» — это одно из первых ИХ. Назовите ИХ достаточно точно.",
@@ -735,13 +735,13 @@
 			"answerRatio": "94/209 · 45%",
 			"source": [
 				{
-					"link": "David Crystal. English as a Global Language",
-					"id": 1
+					"id": 0,
+					"link": "David Crystal. English as a Global Language"
 				}
 			]
 		},
 		{
-			"id": 31,
+			"id": 17659,
 			"qNumber": 28,
 			"tourNumber": 3,
 			"author": "Сергей Спешков",
@@ -755,17 +755,17 @@
 			"answerRatio": "140/209 · 67%",
 			"source": [
 				{
-					"link": "Китти Фергюсон. Стивен Хокинг. Непобедимый разум.",
-					"id": 1
+					"id": 0,
+					"link": "Китти Фергюсон. Стивен Хокинг. Непобедимый разум"
 				},
 				{
-					"link": "http://www.bibliotekar.ru/3-1-44-parazity/51.htm",
-					"id": 2
+					"id": 1,
+					"link": "http://www.bibliotekar.ru/3-1-44-parazity/51.htm"
 				}
 			]
 		},
 		{
-			"id": 32,
+			"id": 17660,
 			"qNumber": 29,
 			"tourNumber": 3,
 			"author": "Сергей Спешков",
@@ -779,21 +779,21 @@
 			"answerRatio": "102/209 · 49%",
 			"source": [
 				{
-					"link": "https://web.archive.org/web/20131016192334/http://www.australianstamp.com/coin-web/feature/history/abdream.htm",
-					"id": 1
+					"id": 0,
+					"link": "https://web.archive.org/web/20131016192334/http://www.australianstamp.com/coin-web/feature/history/abdream.htm"
 				},
 				{
-					"link": "https://en.wikipedia.org/wiki/Freshwater_crocodile",
-					"id": 2
+					"id": 1,
+					"link": "https://en.wikipedia.org/wiki/Freshwater_crocodile"
 				},
 				{
-					"link": "https://en.wikipedia.org/wiki/Saltwater_crocodile",
-					"id": 3
+					"id": 2,
+					"link": "https://en.wikipedia.org/wiki/Saltwater_crocodile"
 				}
 			]
 		},
 		{
-			"id": 33,
+			"id": 17661,
 			"qNumber": 30,
 			"tourNumber": 3,
 			"author": "Сергей Спешков",
@@ -807,13 +807,13 @@
 			"answerRatio": "73/209 · 35%",
 			"source": [
 				{
-					"link": "Мультипликационный фильм «Пластилиновая ворона».",
-					"id": 1
+					"id": 0,
+					"link": "Мультипликационный фильм «Пластилиновая ворона»"
 				}
 			]
 		},
 		{
-			"id": 34,
+			"id": 17662,
 			"qNumber": 31,
 			"tourNumber": 3,
 			"author": "Сергей Спешков",
@@ -827,13 +827,13 @@
 			"answerRatio": "9/209 · 4%",
 			"source": [
 				{
-					"link": "https://en.wikipedia.org/wiki/His_Master’s_Voice",
-					"id": 1
+					"id": 0,
+					"link": "https://en.wikipedia.org/wiki/His_Master’s_Voice"
 				}
 			]
 		},
 		{
-			"id": 35,
+			"id": 17663,
 			"qNumber": 32,
 			"tourNumber": 3,
 			"author": "Сергей Спешков",
@@ -847,17 +847,17 @@
 			"answerRatio": "48/209 · 23%",
 			"source": [
 				{
-					"link": "https://en.wikipedia.org/wiki/Bone_Wars",
-					"id": 1
+					"id": 0,
+					"link": "https://en.wikipedia.org/wiki/Bone_Wars"
 				},
 				{
-					"link": "https://en.wikipedia.org/wiki/Edward_Drinker_Cope",
-					"id": 2
+					"id": 1,
+					"link": "https://en.wikipedia.org/wiki/Edward_Drinker_Cope"
 				}
 			]
 		},
 		{
-			"id": 36,
+			"id": 17664,
 			"qNumber": 33,
 			"tourNumber": 3,
 			"author": "Сергей Спешков",
@@ -871,17 +871,17 @@
 			"answerRatio": "19/209 · 9%",
 			"source": [
 				{
-					"link": "https://en.wikipedia.org/wiki/Samuel_Balto",
-					"id": 1
+					"id": 0,
+					"link": "https://en.wikipedia.org/wiki/Samuel_Balto"
 				},
 				{
-					"link": "https://en.wikipedia.org/wiki/1925_serum_run_to_Nome",
-					"id": 2
+					"id": 1,
+					"link": "https://en.wikipedia.org/wiki/1925_serum_run_to_Nome"
 				}
 			]
 		},
 		{
-			"id": 37,
+			"id": 17665,
 			"qNumber": 34,
 			"tourNumber": 3,
 			"author": "Сергей Спешков",
@@ -895,13 +895,13 @@
 			"answerRatio": "10/209 · 5%",
 			"source": [
 				{
-					"link": "Julian Henby. Dear Celebrity: Absurd Letters to the Stars.",
-					"id": 1
+					"id": 0,
+					"link": "Julian Henby. Dear Celebrity: Absurd Letters to the Stars"
 				}
 			]
 		},
 		{
-			"id": 38,
+			"id": 17666,
 			"qNumber": 35,
 			"tourNumber": 3,
 			"author": "Сергей Спешков",
@@ -915,17 +915,17 @@
 			"answerRatio": "4/209 · 2%",
 			"source": [
 				{
-					"link": "https://en.wikipedia.org/wiki/Cochineal",
-					"id": 1
+					"id": 0,
+					"link": "https://en.wikipedia.org/wiki/Cochineal"
 				},
 				{
-					"link": "https://en.wikipedia.org/wiki/Red_coat_(military_uniform)",
-					"id": 2
+					"id": 1,
+					"link": "https://en.wikipedia.org/wiki/Red_coat_(military_uniform)"
 				}
 			]
 		},
 		{
-			"id": 39,
+			"id": 17667,
 			"qNumber": 36,
 			"tourNumber": 3,
 			"author": "Сергей Спешков",
@@ -939,12 +939,12 @@
 			"answerRatio": "15/209 · 7%",
 			"source": [
 				{
-					"link": "https://es.wikipedia.org/wiki/Emporio_celestial_de_conocimientos_benévolos",
-					"id": 1
+					"id": 0,
+					"link": "https://es.wikipedia.org/wiki/Emporio_celestial_de_conocimientos_benévolos"
 				},
 				{
-					"link": "http://languagelog.ldc.upenn.edu/myl/ldc/wilkins.html",
-					"id": 2
+					"id": 1,
+					"link": "http://languagelog.ldc.upenn.edu/myl/ldc/wilkins.html"
 				}
 			]
 		}
